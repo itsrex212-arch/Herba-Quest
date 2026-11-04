@@ -1,0 +1,7 @@
+task,dataset,model,auc_mean,auc_std,n_molecules
+herg,hERG,dummy_baseline,0.5,0,655
+herg,hERG,logistic_regression,0.815,0.051,655
+herg,hERG,random_forest,0.813,0.048,655
+hepatotox,DILI,dummy_baseline,0.5,0,475
+hepatotox,DILI,logistic_regression,0.838,0.029,475
+hepatotox,DILI,random_forest,0.849,0.031,475
