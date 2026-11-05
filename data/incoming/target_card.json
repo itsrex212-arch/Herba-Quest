@@ -1,0 +1,113 @@
+{
+  "project": "OmniPhyto",
+  "disease": "Type 2 diabetes mellitus (T2DM)",
+  "target": {
+    "name": "Human dipeptidyl peptidase IV / CD26 (DPP-4)",
+    "pdb_id": "3D4L",
+    "resolution_angstrom": 2.0,
+    "method": "X-ray diffraction",
+    "chain_used": "A",
+    "reference_ligand_code": "605",
+    "reference_ligand_name": "4'-[(1R)-1-amino-2-(2,5-difluorophenyl)ethyl]biphenyl-3-carboxamide",
+    "reference": "Liang GB et al. Bioorg Med Chem Lett. 2008;18(13):3706-3710. doi:10.1016/j.bmcl.2008.05.061",
+    "alternative_name": "CD26",
+    "organism": "Homo sapiens",
+    "target_class": "Enzyme"
+  },
+  "safety_panel": [
+    {
+      "key": "hERG",
+      "pdb_id": "8ZYO",
+      "chains": "ABCD",
+      "reference_ligand_code": "XB7",
+      "note": "four-chain channel; docking is a flag, not a verdict"
+    },
+    {
+      "key": "CYP3A4",
+      "pdb_id": "2V0M",
+      "chains": "A",
+      "reference_ligand_code": "KLN",
+      "note": "ketoconazole; heme kept"
+    },
+    {
+      "key": "CYP2D6",
+      "pdb_id": "3TDA",
+      "chains": "A",
+      "reference_ligand_code": "PN0",
+      "note": "prinomastat; heme kept"
+    }
+  ],
+  "library": {
+    "source": "COCONUT natural products",
+    "plant": "Azadirachta indica (neem)",
+    "initial_compound_records": 437,
+    "passed_admet_filter": 300,
+    "docked": 238,
+    "docking_note": "62 stereoisomer duplicates of docked parent structures were not docked"
+  },
+  "docking": {
+    "engine": "AutoDock Vina 1.2.5",
+    "score_unit": "kcal/mol",
+    "lower_is_better": true,
+    "top_n_to_safety_panel": 10,
+    "reference_ligand_redocking": {
+      "reported_verdict": "PASS",
+      "reference_docking_score_kcal_mol": -10.077,
+      "rmsd_angstrom": null,
+      "rmsd_note": "see redocking_results.csv for the RMSD per protein",
+      "redocking_exhaustiveness": 16,
+      "screening_exhaustiveness": 4
+    }
+  },
+  "team": "Team OmniPhyto",
+  "hackathon": "EthnoHack 2026",
+  "track": "Natural Products for Drug Discovery",
+  "project_title": "Computational Screening of Neem-Associated Natural Products Against Human DPP-4",
+  "plant_source": {
+    "scientific_name": "Azadirachta indica",
+    "common_name": "Neem",
+    "local_name": "Dogon yaro"
+  },
+  "biological_rationale": "DPP-4 degrades the incretin hormones GLP-1 and GIP, which contribute to glucose regulation. Inhibition of DPP-4 prolongs incretin activity and is an established therapeutic strategy for type 2 diabetes.",
+  "drug_discovery_rationale": "Identify neem-associated natural products with potentially favourable predicted interactions with human DPP-4 through computational screening.",
+  "composite_scoring": {
+    "formula": "composite_score = (0.5 * efficacy_norm) + (0.3 * selectivity_norm) + (0.2 * admet_score)",
+    "components": {
+      "efficacy_norm": {
+        "weight": 0.5,
+        "description": "Normalised DPP-4 docking performance"
+      },
+      "selectivity_norm": {
+        "weight": 0.3,
+        "description": "Normalised computational selectivity assessment involving hERG, CYP3A4 and CYP2D6"
+      },
+      "admet_score": {
+        "weight": 0.2,
+        "description": "Combined drug-likeness and computational ADMET assessment"
+      }
+    },
+    "score_range": {
+      "minimum": 0,
+      "maximum": 1
+    },
+    "ranking_direction": "Descending composite score",
+    "definitions_checked_against_files": {
+      "efficacy_norm": "min-max of the DPP-4 Vina score over all 238 docked compounds; reconstructed from the delivered files",
+      "selectivity_norm": "min-max over the top 10 of the worst (most negative) difference between a safety-protein score and the DPP-4 score; reconstructed from the delivered files, confirm with the ML engineer"
+    }
+  },
+  "limitations": [
+    "Docking scores represent computational predictions and do not establish experimental binding or enzyme inhibition.",
+    "Computational selectivity scores do not establish biological selectivity or safety.",
+    "ADMET predictions require experimental validation.",
+    "Botanical provenance and exact compound identities require confirmation against primary literature.",
+    "No experimental DPP-4 inhibition results are reported."
+  ],
+  "proposed_next_steps": [
+    "Verify shortlisted compound structures and botanical provenance.",
+    "Inspect and validate predicted protein-ligand binding poses.",
+    "Conduct in-vitro DPP-4 enzyme inhibition assays.",
+    "Evaluate selectivity and toxicity experimentally.",
+    "Prioritise promising compounds for further medicinal chemistry investigation."
+  ]
+}

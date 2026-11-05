@@ -1,0 +1,438 @@
+compound_id,name,source_plant,mw_calc,logp,hbd,hba,tpsa,rot_bonds,veber_pass,pains_flag,pains_name,qed,lipinski_violations,herg_risk,hepatotox_risk,admet_score,pass_flag,fail_reason
+OP0001,Butyl propyl disulfide,Azadirachta indica,164.34,3.58,0,0,0,6,TRUE,FALSE,,0.435,0,0.241,0.2,0.642,TRUE,
+OP0002,,Azadirachta indica,490.73,4.81,4,5,90.2,3,TRUE,FALSE,,0.427,0,0.202,0.183,0.655,TRUE,
+OP0003,2-Methyldecalin,Azadirachta indica,152.28,3.61,0,0,0,0,TRUE,FALSE,,0.497,0,0.131,0.097,0.731,TRUE,
+OP0004,"methyl (1S,2R,3S,4R,8S,9S,10R,13R,15R)-2-acetyloxy-13-(furan-3-yl)-4-hydroxy-4,8,10,12-tetramethyl-7-oxo-16-oxatetracyclo[8.6.0.03,8.011,15]hexadeca-5,11-diene-9-carboxylate",Azadirachta indica,484.55,3.1,1,8,112.3,3,TRUE,FALSE,,0.515,0,0.067,0.687,0.58,TRUE,
+OP0005,VEPAOL,Azadirachta indica,736.81,0.86,2,15,195.1,8,FALSE,FALSE,,0.202,2,0.544,0.523,0.36,FALSE,lipinski_over_1
+OP0006,"dimethyl (1S,4S,5R,6S,7S,8R,11S,12R,14S,15R)-12-acetyloxy-7-hydroxy-6-[(2S,4R,6R,9R,11S)-2-hydroxy-4-methoxy-11-methyl-7,10-dioxatetracyclo[6.3.1.02,6.09,11]dodecan-9-yl]-6-methyl-14-(2-methylbutanoyloxy)-3,9-dioxatetracyclo[6.6.1.01,5.011,15]pentadecane-4,11-dicarboxylate",Azadirachta indica,736.81,0.86,2,15,195.1,8,FALSE,FALSE,,0.202,2,0.544,0.523,0.36,FALSE,lipinski_over_1
+OP0007,NEEMFRUITIN A,Azadirachta indica,516.68,4.6,1,7,99.1,3,TRUE,FALSE,,0.432,1,0.3,0.487,0.537,TRUE,
+OP0008,allyl propyl trisulfide,Azadirachta indica,180.36,3.61,0,0,0,6,TRUE,FALSE,,0.348,0,0.199,0.233,0.61,TRUE,
+OP0009,"3,7,11-Trimethyl-1-dodecanol",Azadirachta indica,228.42,4.64,1,1,20.2,10,TRUE,FALSE,,0.577,0,0.207,0.097,0.74,TRUE,
+OP0010,"3,4-Dimethylthiophene",Azadirachta indica,112.2,2.36,0,0,0,0,TRUE,FALSE,,0.483,0,0.044,0.413,0.656,TRUE,
+OP0011,"2',3'-Dihydrosalannin",Azadirachta indica,598.73,5.37,0,9,110.5,7,TRUE,FALSE,,0.232,2,0.631,0.627,0.316,FALSE,lipinski_over_1
+OP0012,Ohchinin Acetate,Azadirachta indica,644.76,6.04,0,9,110.5,7,TRUE,FALSE,,0.154,2,0.511,0.63,0.319,FALSE,lipinski_over_1
+OP0013,15-Hydroxyazadiradione,Azadirachta indica,466.57,5.3,1,6,93.8,2,TRUE,FALSE,,0.594,1,0.05,0.463,0.684,TRUE,
+OP0014,Dipropyl trisulfide,Azadirachta indica,182.38,3.84,0,0,0,6,TRUE,FALSE,,0.452,0,0.172,0.203,0.668,TRUE,
+OP0015,,Azadirachta indica,136.24,3.33,0,0,0,3,TRUE,FALSE,,0.522,0,0.067,0.137,0.748,TRUE,
+OP0016,"[(10~{R})-17-(3-furyl)-7-hydroxy-4,4,10,13-tetramethyl-3-oxo-2,5,6,7,8,9,11,12,16,17-decahydro-1~{H}-cyclopenta[a]phenanthren-6-yl] acetate",Azadirachta indica,440.58,5.04,1,5,76.7,2,TRUE,FALSE,,0.515,1,0.506,0.507,0.502,TRUE,
+OP0017,"dimethyl (1S,4S,5R,6S,7R,8R,10S,14S,16R,18S,19R,22S,23R,25S,26R)-23-acetyloxy-7,14-dihydroxy-4-methoxy-6-methyl-25-(2-methylbutanoyloxy)-3,9,11,17,20-pentaoxaoctacyclo[17.6.1.18,15.01,5.06,18.07,16.010,14.022,26]heptacos-12-ene-4,22-dicarboxylate",Azadirachta indica,722.74,0.14,2,16,201,7,FALSE,FALSE,,0.265,2,0.849,0.48,0.307,FALSE,lipinski_over_1;herg_risk_high
+OP0018,"[(1R,2S,5R,7S,8S,9R,12R,13R,15S,16R)-13-acetyloxy-15-hydroxy-1,5,7,12-tetramethyl-5-[(1S)-1-[(3S)-5-oxooxolan-3-yl]ethyl]-10-oxatetracyclo[7.6.1.02,7.012,16]hexadecan-8-yl] 2-methylbutanoate",Azadirachta indica,562.74,4.69,1,8,108.4,6,TRUE,FALSE,,0.367,1,0.478,0.47,0.462,FALSE,ranked_below_cap
+OP0019,"(4~{a}~{S},10~{a}~{R})-6-hydroxy-7-[(1~{S})-2-hydroxy-1-methyl-ethyl]-1,1,4~{a}-trimethyl-3,4,10,10~{a}-tetrahydrophenanthrene-2,9-dione",Azadirachta indica,330.42,3.34,2,4,74.6,2,TRUE,FALSE,,0.872,0,0.253,0.4,0.753,TRUE,
+OP0020,578-74-5,Azadirachta indica,432.38,0.05,6,10,170,4,FALSE,FALSE,,0.331,1,0.114,0.613,0.514,TRUE,
+OP0021,quercetin,Azadirachta indica,302.24,1.99,5,7,131.4,1,TRUE,TRUE,catechol_A(92),0.434,0,0.021,0.607,0.485,TRUE,
+OP0022,nimbidiol,Azadirachta indica,274.36,3.77,2,3,57.5,0,TRUE,TRUE,catechol_A(92),0.708,0,0.029,0.307,0.682,TRUE,
+OP0023,Methyl propyl trisulfide,Azadirachta indica,154.32,3.06,0,0,0,4,TRUE,FALSE,,0.451,0,0.274,0.21,0.635,TRUE,
+OP0024,myricetin,Azadirachta indica,318.24,1.69,6,8,151.6,1,FALSE,TRUE,catechol_A(92),0.371,1,0.018,0.62,0.457,FALSE,ranked_below_cap
+OP0025,METHYL STEARATE,Azadirachta indica,298.51,6.42,0,2,26.3,16,FALSE,FALSE,,0.243,1,0.261,0.093,0.591,TRUE,
+OP0026,"(6~{Z},9~{Z})-12-[(1~{S},2~{S})-2-pentylcyclopropyl]dodeca-6,9-dienoic acid",Azadirachta indica,306.49,6.13,1,2,37.3,14,FALSE,FALSE,,0.309,1,0.092,0.233,0.626,TRUE,
+OP0027,,Azadirachta indica,300.44,4.93,0,2,26.3,2,TRUE,FALSE,,0.724,0,0.711,0.26,0.598,FALSE,herg_risk_high
+OP0028,METHYL LINOLENATE,Azadirachta indica,292.46,5.75,0,2,26.3,13,FALSE,FALSE,,0.245,1,0.14,0.203,0.595,TRUE,
+OP0029,,Azadirachta indica,292.46,5.75,0,2,26.3,13,FALSE,FALSE,,0.245,1,0.14,0.203,0.595,TRUE,
+OP0030,"(6S,10R)-6,10,14-trimethylpentadecan-2-one",Azadirachta indica,268.48,6.01,0,1,17.1,12,FALSE,FALSE,,0.423,1,0.259,0.127,0.653,TRUE,
+OP0031,"2',3'-Dehydrosalannol",Azadirachta indica,554.68,4.72,1,8,104.4,5,TRUE,FALSE,,0.317,1,0.219,0.633,0.471,FALSE,ranked_below_cap
+OP0032,DESMETHYLLIMOCIN B,Azadirachta indica,470.61,4.01,1,6,89.9,2,TRUE,FALSE,,0.614,0,0.34,0.42,0.618,TRUE,
+OP0033,120092-49-1,Azadirachta indica,314.38,3.54,1,4,71.4,1,TRUE,FALSE,,0.86,0,0.072,0.65,0.727,TRUE,
+OP0034,Deacetylnimbin,Azadirachta indica,498.57,3.35,1,8,112.3,4,TRUE,FALSE,,0.497,0,0.242,0.637,0.535,TRUE,
+OP0035,"[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{S},14~{R},17~{R})-17-(3-furyl)-4,4,8,10,13-pentamethyl-3,15-dioxo-6,7,9,11,12,14,16,17-octahydro-5~{H}-cyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,452.59,5.5,0,5,73.6,2,TRUE,FALSE,,0.554,1,0.673,0.383,0.505,TRUE,
+OP0036,Deacetylsalannin,Azadirachta indica,554.68,4.72,1,8,104.4,5,TRUE,FALSE,,0.317,1,0.358,0.613,0.436,FALSE,ranked_below_cap
+OP0037,"[(1R,2S,4R,6R,9R,10R,11R,12S,14R,15R,18R)-6-(furan-3-yl)-14-hydroxy-10-(2-methoxy-2-oxoethyl)-7,9,11,15-tetramethyl-3,17-dioxapentacyclo[9.6.1.02,9.04,8.015,18]octadec-7-en-12-yl] (Z)-2-methylbut-2-enoate",Azadirachta indica,554.68,4.72,1,8,104.4,5,TRUE,FALSE,,0.317,1,0.358,0.613,0.436,FALSE,ranked_below_cap
+OP0038,"[(1~{R},2~{S},4~{R},6~{R},9~{R},10~{R},11~{R},12~{S},14~{S},15~{R},18~{R})-6-(3-furyl)-14-hydroxy-10-(2-methoxy-2-oxo-ethyl)-7,9,11,15-tetramethyl-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadec-7-en-12-yl] (~{E})-2-methylbut-2-enoate",Azadirachta indica,554.68,4.72,1,8,104.4,5,TRUE,FALSE,,0.317,1,0.358,0.613,0.436,FALSE,ranked_below_cap
+OP0039,,Azadirachta indica,554.68,4.72,1,8,104.4,5,TRUE,FALSE,,0.317,1,0.358,0.613,0.436,FALSE,ranked_below_cap
+OP0040,,Azadirachta indica,470.65,5.49,0,5,61.8,3,TRUE,FALSE,,0.403,1,0.215,0.443,0.564,TRUE,
+OP0041,SALANNOLIDE,Azadirachta indica,628.72,3.33,1,11,143.9,6,FALSE,FALSE,,0.2,2,0.375,0.603,0.387,FALSE,lipinski_over_1
+OP0042,"[(1~{R},2~{S},4~{R},6~{R},9~{R},10~{R},11~{R},12~{S},14~{R},15~{R},18~{R})-14-acetoxy-6-[(2~{S})-2-hydroxy-5-oxo-2~{H}-furan-4-yl]-10-(2-methoxy-2-oxo-ethyl)-7,9,11,15-tetramethyl-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadec-7-en-12-yl] (~{E})-2-methylbut-2-enoate",Azadirachta indica,628.72,3.33,1,11,143.9,6,FALSE,FALSE,,0.2,2,0.375,0.603,0.387,FALSE,lipinski_over_1
+OP0043,"[(5~{R},7~{R},8~{R},9~{R},10~{R},12~{S},13~{S},14~{R},17~{S})-12-hydroxy-17-[(2~{S},3~{S},5~{R})-2-hydroxy-5-(hydroxymethyl)tetrahydrofuran-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,14,15,16,17-decahydrocyclopenta[a]phenanthren-7-yl] (~{E})-3-(4-hydroxy-3-methoxy-phenyl)prop-2-enoate",Azadirachta indica,638.8,4.65,4,9,142.8,6,FALSE,FALSE,,0.259,1,0.768,0.49,0.326,FALSE,herg_risk_high
+OP0044,116425-93-5,Azadirachta indica,286.37,3.55,1,3,54.4,0,TRUE,FALSE,,0.793,0,0.194,0.49,0.712,TRUE,
+OP0045,"10-hydroxy-7-(4-hydroxy-4-methyl-pent-2-enyl)-2,9,13,17,17-pentamethyl-5-oxapentacyclo[10.8.0.0^{2,9}.0^{4,8}.0^{13,18}]icos-1(20)-ene-6,16-dione",Azadirachta indica,484.68,5,2,5,83.8,3,TRUE,FALSE,,0.435,1,0.041,0.493,0.614,TRUE,
+OP0046,(+)-gamma-bulgarene,Azadirachta indica,204.36,4.58,0,0,0,1,TRUE,FALSE,,0.548,0,0.247,0.25,0.67,TRUE,
+OP0047,alpha-Gurjunene,Azadirachta indica,204.36,4.42,0,0,0,0,TRUE,FALSE,,0.513,0,0.223,0.29,0.651,TRUE,
+OP0048,"(1~{S},4~{a}~{R},4~{b}~{S},7~{S},10~{a}~{R})-1,4~{a},7-trimethyl-7-(2-sulfooxyethyl)-3,4,4~{b},5,6,8,10,10~{a}-octahydro-2~{H}-phenanthrene-1-carboxylic acid",Azadirachta indica,400.54,4.23,2,6,100.9,5,TRUE,FALSE,,0.529,0,0.255,0.463,0.596,TRUE,
+OP0049,Gallic acid,Azadirachta indica,170.12,0.5,4,5,98,1,TRUE,TRUE,catechol_A(92),0.46,0,0.015,0.553,0.514,TRUE,
+OP0050,"(2~{S})-5,7-dihydroxy-2-[3-(3-hydroxy-3-methyl-butyl)-4-methoxy-phenyl]-8-[(1~{E})-3-methylbuta-1,3-dienyl]chroman-4-one",Azadirachta indica,438.52,5.11,3,6,96.2,7,TRUE,FALSE,,0.52,1,0.34,0.57,0.535,TRUE,
+OP0051,Myricetin 3-rutinoside,Azadirachta indica,626.52,-1.98,11,17,289.7,6,FALSE,TRUE,catechol_A(92),0.132,3,0.099,0.59,0.346,FALSE,lipinski_over_1
+OP0052,"[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{S},17~{S})-17-[(1~{S},4~{S},6~{R})-1-(1-hydroxy-1-methyl-ethyl)-2,7-dioxabicyclo[4.1.0]heptan-4-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,526.71,5.38,1,6,85.4,3,TRUE,FALSE,,0.302,2,0.173,0.42,0.543,FALSE,lipinski_over_1
+OP0053,NONACOSANE,Azadirachta indica,408.8,11.56,0,0,0,26,FALSE,FALSE,,0.125,1,0.447,0.08,0.492,TRUE,
+OP0054,"[(1~{R},2~{R},5~{S},6~{S},10~{R},11~{S},12~{R},15~{R},16~{R},18~{S},19~{R})-16-acetoxy-11-hydroxy-1,5,10,15-tetramethyl-6-[(3~{S})-tetrahydrofuran-3-yl]-13-oxapentacyclo[10.6.1.0^{2,10}.0^{5,9}.0^{15,19}]nonadec-8-en-18-yl] 3-methylbut-2-enoate",Azadirachta indica,556.74,5.01,1,7,91.3,4,TRUE,FALSE,,0.296,2,0.036,0.443,0.575,FALSE,lipinski_over_1
+OP0055,"[(1~{S},2~{S},4~{R},5~{S},6~{S},10~{R},11~{R},14~{S},15~{S},18~{S},20~{R})-4,15-diacetoxy-6-(3-furyl)-11,18-dihydroxy-5,10,14-trimethyl-3-oxo-16-oxapentacyclo[12.3.3.0^{1,13}.0^{2,10}.0^{5,9}]icos-8-en-20-yl] acetate",Azadirachta indica,600.66,2.83,2,11,158.8,4,FALSE,FALSE,,0.297,2,0.138,0.617,0.492,FALSE,lipinski_over_1
+OP0056,"[(1~{S},2~{R},4~{R},5~{S},6~{S},10~{R},11~{R},13~{R},14~{R},15~{S},18~{S},20~{R})-4,15-diacetoxy-6-(3-furyl)-11,18-dihydroxy-5,10,14-trimethyl-3-oxo-16-oxapentacyclo[12.3.3.0^{1,13}.0^{2,10}.0^{5,9}]icos-8-en-20-yl] acetate",Azadirachta indica,600.66,2.83,2,11,158.8,4,FALSE,FALSE,,0.297,2,0.138,0.617,0.492,FALSE,lipinski_over_1
+OP0057,azadirachtin H,Azadirachta indica,662.69,0.25,3,14,189,5,FALSE,FALSE,,0.157,2,0.117,0.583,0.453,FALSE,lipinski_over_1
+OP0058,"methyl (1~{S},4~{S},5~{R},6~{S},7~{S},8~{R},11~{S},12~{R},14~{S},15~{R})-12-acetoxy-4,7-dihydroxy-6-[(1~{S},2~{R},6~{S},8~{S},9~{R},11~{S})-2-hydroxy-11-methyl-5,7,10-trioxatetracyclo[6.3.1.0^{2,6}.0^{9,11}]dodec-3-en-9-yl]-6-methyl-14-[(~{E})-2-methylbut-2-enoyl]oxy-3,9-dioxatetracyclo[6.6.1.0^{1,5}.0^{11,15}]pentadecane-11-carboxylate",Azadirachta indica,662.69,0.25,3,14,189,5,FALSE,FALSE,,0.157,2,0.117,0.583,0.453,FALSE,lipinski_over_1
+OP0059,134788-15-1,Azadirachta indica,662.69,0.25,3,14,189,5,FALSE,FALSE,,0.157,2,0.117,0.583,0.453,FALSE,lipinski_over_1
+OP0060,azadirachtin H,Azadirachta indica,662.69,0.25,3,14,189,5,FALSE,FALSE,,0.157,2,0.117,0.583,0.453,FALSE,lipinski_over_1
+OP0061,"methyl (1~{S},4~{R},5~{R},6~{R},7~{R},8~{R},11~{R},12~{S},14~{R},15~{S})-12-acetoxy-4,7-dihydroxy-6-[(1~{S},2~{S},6~{S},8~{S},9~{R},11~{S})-2-hydroxy-11-methyl-5,7,10-trioxatetracyclo[6.3.1.0^{2,6}.0^{9,11}]dodec-3-en-9-yl]-6-methyl-14-[(~{E})-2-methylbut-2-enoyl]oxy-3,9-dioxatetracyclo[6.6.1.0^{1,5}.0^{11,15}]pentadecane-11-carboxylate",Azadirachta indica,662.69,0.25,3,14,189,5,FALSE,FALSE,,0.157,2,0.117,0.583,0.453,FALSE,lipinski_over_1
+OP0062,Elasticamide,Azadirachta indica,684.14,10.85,5,6,110,39,FALSE,FALSE,,0.041,2,0.196,0.18,0.504,FALSE,lipinski_over_1
+OP0063,"7-acetyl-16,17-dehydro-16-hydroxyneotrichilenone",Azadirachta indica,466.57,5.29,1,6,93.8,2,TRUE,FALSE,,0.595,1,0.159,0.483,0.645,TRUE,
+OP0064,Chisocheton compound F,Azadirachta indica,454.61,5.04,0,5,69.7,2,TRUE,FALSE,,0.432,1,0.048,0.507,0.606,TRUE,
+OP0065,Nimbin,Azadirachta indica,540.61,3.92,0,9,118.3,5,TRUE,FALSE,,0.311,1,0.167,0.667,0.474,FALSE,ranked_below_cap
+OP0066,P-CYMENE,Azadirachta indica,134.22,3.12,0,0,0,1,TRUE,FALSE,,0.553,0,0.193,0.267,0.683,TRUE,
+OP0067,,Azadirachta indica,498.66,7.53,0,4,56.5,3,TRUE,FALSE,,0.324,1,0.623,0.497,0.394,FALSE,ranked_below_cap
+OP0068,gedunin,Azadirachta indica,482.57,4.56,0,7,95.3,2,TRUE,FALSE,,0.45,0,0.209,0.407,0.595,TRUE,
+OP0069,"[(1~{S},2~{R},4~{S},7~{S},8~{S},11~{R},12~{R},17~{S},19~{R})-7-(3-furyl)-1,8,12,16,16-pentamethyl-5,15-dioxo-3,6-dioxapentacyclo[9.8.0.0^{2,4}.0^{2,8}.0^{12,17}]nonadec-13-en-19-yl] acetate",Azadirachta indica,482.57,4.56,0,7,95.3,2,TRUE,FALSE,,0.45,0,0.209,0.407,0.595,TRUE,
+OP0070,DESFURANOAZADIRADIONE,Azadirachta indica,384.52,4.43,0,4,60.4,1,TRUE,FALSE,,0.628,0,0.21,0.353,0.682,TRUE,
+OP0071,,Azadirachta indica,278.44,5.66,1,2,37.3,13,FALSE,FALSE,,0.348,1,0.044,0.253,0.65,TRUE,
+OP0072,"[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{S},17~{R})-17-[(2~{S})-2-methoxy-5-oxo-2~{H}-furan-4-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,482.62,4.93,0,6,78.9,3,TRUE,FALSE,,0.419,0,0.302,0.49,0.53,TRUE,
+OP0073,,Azadirachta indica,482.62,4.93,0,6,78.9,3,TRUE,FALSE,,0.419,0,0.302,0.49,0.53,TRUE,
+OP0074,"(3~{R},6~{R})-3-isopropyl-6-[(4-methoxyphenyl)methyl]-4-methyl-morpholine-2,5-dione",Azadirachta indica,291.35,1.65,0,5,55.8,4,TRUE,FALSE,,0.792,0,0.213,0.577,0.68,TRUE,
+OP0075,D-Citronellol,Azadirachta indica,156.27,2.75,1,1,20.2,5,TRUE,FALSE,,0.607,0,0.069,0.077,0.799,TRUE,
+OP0076,5-Methylmellein,Azadirachta indica,192.21,1.8,1,3,46.5,0,TRUE,FALSE,,0.637,0,0.157,0.603,0.627,TRUE,
+OP0077,"(1~{a}~{R},4~{S},4~{a}~{S},7~{S},7~{a}~{S},7~{b}~{R})-1,1,4,7-tetramethyl-2,3,4,5,6,7,7~{a},7~{b}-octahydro-1~{a}~{H}-cyclopropa[h]azulen-4~{a}-ol",Azadirachta indica,222.37,3.47,1,1,20.2,0,TRUE,FALSE,,0.665,0,0.049,0.163,0.802,TRUE,
+OP0078,"(5~{R},9~{R},10~{R},13~{S},14~{S},17~{S})-17-[(1~{R})-1-[(2~{R},3~{S},4~{S})-3,4-dihydroxy-5,5-dimethyl-tetrahydrofuran-2-yl]ethyl]-4,4,10,13,14-pentamethyl-1,2,5,6,9,11,12,15,16,17-decahydrocyclopenta[a]phenanthren-3-one",Azadirachta indica,472.71,5.7,2,4,66.8,2,TRUE,FALSE,,0.506,1,0.196,0.387,0.628,TRUE,
+OP0079,"(5~{R},9~{R},10~{R},13~{S},14~{S},17~{S})-17-[(1~{R})-1-[(2~{S},3~{R},4~{S})-3,4-dihydroxy-5,5-dimethyl-tetrahydrofuran-2-yl]ethyl]-4,4,10,13,14-pentamethyl-1,2,5,6,9,11,12,15,16,17-decahydrocyclopenta[a]phenanthren-3-one",Azadirachta indica,472.71,5.7,2,4,66.8,2,TRUE,FALSE,,0.506,1,0.196,0.387,0.628,TRUE,
+OP0080,ODORATONE,Azadirachta indica,472.71,5.7,2,4,66.8,2,TRUE,FALSE,,0.506,1,0.196,0.387,0.628,TRUE,
+OP0081,1-Hexacosanol,Azadirachta indica,382.72,9.36,1,1,20.2,24,FALSE,FALSE,,0.165,1,0.288,0.103,0.549,TRUE,
+OP0082,"(3R)-8-hydroxy-3-methyl-1-oxo-3,4-dihydroisochromene-5-carboxylic acid",Azadirachta indica,222.2,1.19,2,5,83.8,1,TRUE,FALSE,,0.697,0,0.035,0.543,0.705,TRUE,
+OP0083,phenol,Azadirachta indica,94.11,1.39,1,1,20.2,0,TRUE,FALSE,,0.515,0,0.18,0.187,0.696,TRUE,
+OP0084,7-Deacetyl-7-benzoylepoxyazadiradione,Azadirachta indica,528.65,5.92,0,6,86.1,3,TRUE,FALSE,,0.363,2,0.656,0.487,0.403,FALSE,lipinski_over_1
+OP0085,"methyl (1~{S},2~{R},3~{R},4~{R},8~{R},9~{S},10~{R},15~{R})-2-hydroxy-9-(2-methoxy-2-oxo-ethyl)-4,8,10,12-tetramethyl-7,13-dioxo-16-oxatetracyclo[8.6.0.0^{3,8}.0^{11,15}]hexadeca-5,11-diene-4-carboxylate",Azadirachta indica,446.5,1.54,1,8,116.2,3,TRUE,FALSE,,0.649,0,0.107,0.57,0.657,TRUE,
+OP0086,"[(1~{S},4~{S},5~{R},6~{S},7~{S},8~{R},11~{S},12~{R},14~{R},15~{S})-12-acetoxy-4,7-dihydroxy-11-(hydroxymethyl)-6-[(1~{S},2~{R},6~{S},8~{S},9~{R},11~{S})-2-hydroxy-11-methyl-5,7,10-trioxatetracyclo[6.3.1.0^{2,6}.0^{9,11}]dodec-3-en-9-yl]-6-methyl-3,9-dioxatetracyclo[6.6.1.0^{1,5}.0^{11,15}]pentadecan-14-yl] (~{E})-2-methylbut-2-enoate",Azadirachta indica,634.68,0.07,4,13,183,5,FALSE,FALSE,,0.181,2,0.116,0.477,0.495,FALSE,lipinski_over_1
+OP0087,"(1S,4S,5R,6S,7S,8R,11S,12R,14S,15R)-12-(acetyloxy)-4,7-dihydroxy-6-[(1S,2S,6S,8S,9R,11S)-2-hydroxy-11-methyl-5,7,10-trioxatetracyclo[6.3.1.0^{2,6}.0^{9,11}]dodec-3-en-9-yl]-11-(hydroxymethyl)-6-methyl-3,9-dioxatetracyclo[6.6.1.0^{1,5}.0^{11,15}]pentadecan-14-yl (2E)-2-methylbut-2-enoate",Azadirachta indica,634.68,0.07,4,13,183,5,FALSE,FALSE,,0.181,2,0.116,0.477,0.495,FALSE,lipinski_over_1
+OP0088,"(5~{S},9~{R},10~{S},13~{S},14~{S},16~{S},17~{S})-17-[(1~{S})-1,5-dimethylhex-4-enyl]-4,4,10,13,14-pentamethyl-2,3,5,6,9,11,12,15,16,17-decahydro-1~{H}-cyclopenta[a]phenanthren-16-ol",Azadirachta indica,426.73,8.34,1,1,20.2,4,TRUE,FALSE,,0.448,1,0.057,0.157,0.715,TRUE,
+OP0089,"(1~{R},4~{S},5~{S},7~{S})-4,10,11,11-tetramethyltricyclo[5.3.1.0^{1,5}]undec-9-ene",Azadirachta indica,204.36,4.42,0,0,0,0,TRUE,FALSE,,0.513,0,0.243,0.273,0.65,TRUE,
+OP0090,2-(4-Hydroxyphenyl)ethanol,Azadirachta indica,138.17,0.93,2,2,40.5,2,TRUE,FALSE,,0.638,0,0.034,0.113,0.811,TRUE,
+OP0091,TERPINOLENE,Azadirachta indica,136.24,3.45,0,0,0,0,TRUE,FALSE,,0.447,0,0.107,0.313,0.653,TRUE,
+OP0092,"methyl 2-[(1~{S},2~{R},8~{R},9~{S},10~{R},13~{R})-13-(3-furyl)-2-hydroxy-4,8,10,12-tetramethyl-7-oxo-16-oxatetracyclo[8.6.0.0^{3,8}.0^{11,15}]hexadeca-4,11-dien-9-yl]acetate",Azadirachta indica,440.54,3.95,1,6,86,3,TRUE,FALSE,,0.566,0,0.261,0.737,0.527,FALSE,hepatotox_risk_high
+OP0093,"methyl 2-[(1~{S},2~{R},3~{R},8~{R},9~{S},10~{R},13~{R},15~{R})-13-(3-furyl)-2-hydroxy-4,8,10,12-tetramethyl-7-oxo-16-oxatetracyclo[8.6.0.0^{3,8}.0^{11,15}]hexadeca-4,11-dien-9-yl]acetate",Azadirachta indica,440.54,3.95,1,6,86,3,TRUE,FALSE,,0.566,0,0.261,0.737,0.527,FALSE,hepatotox_risk_high
+OP0094,"[(5~{S},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S},17~{R})-17-(3-furyl)-6-hydroxy-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,452.59,5.21,1,5,76.7,2,TRUE,FALSE,,0.492,1,0.242,0.527,0.566,TRUE,
+OP0095,NIMONOL,Azadirachta indica,452.59,5.21,1,5,76.7,2,TRUE,FALSE,,0.492,1,0.242,0.527,0.566,TRUE,
+OP0096,Nimocinol,Azadirachta indica,452.59,5.21,1,5,76.7,2,TRUE,FALSE,,0.492,1,0.242,0.527,0.566,TRUE,
+OP0097,,Azadirachta indica,452.59,5.21,1,5,76.7,2,TRUE,FALSE,,0.492,1,0.242,0.527,0.566,TRUE,
+OP0098,,Azadirachta indica,300.44,4.93,0,2,26.3,2,TRUE,FALSE,,0.774,0,0.199,0.32,0.754,TRUE,
+OP0099,(-)-Epigallocatechin,Azadirachta indica,306.27,1.25,6,7,130.6,1,TRUE,TRUE,catechol_A(92),0.437,1,0.426,0.417,0.422,FALSE,ranked_below_cap
+OP0100,(+)-Gallocatechin,Azadirachta indica,306.27,1.25,6,7,130.6,1,TRUE,TRUE,catechol_A(92),0.437,1,0.426,0.417,0.422,FALSE,ranked_below_cap
+OP0101,"(5~{R},10~{S},13~{S},14~{S},17~{S})-17-[(1~{S})-1,5-dimethylhex-4-enyl]-4,4,10,13,14-pentamethyl-1,2,3,5,6,7,11,12,15,17-decahydrocyclopenta[a]phenanthren-16-one",Azadirachta indica,424.71,8.69,0,1,17.1,4,TRUE,FALSE,,0.412,1,0.371,0.263,0.575,TRUE,
+OP0102,,Azadirachta indica,424.71,8.69,0,1,17.1,4,TRUE,FALSE,,0.412,1,0.371,0.263,0.575,TRUE,
+OP0103,multiplolide A,Azadirachta indica,214.22,-0.63,2,5,79.3,0,TRUE,FALSE,,0.319,0,0.007,0.56,0.558,TRUE,
+OP0104,"(1~{S},4~{R},6~{R},7~{R},8~{E},10~{S})-6,7-dihydroxy-4-methyl-3,11-dioxabicyclo[8.1.0]undec-8-en-2-one",Azadirachta indica,214.22,-0.63,2,5,79.3,0,TRUE,FALSE,,0.319,0,0.007,0.56,0.558,TRUE,
+OP0105,(+)-alpha-bulgarene,Azadirachta indica,204.36,4.58,0,0,0,1,TRUE,FALSE,,0.548,0,0.452,0.283,0.599,TRUE,
+OP0106,"[(1~{S},2~{R},4~{R},6~{S},7~{S},10~{R},11~{R},16~{S},17~{R},18~{S})-6-(3-furyl)-17-hydroxy-1,7,11,15,15-pentamethyl-14-oxo-3-oxapentacyclo[8.8.0.0^{2,4}.0^{2,7}.0^{11,16}]octadec-12-en-18-yl] acetate",Azadirachta indica,468.59,4.42,1,6,89.3,2,TRUE,FALSE,,0.511,0,0.274,0.523,0.565,TRUE,
+OP0107,EPOXY NIMONOL,Azadirachta indica,468.59,4.42,1,6,89.3,2,TRUE,FALSE,,0.511,0,0.274,0.523,0.565,TRUE,
+OP0108,"(3R)-5,8-dihydroxy-3-methyl-3,4-dihydroisochromen-1-one",Azadirachta indica,194.19,1.2,2,4,66.8,0,TRUE,FALSE,,0.481,0,0.09,0.58,0.591,TRUE,
+OP0109,"15-[5-(1,2-dihydroxy-2-methyl-propyl)-2-methoxy-tetrahydrofuran-3-yl]-6,6,11,14,18-pentamethyl-2-oxapentacyclo[9.7.0.0^{1,3}.0^{5,10}.0^{14,18}]octadec-5(10)-en-7-one",Azadirachta indica,516.72,4.95,2,6,88.5,4,TRUE,FALSE,,0.406,1,0.143,0.387,0.604,TRUE,
+OP0110,"[(1~{S},2~{R},4~{S},6~{S},7~{S},10~{R},11~{R},12~{S},16~{R},18~{R})-6-(3-furyl)-12-methoxy-1,7,11,15,15-pentamethyl-5,14-dioxo-3-oxapentacyclo[8.8.0.0^{2,4}.0^{2,7}.0^{11,16}]octadecan-18-yl] acetate",Azadirachta indica,498.62,4.48,0,7,95.3,3,TRUE,FALSE,,0.448,0,0.235,0.557,0.542,TRUE,
+OP0111,(+)-Germacrene A,Azadirachta indica,204.36,5.04,0,0,0,1,TRUE,FALSE,,0.525,1,0.213,0.293,0.658,TRUE,
+OP0112,1-Docosene,Azadirachta indica,308.59,8.6,0,0,0,19,FALSE,FALSE,,0.165,1,0.583,0.12,0.455,FALSE,ranked_below_cap
+OP0113,Cerevisterol,Azadirachta indica,430.67,5.5,3,3,60.7,4,TRUE,FALSE,,0.516,1,0.784,0.253,0.495,FALSE,herg_risk_high
+OP0114,6-Acetylnimbandiol,Azadirachta indica,498.57,3.49,1,8,112.3,4,TRUE,FALSE,,0.496,0,0.112,0.663,0.566,TRUE,
+OP0115,"methyl 2-[(1~{S},2~{R},4~{R},8~{R},9~{S},10~{R},13~{R})-2-acetoxy-13-(3-furyl)-4-hydroxy-4,8,10,12-tetramethyl-7-oxo-16-oxatetracyclo[8.6.0.0^{3,8}.0^{11,15}]hexadeca-5,11-dien-9-yl]acetate",Azadirachta indica,498.57,3.49,1,8,112.3,4,TRUE,FALSE,,0.496,0,0.112,0.663,0.566,TRUE,
+OP0116,,Azadirachta indica,498.57,3.49,1,8,112.3,4,TRUE,FALSE,,0.496,0,0.112,0.663,0.566,TRUE,
+OP0117,quercitrin,Azadirachta indica,448.38,0.49,7,11,190.3,3,FALSE,TRUE,catechol_A(92),0.276,2,0.03,0.613,0.417,FALSE,lipinski_over_1
+OP0118,"[(1R,11R,16R)-17,19-diacetyloxy-8-(furan-3-yl)-4-hydroxy-1,9,11,16-tetramethyl-5,14-dioxapentacyclo[11.6.1.02,11.06,10.016,20]icos-9-en-12-yl] (E)-3-phenylprop-2-enoate",Azadirachta indica,674.79,5.75,1,10,130.7,6,TRUE,FALSE,,0.175,2,0.383,0.653,0.359,FALSE,lipinski_over_1
+OP0119,Euchrestaflavanone A,Azadirachta indica,408.49,5.53,3,5,87,5,TRUE,FALSE,,0.567,1,0.337,0.583,0.551,TRUE,
+OP0120,"[(5~{R},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S},17~{R})-6-hydroxy-17-[(2~{R})-2-hydroxy-5-oxo-2~{H}-furan-4-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,484.59,3.25,2,7,110.1,2,TRUE,FALSE,,0.457,0,0.391,0.473,0.524,TRUE,
+OP0121,cholesterol,Azadirachta indica,386.66,7.39,1,1,20.2,5,TRUE,FALSE,,0.488,1,0.864,0.217,0.471,FALSE,herg_risk_high
+OP0122,"(2~{S},4~{a}~{S},10~{a}~{S})-2,6-dihydroxy-7-methoxy-1,1,4~{a}-trimethyl-3,4,10,10~{a}-tetrahydro-2~{H}-phenanthren-9-one",Azadirachta indica,304.39,3.04,2,4,66.8,1,TRUE,FALSE,,0.837,0,0.303,0.33,0.745,TRUE,
+OP0123,,Azadirachta indica,304.39,3.04,2,4,66.8,1,TRUE,FALSE,,0.837,0,0.303,0.33,0.745,TRUE,
+OP0124,24-Methylenelophenol,Azadirachta indica,412.7,7.8,1,1,20.2,5,TRUE,FALSE,,0.457,1,0.27,0.34,0.6,TRUE,
+OP0125,"[(5~{R},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S},17~{R})-6-hydroxy-17-[(2~{S})-2-methoxy-5-oxo-2~{H}-furan-4-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] 3-methylbut-2-enoate",Azadirachta indica,538.68,4.85,1,7,99.1,4,TRUE,FALSE,,0.31,1,0.204,0.553,0.497,TRUE,
+OP0126,,Azadirachta indica,596.72,5.29,0,9,110.5,6,TRUE,FALSE,,0.187,2,0.372,0.647,0.369,FALSE,lipinski_over_1
+OP0127,"[(1R,2S,4R,6R,9R,10S,11R,12S,14R,15R,18R)-14-Acetyloxy-6-(furan-3-yl)-10-(2-methoxy-2-oxoethyl)-7,9,11,15-tetramethyl-3,17-dioxapentacyclo[9.6.1.02,9.04,8.015,18]octadec-7-en-12-yl] (E)-2-methylbut-2-enoate",Azadirachta indica,596.72,5.29,0,9,110.5,6,TRUE,FALSE,,0.187,2,0.372,0.647,0.369,FALSE,lipinski_over_1
+OP0128,SALANNIN,Azadirachta indica,596.72,5.29,0,9,110.5,6,TRUE,FALSE,,0.187,2,0.372,0.647,0.369,FALSE,lipinski_over_1
+OP0129,Salannin,Azadirachta indica,596.72,5.29,0,9,110.5,6,TRUE,FALSE,,0.187,2,0.372,0.647,0.369,FALSE,lipinski_over_1
+OP0130,"[(1~{R},2~{S},4~{R},6~{R},9~{R},10~{R},11~{R},12~{S},14~{S},15~{R},18~{R})-14-acetoxy-6-(3-furyl)-10-(2-methoxy-2-oxo-ethyl)-7,9,11,15-tetramethyl-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadec-7-en-12-yl] (~{E})-2-methylbut-2-enoate",Azadirachta indica,596.72,5.29,0,9,110.5,6,TRUE,FALSE,,0.187,2,0.372,0.647,0.369,FALSE,lipinski_over_1
+OP0131,,Azadirachta indica,596.72,5.29,0,9,110.5,6,TRUE,FALSE,,0.187,2,0.372,0.647,0.369,FALSE,lipinski_over_1
+OP0132,Isoquercetin,Azadirachta indica,464.38,-0.54,8,12,210.5,4,FALSE,TRUE,catechol_A(92),0.229,2,0.055,0.557,0.408,FALSE,lipinski_over_1
+OP0133,Isoquercitrin,Azadirachta indica,464.38,-0.54,8,12,210.5,4,FALSE,TRUE,catechol_A(92),0.229,2,0.055,0.557,0.408,FALSE,lipinski_over_1
+OP0134,NEEMFRUITIN B,Azadirachta indica,526.71,5.38,1,6,85.4,3,TRUE,FALSE,,0.302,2,0.02,0.5,0.565,FALSE,lipinski_over_1
+OP0135,squalene,Azadirachta indica,410.73,10.6,0,0,0,15,FALSE,FALSE,,0.186,1,0.082,0.053,0.634,TRUE,
+OP0136,scopoletin,Azadirachta indica,192.17,1.51,1,4,59.7,1,TRUE,FALSE,,0.695,0,0.112,0.6,0.664,TRUE,
+OP0137,"[(2~{R},5~{R})-5-acetoxy-4-[(5~{S},7~{R},8~{R},9~{R},10~{R},13~{S},17~{R})-7-hydroxy-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-17-yl]-2,5-dihydrofuran-2-yl] acetate",Azadirachta indica,512.64,4.64,1,7,99.1,3,TRUE,FALSE,,0.434,1,0.32,0.43,0.549,TRUE,
+OP0138,"[5-acetoxy-4-[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{S},17~{R})-7-hydroxy-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-17-yl]-2,5-dihydrofuran-2-yl] acetate",Azadirachta indica,512.64,4.64,1,7,99.1,3,TRUE,FALSE,,0.434,1,0.32,0.43,0.549,TRUE,
+OP0139,Astragalin,Azadirachta indica,448.38,-0.24,7,11,190.3,4,FALSE,FALSE,,0.279,2,0.045,0.59,0.521,FALSE,lipinski_over_1
+OP0140,Epoxyazadiradione,Azadirachta indica,466.57,4.63,0,6,86.1,2,TRUE,FALSE,,0.467,0,0.263,0.403,0.587,TRUE,
+OP0141,"[(1~{S},2~{R},4~{S},6~{S},7~{S},10~{R},11~{R},16~{S},18~{R})-6-(3-furyl)-1,7,11,15,15-pentamethyl-5,14-dioxo-3-oxapentacyclo[8.8.0.0^{2,4}.0^{2,7}.0^{11,16}]octadec-12-en-18-yl] acetate",Azadirachta indica,466.57,4.63,0,6,86.1,2,TRUE,FALSE,,0.467,0,0.263,0.403,0.587,TRUE,
+OP0142,1195-31-9,Azadirachta indica,138.25,3.39,0,0,0,1,TRUE,FALSE,,0.487,0,0.284,0.267,0.63,TRUE,
+OP0143,"dimethyl (1~{S},4~{S},5~{R},6~{S},7~{R},8~{S},10~{R},12~{S},14~{S},15~{S},16~{R},18~{S},19~{R},22~{S},23~{R},25~{S},26~{R})-7,12,14,25-tetrahydroxy-6,16-dimethyl-23-[(~{E})-2-methylbut-2-enoyl]oxy-3,9,11,17,20-pentaoxaoctacyclo[17.6.1.1^{8,15}.0^{1,5}.0^{6,18}.0^{7,16}.0^{10,14}.0^{22,26}]heptacosane-4,22-dicarboxylate",Azadirachta indica,680.7,-0.9,4,15,206,4,FALSE,FALSE,,0.161,2,0.211,0.383,0.486,FALSE,lipinski_over_1
+OP0144,"dimethyl (1~{S},4~{S},5~{R},6~{S},7~{R},8~{S},10~{S},12~{S},14~{S},15~{S},16~{R},18~{S},19~{R},22~{S},23~{R},25~{S},26~{R})-7,12,14,25-tetrahydroxy-6,16-dimethyl-23-[(~{E})-2-methylbut-2-enoyl]oxy-3,9,11,17,20-pentaoxaoctacyclo[17.6.1.1^{8,15}.0^{1,5}.0^{6,18}.0^{7,16}.0^{10,14}.0^{22,26}]heptacosane-4,22-dicarboxylate",Azadirachta indica,680.7,-0.9,4,15,206,4,FALSE,FALSE,,0.161,2,0.211,0.383,0.486,FALSE,lipinski_over_1
+OP0145,"[(5~{R},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S},17~{R})-6-hydroxy-17-[(2~{S})-2-hydroxy-5-oxo-2~{H}-furan-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,484.59,3.25,2,7,110.1,2,TRUE,FALSE,,0.457,0,0.181,0.483,0.583,TRUE,
+OP0146,"[(5~{S},6~{R},7~{S},8~{R},9~{S},10~{R},13~{S},17~{R})-6-hydroxy-17-[(2~{S})-2-hydroxy-5-oxo-2~{H}-furan-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,484.59,3.25,2,7,110.1,2,TRUE,FALSE,,0.457,0,0.181,0.483,0.583,TRUE,
+OP0147,alpha-Cubebene,Azadirachta indica,204.36,4.27,0,0,0,1,TRUE,FALSE,,0.559,0,0.162,0.257,0.698,TRUE,
+OP0148,"methyl 2-[(1~{S},2~{S},4~{R},6~{R},9~{R},10~{R},11~{R},15~{R},18~{R})-6-[(2~{S})-2-hydroxy-5-oxo-2~{H}-furan-4-yl]-7,9,11,15-tetramethyl-14-oxo-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadeca-7,12-dien-10-yl]acetate",Azadirachta indica,484.55,2.26,1,8,108.4,3,TRUE,FALSE,,0.48,0,0.141,0.563,0.581,TRUE,
+OP0149,"(5~{R},7~{R},8~{R},9~{R},10~{R},13~{R},17~{S})-17-(3-furyl)-7,17-dihydroxy-4,4,8,10,13-pentamethyl-5,6,7,9,11,12-hexahydrocyclopenta[a]phenanthrene-3,16-dione",Azadirachta indica,424.54,3.95,2,5,87.7,1,TRUE,FALSE,,0.713,0,0.138,0.37,0.733,TRUE,
+OP0150,Desfurano-6alpha-hydroxyazadiradione,Azadirachta indica,400.52,3.4,1,5,80.7,1,TRUE,FALSE,,0.683,0,0.194,0.427,0.687,TRUE,
+OP0151,"[(5~{S},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S})-6-hydroxy-4,4,8,10,13-pentamethyl-3,16-dioxo-6,7,9,11,12,17-hexahydro-5~{H}-cyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,400.52,3.4,1,5,80.7,1,TRUE,FALSE,,0.683,0,0.194,0.427,0.687,TRUE,
+OP0152,23-Epivepaol,Azadirachta indica,752.76,-0.35,3,17,224.6,7,FALSE,FALSE,,0.131,2,0.108,0.56,0.452,FALSE,lipinski_over_1
+OP0153,VEPAOL,Azadirachta indica,752.76,-0.35,3,17,224.6,7,FALSE,FALSE,,0.131,2,0.108,0.56,0.452,FALSE,lipinski_over_1
+OP0154,"dimethyl (1~{S},4~{S},5~{R},6~{S},7~{S},8~{R},11~{S},12~{R},14~{S},15~{R})-4,7,14-trihydroxy-6-[(1~{S},2~{S},6~{S},8~{S},9~{R},11~{S})-2-hydroxy-11-methyl-5,7,10-trioxatetracyclo[6.3.1.0^{2,6}.0^{9,11}]dodec-3-en-9-yl]-6-methyl-12-[(~{E})-2-methylbut-2-enoyl]oxy-3,9-dioxatetracyclo[6.6.1.0^{1,5}.0^{11,15}]pentadecane-4,11-dicarboxylate",Azadirachta indica,678.68,-0.77,4,15,209.3,5,FALSE,FALSE,,0.122,2,0.215,0.593,0.406,FALSE,lipinski_over_1
+OP0155,7-Benzoylnimbocinol,Azadirachta indica,512.65,6.71,0,5,73.6,3,TRUE,FALSE,,0.427,2,0.684,0.56,0.398,FALSE,lipinski_over_1
+OP0156,,Azadirachta indica,310.52,6.59,0,2,26.3,16,FALSE,FALSE,,0.183,1,0.318,0.177,0.525,TRUE,
+OP0157,,Azadirachta indica,294.48,5.97,0,2,26.3,14,FALSE,FALSE,,0.224,1,0.407,0.21,0.504,TRUE,
+OP0158,TETRADECANAL,Azadirachta indica,212.38,4.89,0,1,17.1,12,FALSE,FALSE,,0.332,0,0.638,0.123,0.504,TRUE,
+OP0159,azadirachtin I,Azadirachta indica,618.68,1.1,3,12,162.7,4,FALSE,FALSE,,0.234,2,0.08,0.503,0.518,FALSE,lipinski_over_1
+OP0160,134788-16-2,Azadirachta indica,618.68,1.1,3,12,162.7,4,FALSE,FALSE,,0.234,2,0.08,0.503,0.518,FALSE,lipinski_over_1
+OP0161,(-)-alpha-Pinene,Azadirachta indica,136.24,3,0,0,0,0,TRUE,FALSE,,0.449,0,0.16,0.347,0.627,TRUE,
+OP0162,"[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{S},17~{S})-17-[(3~{R},5~{R})-5-methoxytetrahydrofuran-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] benzoate",Azadirachta indica,532.72,6.78,0,5,61.8,4,TRUE,FALSE,,0.316,2,0.724,0.483,0.364,FALSE,lipinski_over_1;herg_risk_high
+OP0163,NIMBOCINOL,Azadirachta indica,408.54,4.85,1,4,67.5,1,TRUE,FALSE,,0.721,0,0.192,0.473,0.689,TRUE,
+OP0164,71902-49-3,Azadirachta indica,624.73,5.21,0,10,127.6,5,TRUE,FALSE,,0.186,2,0.113,0.723,0.424,FALSE,lipinski_over_1;hepatotox_risk_high
+OP0165,"[(4~{b}~{R},8~{a}~{S})-2,4~{b},8,8~{a}-tetramethyl-10-oxo-6,9-dihydro-5~{H}-phenanthren-3-yl] acetate",Azadirachta indica,312.41,4.51,0,3,43.4,1,TRUE,FALSE,,0.435,0,0.141,0.51,0.579,TRUE,
+OP0166,"(1~{a}~{R},4~{S},4~{a}~{S},7~{R},7~{a}~{R},7~{b}~{S})-1,1,4,7-tetramethyl-2,3,4~{a},5,6,7,7~{a},7~{b}-octahydro-1~{a}~{H}-cyclopropa[e]azulen-4-ol",Azadirachta indica,222.37,3.47,1,1,20.2,0,TRUE,FALSE,,0.665,0,0.167,0.233,0.746,TRUE,
+OP0167,"(1~{a}~{R},4~{R},4~{a}~{R},7~{R},7~{a}~{R},7~{b}~{S})-1,1,4,7-tetramethyl-2,3,4~{a},5,6,7,7~{a},7~{b}-octahydro-1~{a}~{H}-cyclopropa[e]azulen-4-ol",Azadirachta indica,222.37,3.47,1,1,20.2,0,TRUE,FALSE,,0.665,0,0.167,0.233,0.746,TRUE,
+OP0168,"(1~{a}~{R},4~{R},4~{a}~{S},7~{R},7~{a}~{S},7~{b}~{R})-1,1,4,7-tetramethyl-2,3,4~{a},5,6,7,7~{a},7~{b}-octahydro-1~{a}~{H}-cyclopropa[e]azulen-4-ol",Azadirachta indica,222.37,3.47,1,1,20.2,0,TRUE,FALSE,,0.665,0,0.167,0.233,0.746,TRUE,
+OP0169,(-)-beta-Pinene,Azadirachta indica,136.24,3,0,0,0,0,TRUE,FALSE,,0.449,0,0.414,0.15,0.61,TRUE,
+OP0170,ALPHA-D-(+)-TALOSE,Azadirachta indica,180.16,-3.22,5,6,110.4,1,TRUE,FALSE,,0.29,0,0.045,0.137,0.661,TRUE,
+OP0171,"[(1~{S},4~{R},6~{R},7~{R},8~{E},10~{S})-7-hydroxy-4-methyl-2-oxo-3,11-dioxabicyclo[8.1.0]undec-8-en-6-yl] acetate",Azadirachta indica,256.25,-0.06,1,6,85.4,1,TRUE,FALSE,,0.402,0,0.007,0.58,0.585,TRUE,
+OP0172,Isocaryophyllene,Azadirachta indica,204.36,4.73,0,0,0,0,TRUE,FALSE,,0.501,0,0.123,0.31,0.671,TRUE,
+OP0173,Cerebroside C,Azadirachta indica,754.1,7.08,7,10,168.9,33,FALSE,FALSE,,0.027,3,0.257,0.24,0.462,FALSE,lipinski_over_1
+OP0174,azadirol,Azadirachta indica,544.73,4.18,3,7,121.1,7,TRUE,FALSE,,0.325,1,0.075,0.333,0.607,TRUE,
+OP0175,"(~{E})-3-[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{S},17~{S})-7-acetoxy-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-17-yl]but-2-enoic acid",Azadirachta indica,454.61,5.51,1,5,80.7,3,TRUE,FALSE,,0.345,1,0.089,0.387,0.595,TRUE,
+OP0176,"(1R,2S,3S,5R,7S,9R,10R,14S,15S)-3,9-bis(acetyloxy)-14-[(3S,5R,6S)-5,6-dihydroxy-7,7-dimethyloxepan-3-yl]-2,6,6,10,15-pentamethyltetracyclo[8.7.0.0^{2,7}.0^{11,15}]heptadec-11-en-5-yl benzoate",Azadirachta indica,694.91,6.44,2,9,128.6,5,TRUE,FALSE,,0.203,2,0.523,0.537,0.363,FALSE,lipinski_over_1
+OP0177,adenosine,Azadirachta indica,267.25,-1.98,5,9,139.5,2,TRUE,FALSE,,0.491,0,0.042,0.84,0.532,FALSE,hepatotox_risk_high
+OP0178,119889-29-1,Azadirachta indica,302.37,3.25,1,4,63.6,1,TRUE,FALSE,,0.865,0,0.348,0.407,0.72,TRUE,
+OP0179,17-Epiazadiradione,Azadirachta indica,450.58,5.42,0,5,73.6,2,TRUE,FALSE,,0.563,1,0.289,0.523,0.581,TRUE,
+OP0180,Azadiradione,Azadirachta indica,450.58,5.42,0,5,73.6,2,TRUE,FALSE,,0.563,1,0.289,0.523,0.581,TRUE,
+OP0181,7-Deacetyl-17-epinimolicinol,Azadirachta indica,440.54,3.88,2,6,97,1,TRUE,FALSE,,0.643,0,0.194,0.367,0.689,TRUE,
+OP0182,7-Deacetylnimolicinol,Azadirachta indica,440.54,3.88,2,6,97,1,TRUE,FALSE,,0.643,0,0.194,0.367,0.689,TRUE,
+OP0183,"[(1~{R},2~{S},4~{R},6~{R},9~{R},10~{R},11~{R},12~{S},14~{R},15~{R},18~{R})-14-acetoxy-10-(2-methoxy-2-oxo-ethyl)-7,9,11,15-tetramethyl-6-(5-oxo-1,2-dihydropyrrol-3-yl)-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadec-7-en-12-yl] (~{E})-2-methylbut-2-enoate",Azadirachta indica,611.73,3.59,1,10,126.5,6,TRUE,FALSE,,0.208,1,0.394,0.647,0.371,FALSE,ranked_below_cap
+OP0184,2-TRIDECANONE,Azadirachta indica,198.35,4.5,0,1,17.1,10,TRUE,FALSE,,0.472,0,0.203,0.127,0.69,TRUE,
+OP0185,"[(1~{R},2~{S},4~{R},6~{R},9~{S},10~{S},11~{S},12~{S},14~{R},15~{R},18~{R})-14-hydroxy-6-[(2~{S})-2-hydroxy-5-oxo-2~{H}-furan-3-yl]-10-(2-methoxy-2-oxo-ethyl)-7,9,11,15-tetramethyl-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadec-7-en-12-yl] 3-methylbut-2-enoate",Azadirachta indica,586.68,2.76,2,10,137.8,5,TRUE,FALSE,,0.214,1,0.089,0.593,0.481,FALSE,ranked_below_cap
+OP0186,Nicotiflorin,Azadirachta indica,594.52,-1.39,9,15,249.2,6,FALSE,FALSE,,0.159,3,0.067,0.637,0.453,FALSE,lipinski_over_1
+OP0187,"(2~{R})-5,7-dihydroxy-2-[4-methoxy-3-(3-methylbut-2-enyl)phenyl]-8-(3-methylbut-2-enyl)chroman-4-one",Azadirachta indica,422.52,5.83,2,5,76,6,TRUE,FALSE,,0.573,1,0.452,0.58,0.52,TRUE,
+OP0188,"(2S)-5,7-dihydroxy-2-[4-methoxy-3-(3-methylbut-2-enyl)phenyl]-8-(3-methylbut-2-enyl)-2,3-dihydrochromen-4-one",Azadirachta indica,422.52,5.83,2,5,76,6,TRUE,FALSE,,0.573,1,0.452,0.58,0.52,TRUE,
+OP0189,"22,23-Dihydronimocinol",Azadirachta indica,454.61,4.75,1,5,72.8,2,TRUE,FALSE,,0.481,0,0.181,0.55,0.573,TRUE,
+OP0190,"[(5~{S},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S},17~{R})-17-(2,3-dihydrofuran-4-yl)-6-hydroxy-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,454.61,4.75,1,5,72.8,2,TRUE,FALSE,,0.481,0,0.181,0.55,0.573,TRUE,
+OP0191,"2-[(5~{S},7~{R},8~{S},9~{R},10~{S},13~{S},17~{S})-7-acetoxy-4,4,8,10,13-pentamethyl-3,16-dioxo-6,7,9,11,12,17-hexahydro-5~{H}-cyclopenta[a]phenanthren-17-yl]acetic acid",Azadirachta indica,442.55,4.13,1,6,97.7,3,TRUE,FALSE,,0.66,0,0.311,0.367,0.661,TRUE,
+OP0192,"[(1~{R},2~{S},4~{R},6~{R},9~{R},10~{R},11~{R},14~{R},15~{R},18~{R})-6-[(2~{S})-2-(1-hydroxy-1-methyl-ethyl)-5-oxo-2~{H}-furan-4-yl]-10-(2-methoxy-2-oxo-ethyl)-7,9,11,15-tetramethyl-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadec-7-en-14-yl] 3-methylbut-2-enoate",Azadirachta indica,612.76,4.61,1,9,117.6,6,TRUE,FALSE,,0.199,1,0.495,0.43,0.402,FALSE,ranked_below_cap
+OP0193,Deacetylgedunin,Azadirachta indica,440.54,3.99,1,6,89.3,1,TRUE,FALSE,,0.525,0,0.19,0.39,0.636,TRUE,
+OP0194,"(1~{S},2~{R},4~{S},7~{S},8~{S},11~{R},12~{R},17~{S},19~{R})-7-(3-furyl)-19-hydroxy-1,8,12,16,16-pentamethyl-3,6-dioxapentacyclo[9.8.0.0^{2,4}.0^{2,8}.0^{12,17}]nonadec-13-ene-5,15-dione",Azadirachta indica,440.54,3.99,1,6,89.3,1,TRUE,FALSE,,0.525,0,0.19,0.39,0.636,TRUE,
+OP0195,"[(5~{R},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S},17~{R})-17-[(2~{R})-2-hydroxy-5-oxo-2~{H}-furan-3-yl]-6-methoxy-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,498.62,3.9,1,7,99.1,3,TRUE,FALSE,,0.465,0,0.061,0.47,0.627,TRUE,
+OP0196,"~{N}-[(1~{S},2~{R})-2-[4-(2-cyanoethoxy)phenyl]-2-hydroxy-1-(hydroxymethyl)ethyl]formamide",Azadirachta indica,264.28,0.12,3,6,102.6,8,TRUE,FALSE,,0.457,0,0.135,0.39,0.625,TRUE,
+OP0197,EICOSANE,Azadirachta indica,282.56,8.05,0,0,0,17,FALSE,FALSE,,0.237,1,0.447,0.08,0.537,TRUE,
+OP0198,Malyngamide S,Azadirachta indica,484.08,4.73,2,6,92.7,13,FALSE,FALSE,,0.224,0,0.047,0.427,0.548,TRUE,
+OP0199,SUGIOL,Azadirachta indica,300.44,5.19,1,2,37.3,1,TRUE,FALSE,,0.775,1,0.034,0.337,0.799,TRUE,
+OP0200,Dipropyl tetrasulfide,Azadirachta indica,214.45,4.48,0,0,0,7,TRUE,FALSE,,0.452,0,0.149,0.2,0.676,TRUE,
+OP0201,"(1~{a}~{R},7~{S},7~{a}~{S},7~{b}~{S})-1,1,4,7-tetramethyl-1~{a},2,3,5,6,7,7~{a},7~{b}-octahydrocyclopropa[e]azulene",Azadirachta indica,204.36,4.42,0,0,0,0,TRUE,FALSE,,0.513,0,0.239,0.343,0.631,TRUE,
+OP0202,beta-carotene,Azadirachta indica,536.89,12.61,0,0,0,10,TRUE,FALSE,,0.244,2,0.272,0.157,0.569,FALSE,lipinski_over_1
+OP0203,,Azadirachta indica,536.89,12.61,0,0,0,10,TRUE,FALSE,,0.244,2,0.272,0.157,0.569,FALSE,lipinski_over_1
+OP0204,3-Acetyl-1-tigloylazadirachtinin,Azadirachta indica,720.72,-0.2,3,16,212,5,FALSE,FALSE,,0.191,2,0.636,0.49,0.339,FALSE,lipinski_over_1
+OP0205,"(1~{S},4~{a}~{R},4~{b}~{R},7~{R},10~{a}~{R})-1,4~{a},7-trimethyl-7-(2-sulfooxyethyl)-3,4,4~{b},5,6,10~{a}-hexahydro-2~{H}-phenanthrene-1-carboxylic acid",Azadirachta indica,398.52,4.01,2,6,100.9,5,TRUE,FALSE,,0.679,0,0.11,0.45,0.704,TRUE,
+OP0206,Nimbolide,Azadirachta indica,466.53,3.74,0,7,92,3,TRUE,FALSE,,0.495,0,0.115,0.65,0.568,TRUE,
+OP0207,"methyl 2-[(1R,2S,4R,9R,11R,15R,18R)-6-(furan-3-yl)-7,9,11,15-tetramethyl-12,16-dioxo-3,17-dioxapentacyclo[9.6.1.02,9.04,8.015,18]octadeca-7,13-dien-10-yl]acetate",Azadirachta indica,466.53,3.74,0,7,92,3,TRUE,FALSE,,0.495,0,0.115,0.65,0.568,TRUE,
+OP0208,"methyl 2-[(1~{S},2~{S},4~{S},6~{S},9~{R},10~{R},11~{R},15~{S},18~{R})-6-(3-furyl)-7,9,11,15-tetramethyl-12,16-dioxo-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadeca-7,13-dien-10-yl]acetate",Azadirachta indica,466.53,3.74,0,7,92,3,TRUE,FALSE,,0.495,0,0.115,0.65,0.568,TRUE,
+OP0209,Nimbolide,Azadirachta indica,466.53,3.74,0,7,92,3,TRUE,FALSE,,0.495,0,0.115,0.65,0.568,TRUE,
+OP0210,"methyl 2-[(1~{R},2~{S},4~{S},6~{R},9~{R},10~{S},11~{R},15~{R},18~{S})-6-(3-furyl)-7,9,11,15-tetramethyl-12,16-dioxo-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadeca-7,13-dien-10-yl]acetate",Azadirachta indica,466.53,3.74,0,7,92,3,TRUE,FALSE,,0.495,0,0.115,0.65,0.568,TRUE,
+OP0211,"methyl 2-[(1~{R},2~{S},4~{S},6~{R},9~{S},10~{S},11~{S},15~{R},18~{S})-6-(3-furyl)-7,9,11,15-tetramethyl-12,16-dioxo-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadeca-7,13-dien-10-yl]acetate",Azadirachta indica,466.53,3.74,0,7,92,3,TRUE,FALSE,,0.495,0,0.115,0.65,0.568,TRUE,
+OP0212,"methyl 2-[(1~{S},2~{S},4~{R},6~{R},9~{R},10~{R},11~{R},15~{R},18~{R})-6-[(2~{R})-2-hydroxy-5-oxo-2~{H}-furan-3-yl]-7,9,11,15-tetramethyl-14-oxo-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadeca-7,12-dien-10-yl]acetate",Azadirachta indica,484.55,2.26,1,8,108.4,3,TRUE,FALSE,,0.48,0,0.057,0.55,0.61,TRUE,
+OP0213,BETA-SITOSTEROL,Azadirachta indica,414.72,8.02,1,1,20.2,6,TRUE,FALSE,,0.436,1,0.669,0.26,0.496,TRUE,
+OP0214,"(3~{R},8~{R},9~{R},10~{S},13~{R},14~{R},17~{S})-17-[(1~{R},4~{R})-4-ethyl-1,5-dimethyl-hexyl]-10,13-dimethyl-2,3,4,7,8,9,11,12,14,15,16,17-dodecahydro-1~{H}-cyclopenta[a]phenanthren-3-ol",Azadirachta indica,414.72,8.02,1,1,20.2,6,TRUE,FALSE,,0.436,1,0.669,0.26,0.496,TRUE,
+OP0215,"(3~{S},8~{R},9~{R},10~{R},13~{R},14~{R},17~{R})-17-[(1~{R},4~{R})-4-ethyl-1,5-dimethyl-hexyl]-10,13-dimethyl-2,3,4,7,8,9,11,12,14,15,16,17-dodecahydro-1~{H}-cyclopenta[a]phenanthren-3-ol",Azadirachta indica,414.72,8.02,1,1,20.2,6,TRUE,FALSE,,0.436,1,0.669,0.26,0.496,TRUE,
+OP0216,119269-83-9,Azadirachta indica,316.4,3.55,0,4,52.6,2,TRUE,FALSE,,0.837,0,0.451,0.417,0.675,TRUE,
+OP0217,,Azadirachta indica,100.12,1.04,1,2,37.3,1,TRUE,FALSE,,0.5,0,0.017,0.127,0.757,TRUE,
+OP0218,,Azadirachta indica,490.73,4.81,4,5,90.2,3,TRUE,FALSE,,0.427,0,0.419,0.177,0.592,TRUE,
+OP0219,"[(1~{S},4~{R},6~{R},7~{R},8~{E},10~{S})-6-hydroxy-4-methyl-2-oxo-3,11-dioxabicyclo[8.1.0]undec-8-en-7-yl] acetate",Azadirachta indica,256.25,-0.06,1,6,85.4,1,TRUE,FALSE,,0.402,0,0.025,0.57,0.582,TRUE,
+OP0220,Licoflavanone,Azadirachta indica,340.38,4.02,3,5,87,3,TRUE,FALSE,,0.735,0,0.739,0.587,0.496,FALSE,herg_risk_high
+OP0221,"5-(1,2-dihydroxy-2-methyl-propyl)-3-(3-hydroxy-4,4,10,13,14-pentamethyl-2,3,5,6,9,11,12,15,16,17-decahydro-1~{H}-cyclopenta[a]phenanthren-17-yl)tetrahydrofuran-2-one",Azadirachta indica,488.71,5.02,3,5,87,3,TRUE,FALSE,,0.384,1,0.036,0.267,0.663,TRUE,
+OP0222,Epicubenol,Azadirachta indica,222.37,3.78,1,1,20.2,1,TRUE,FALSE,,0.669,0,0.179,0.2,0.754,TRUE,
+OP0223,Cubenol,Azadirachta indica,222.37,3.78,1,1,20.2,1,TRUE,FALSE,,0.669,0,0.179,0.2,0.754,TRUE,
+OP0224,"methyl 2-[(1~{S},2~{R},3~{S},8~{R},9~{S},10~{R},13~{R},15~{S})-2-acetoxy-13-(3-furyl)-4,8,10,12-tetramethyl-7-oxo-16-oxatetracyclo[8.6.0.0^{3,8}.0^{11,15}]hexadeca-4,11-dien-9-yl]acetate",Azadirachta indica,482.57,4.52,0,7,92,4,TRUE,FALSE,,0.46,0,0.346,0.733,0.46,FALSE,hepatotox_risk_high
+OP0225,,Azadirachta indica,482.57,4.52,0,7,92,4,TRUE,FALSE,,0.46,0,0.346,0.733,0.46,FALSE,hepatotox_risk_high
+OP0226,o-cresol,Azadirachta indica,108.14,1.7,1,1,20.2,0,TRUE,FALSE,,0.536,0,0.493,0.3,0.576,TRUE,
+OP0227,"[(1~{S},2~{R},4~{R},6~{S},7~{S},10~{R},11~{R},16~{R},18~{R})-6-(3-furyl)-1,7,11,15,15-pentamethyl-14-oxo-3-oxapentacyclo[8.8.0.0^{2,4}.0^{2,7}.0^{11,16}]octadec-12-en-18-yl] acetate",Azadirachta indica,452.59,5.45,0,5,69,2,TRUE,FALSE,,0.441,1,0.234,0.437,0.575,TRUE,
+OP0228,Azadirone,Azadirachta indica,436.59,6.24,0,4,56.5,2,TRUE,FALSE,,0.407,1,0.282,0.463,0.539,TRUE,
+OP0229,"[(5~{R},7~{R},8~{S},9~{S},10~{S},13~{S},17~{R})-17-(3-furyl)-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,436.59,6.24,0,4,56.5,2,TRUE,FALSE,,0.407,1,0.282,0.463,0.539,TRUE,
+OP0230,"methyl 2-[(1~{S},2~{R},3~{S},4~{R},8~{R},9~{S},10~{R},13~{R},15~{R})-13-(3-furyl)-2,4-dihydroxy-4,8,10,12-tetramethyl-7-oxo-16-oxatetracyclo[8.6.0.0^{3,8}.0^{11,15}]hexadeca-5,11-dien-9-yl]acetate",Azadirachta indica,456.54,2.92,2,7,106.2,3,TRUE,FALSE,,0.532,0,0.068,0.637,0.601,TRUE,
+OP0231,"methyl 2-[(1~{S},2~{R},3~{R},4~{R},8~{R},9~{S},10~{R},13~{R},15~{S})-13-(3-furyl)-2,4-dihydroxy-4,8,10,12-tetramethyl-7-oxo-16-oxatetracyclo[8.6.0.0^{3,8}.0^{11,15}]hexadeca-5,11-dien-9-yl]acetate",Azadirachta indica,456.54,2.92,2,7,106.2,3,TRUE,FALSE,,0.532,0,0.068,0.637,0.601,TRUE,
+OP0232,,Azadirachta indica,456.54,2.92,2,7,106.2,3,TRUE,FALSE,,0.532,0,0.068,0.637,0.601,TRUE,
+OP0233,,Azadirachta indica,456.54,2.92,2,7,106.2,3,TRUE,FALSE,,0.532,0,0.068,0.637,0.601,TRUE,
+OP0234,,Azadirachta indica,98.14,1.54,0,1,17.1,2,TRUE,FALSE,,0.378,0,0.07,0.087,0.704,TRUE,
+OP0235,Copaene,Azadirachta indica,204.36,4.27,0,0,0,1,TRUE,FALSE,,0.559,0,0.574,0.353,0.545,TRUE,
+OP0236,"methyl (1~{S},6~{R},7~{S},8~{S},9~{R},12~{S},13~{R},15~{S},16~{S})-13-acetoxy-8-hydroxy-7-[(1~{S},2~{S},6~{R},8~{S},9~{R},11~{S})-2-hydroxy-11-methyl-5,7,10-trioxatetracyclo[6.3.1.0^{2,6}.0^{9,11}]dodec-3-en-9-yl]-7-methyl-15-[(~{E})-2-methylbut-2-enoyl]oxy-4,5-dioxo-3,10-dioxatetracyclo[7.6.1.0^{1,6}.0^{12,16}]hexadecane-12-carboxylate",Azadirachta indica,688.68,0.03,2,15,202.9,5,FALSE,FALSE,,0.129,2,0.207,0.637,0.398,FALSE,lipinski_over_1
+OP0237,Phytol,Azadirachta indica,296.54,6.36,1,1,20.2,13,FALSE,FALSE,,0.392,1,0.463,0.1,0.588,TRUE,
+OP0238,"[(1~{R},2~{R},5~{R},6~{R},11~{R},12~{S},13~{R},16~{R},17~{R},19~{S},20~{R})-6-(3-furyl)-12,17-dihydroxy-1,5,11,16-tetramethyl-8-oxo-7,14-dioxapentacyclo[11.6.1.0^{2,11}.0^{5,10}.0^{16,20}]icos-9-en-19-yl] 2,3-dimethylbut-2-enoate",Azadirachta indica,554.68,4.66,2,8,115.4,3,TRUE,FALSE,,0.41,1,0.339,0.48,0.518,TRUE,
+OP0239,28-Deoxonimbolide,Azadirachta indica,452.55,4.22,0,6,75,3,TRUE,FALSE,,0.505,0,0.106,0.68,0.566,TRUE,
+OP0240,"methyl 2-[(1~{R},2~{S},4~{S},6~{R},9~{R},10~{S},11~{R},15~{R},18~{R})-6-(3-furyl)-7,9,11,15-tetramethyl-12-oxo-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadeca-7,13-dien-10-yl]acetate",Azadirachta indica,452.55,4.22,0,6,75,3,TRUE,FALSE,,0.505,0,0.106,0.68,0.566,TRUE,
+OP0241,,Azadirachta indica,452.55,4.22,0,6,75,3,TRUE,FALSE,,0.505,0,0.106,0.68,0.566,TRUE,
+OP0242,"[(1~{R},2~{S},4~{S},6~{R},9~{R},10~{R},11~{R},12~{S},14~{R},15~{R},18~{R})-14-acetoxy-6-(3-furyl)-10-(2-methoxy-2-oxo-ethyl)-7,9,11,15-tetramethyl-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadec-7-en-12-yl] 3-methylbutanoate",Azadirachta indica,598.73,5.37,0,9,110.5,7,TRUE,FALSE,,0.232,2,0.338,0.643,0.398,FALSE,lipinski_over_1
+OP0243,alpha-Calacorene,Azadirachta indica,200.32,4.54,0,0,0,1,TRUE,FALSE,,0.624,0,0.748,0.317,0.53,FALSE,herg_risk_high
+OP0244,ETHYL PALMITATE,Azadirachta indica,284.48,6.03,0,2,26.3,15,FALSE,FALSE,,0.271,1,0.336,0.17,0.557,TRUE,
+OP0245,MELIANONE,Azadirachta indica,470.69,6.06,1,4,59.1,2,TRUE,FALSE,,0.393,1,0.104,0.41,0.603,TRUE,
+OP0246,Deacetylhectochlorin,Azadirachta indica,623.58,5.16,2,10,145.1,5,FALSE,FALSE,,0.26,2,0.174,0.62,0.466,FALSE,lipinski_over_1
+OP0247,,Azadirachta indica,470.65,5.49,0,5,61.8,3,TRUE,FALSE,,0.403,1,0.106,0.51,0.577,TRUE,
+OP0248,LONGIFOLENE,Azadirachta indica,204.36,4.42,0,0,0,0,TRUE,FALSE,,0.513,0,0.044,0.123,0.755,TRUE,
+OP0249,"1-[4-(3-hydroxy-4,4,10,13,14-pentamethyl-2,3,5,6,12,15,16,17-octahydro-1~{H}-cyclopenta[a]phenanthren-17-yl)-5-methoxy-tetrahydrofuran-2-yl]-2-methyl-propane-1,2-diol",Azadirachta indica,502.74,5.38,3,5,79.2,4,TRUE,FALSE,,0.481,2,0.373,0.233,0.61,FALSE,lipinski_over_1
+OP0250,"[(5~{S},6~{R},7~{S},8~{R},9~{S},10~{R},13~{S},17~{S})-6-methoxy-4,4,8,10,13-pentamethyl-1,12,16-trioxo-17-[(~{Z})-3-oxobut-1-enyl]-5,6,7,9,11,17-hexahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,496.6,3.61,0,7,103.8,4,TRUE,FALSE,,0.433,0,0.048,0.593,0.581,TRUE,
+OP0251,Flowerine,Azadirachta indica,368.43,4.62,1,5,65,5,TRUE,FALSE,,0.78,0,0.762,0.56,0.515,FALSE,herg_risk_high
+OP0252,(+)-Camphene,Azadirachta indica,136.24,3,0,0,0,0,TRUE,FALSE,,0.449,0,0.073,0.177,0.705,TRUE,
+OP0253,SPICATIN,Azadirachta indica,544.73,4.34,3,7,113.3,3,TRUE,FALSE,,0.358,1,0.052,0.357,0.621,TRUE,
+OP0254,"[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{S},17~{S})-17-[(3~{S},5~{R},6~{S})-5,6-dihydroxy-6-(1-hydroxy-1-methyl-ethyl)tetrahydropyran-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,544.73,4.34,3,7,113.3,3,TRUE,FALSE,,0.358,1,0.052,0.357,0.621,TRUE,
+OP0255,Genistoside,Azadirachta indica,432.38,0.05,6,10,170,4,FALSE,FALSE,,0.331,1,0.035,0.567,0.552,TRUE,
+OP0256,"[(1~{R},2~{R},4~{R},5~{S},6~{S},10~{R},11~{S},12~{R},15~{R},16~{R},18~{S},19~{R})-16,18-diacetoxy-6-(3-furyl)-4-hydroxy-1,5,10,15-tetramethyl-13-oxapentacyclo[10.6.1.0^{2,10}.0^{5,9}.0^{15,19}]nonadec-8-en-11-yl] (~{E})-2-methylbut-2-enoate",Azadirachta indica,610.74,5.27,1,9,121.5,5,TRUE,FALSE,,0.206,2,0.139,0.57,0.47,FALSE,lipinski_over_1
+OP0257,epi-Cadinol,Azadirachta indica,222.37,3.78,1,1,20.2,1,TRUE,FALSE,,0.669,0,0.444,0.193,0.676,TRUE,
+OP0258,LHYHMMRYTDARSZ-YJNKXOJESA-N,Azadirachta indica,222.37,3.78,1,1,20.2,1,TRUE,FALSE,,0.669,0,0.444,0.193,0.676,TRUE,
+OP0259,"(1~{S},4~{S},4~{a}~{S},8~{a}~{S})-4-isopropyl-1,6-dimethyl-3,4,4~{a},7,8,8~{a}-hexahydro-2~{H}-naphthalen-1-ol",Azadirachta indica,222.37,3.78,1,1,20.2,1,TRUE,FALSE,,0.669,0,0.444,0.193,0.676,TRUE,
+OP0260,"(1~{R},4~{S},4~{a}~{S},8~{a}~{R})-4-isopropyl-1,6-dimethyl-3,4,4~{a},7,8,8~{a}-hexahydro-2~{H}-naphthalen-1-ol",Azadirachta indica,222.37,3.78,1,1,20.2,1,TRUE,FALSE,,0.669,0,0.444,0.193,0.676,TRUE,
+OP0261,Tetratriacontane,Azadirachta indica,478.93,13.51,0,0,0,31,FALSE,FALSE,,0.087,1,0.447,0.08,0.477,FALSE,ranked_below_cap
+OP0262,Ethyl dodecanoate,Azadirachta indica,228.38,4.47,0,2,26.3,11,FALSE,FALSE,,0.385,0,0.336,0.17,0.602,TRUE,
+OP0263,DOCOSANE,Azadirachta indica,310.61,8.83,0,0,0,19,FALSE,FALSE,,0.209,1,0.447,0.08,0.526,TRUE,
+OP0264,Nimolicinol,Azadirachta indica,482.57,4.45,1,7,103,2,TRUE,FALSE,,0.621,0,0.292,0.42,0.635,TRUE,
+OP0265,"methyl (1~{S},4~{S},5~{R},6~{S},7~{S},8~{R},11~{R},12~{R},14~{S},15~{S})-12-acetoxy-4,7-dihydroxy-6-[(1~{S},2~{S},6~{S},8~{S},9~{R},11~{S})-2-hydroxy-11-methyl-5,7,10-trioxatetracyclo[6.3.1.0^{2,6}.0^{9,11}]dodec-3-en-9-yl]-6,11-dimethyl-14-[(~{E})-2-methylbut-2-enoyl]oxy-3,9-dioxatetracyclo[6.6.1.0^{1,5}.0^{11,15}]pentadecane-4-carboxylate",Azadirachta indica,676.71,0.64,3,14,189,5,FALSE,FALSE,,0.159,2,0.256,0.563,0.418,FALSE,lipinski_over_1
+OP0266,"methyl (1~{S},4~{R},5~{R},6~{S},7~{S},8~{S},11~{R},12~{R},14~{S},15~{S})-12-acetoxy-4,7-dihydroxy-6-[(1~{S},2~{R},6~{S},8~{S},9~{R},11~{S})-2-hydroxy-11-methyl-5,7,10-trioxatetracyclo[6.3.1.0^{2,6}.0^{9,11}]dodec-3-en-9-yl]-6,11-dimethyl-14-[(~{E})-2-methylbut-2-enoyl]oxy-3,9-dioxatetracyclo[6.6.1.0^{1,5}.0^{11,15}]pentadecane-4-carboxylate",Azadirachta indica,676.71,0.64,3,14,189,5,FALSE,FALSE,,0.159,2,0.256,0.563,0.418,FALSE,lipinski_over_1
+OP0267,Azadirachtin D,Azadirachta indica,676.71,0.64,3,14,189,5,FALSE,FALSE,,0.159,2,0.256,0.563,0.418,FALSE,lipinski_over_1
+OP0268,,Azadirachta indica,676.71,0.64,3,14,189,5,FALSE,FALSE,,0.159,2,0.256,0.563,0.418,FALSE,lipinski_over_1
+OP0269,116425-92-4,Azadirachta indica,286.37,3.55,1,3,54.4,0,TRUE,FALSE,,0.793,0,0.197,0.487,0.712,TRUE,
+OP0270,"(4~{a}~{S},10~{a}~{R})-7-isopropyl-1,1,4~{a}-trimethyl-3,4,10,10~{a}-tetrahydrophenanthrene-2,9-dione",Azadirachta indica,298.43,4.66,0,2,34.1,1,TRUE,FALSE,,0.755,0,0.3,0.427,0.684,TRUE,
+OP0271,4-methylphenol,Azadirachta indica,108.14,1.7,1,1,20.2,0,TRUE,FALSE,,0.536,0,0.113,0.277,0.697,TRUE,
+OP0272,120092-50-4,Azadirachta indica,314.38,3.54,1,4,71.4,1,TRUE,FALSE,,0.86,0,0.043,0.643,0.738,TRUE,
+OP0273,Protoxylocarpin G,Azadirachta indica,528.73,5.02,2,6,93.1,4,TRUE,FALSE,,0.393,2,0.185,0.37,0.591,FALSE,lipinski_over_1
+OP0274,"[(5~{S},7~{R},8~{R},9~{R},10~{R},13~{S},17~{S})-17-[(3~{S},5~{R})-5-[(1~{S})-1,2-dihydroxy-2-methyl-propyl]tetrahydrofuran-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,528.73,5.02,2,6,93.1,4,TRUE,FALSE,,0.393,2,0.185,0.37,0.591,FALSE,lipinski_over_1
+OP0275,RUTIN,Azadirachta indica,610.52,-1.69,10,16,269.4,6,FALSE,TRUE,catechol_A(92),0.14,3,0.082,0.59,0.354,FALSE,lipinski_over_1
+OP0276,"[(5~{S},7~{R},8~{R},9~{R},10~{R},13~{R},17~{R})-17-[(2~{R})-2-hydroxy-5-oxo-2~{H}-furan-4-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,468.59,4.28,1,6,89.9,2,TRUE,FALSE,,0.481,0,0.457,0.413,0.531,TRUE,
+OP0277,"[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{S},17~{R})-17-[(2~{R})-2-hydroxy-5-oxo-2~{H}-furan-4-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,468.59,4.28,1,6,89.9,2,TRUE,FALSE,,0.481,0,0.457,0.413,0.531,TRUE,
+OP0278,guaiacol,Azadirachta indica,124.14,1.4,1,2,29.5,1,TRUE,FALSE,,0.613,0,0.797,0.183,0.551,FALSE,herg_risk_high
+OP0279,Abyssinone V,Azadirachta indica,408.49,5.53,3,5,87,5,TRUE,FALSE,,0.567,1,0.683,0.577,0.449,FALSE,ranked_below_cap
+OP0280,"[(1R,2S,4R,9R,10R,11R,12S,14R,15R,18R)-14-acetyloxy-10-(2-methoxy-2-oxoethyl)-7,9,11,15-tetramethyl-6-oxo-3,17-dioxapentacyclo[9.6.1.02,9.04,8.015,18]octadec-7-en-12-yl] (Z)-2-methylbut-2-enoate",Azadirachta indica,544.64,3.48,0,9,114.4,5,TRUE,FALSE,,0.291,1,0.091,0.517,0.534,TRUE,
+OP0281,17-Defurano-17-oxosalannin,Azadirachta indica,544.64,3.48,0,9,114.4,5,TRUE,FALSE,,0.291,1,0.091,0.517,0.534,TRUE,
+OP0282,"[(1R,2S,4R,9R,10R,11R,12S,14R,15R,18R)-14-acetyloxy-10-(2-methoxy-2-oxoethyl)-7,9,11,15-tetramethyl-6-oxo-3,17-dioxapentacyclo[9.6.1.02,9.04,8.015,18]octadec-7-en-12-yl] 2-methylbut-2-enoate",Azadirachta indica,544.64,3.48,0,9,114.4,5,TRUE,FALSE,,0.291,1,0.091,0.517,0.534,TRUE,
+OP0283,8-Prenylnaringenin,Azadirachta indica,340.38,4.02,3,5,87,3,TRUE,FALSE,,0.735,0,0.307,0.55,0.637,TRUE,
+OP0284,METHYL PALMITATE,Azadirachta indica,270.46,5.64,0,2,26.3,14,FALSE,FALSE,,0.301,1,0.261,0.093,0.614,TRUE,
+OP0285,,Azadirachta indica,286.42,4.67,0,2,26.3,1,TRUE,FALSE,,0.749,0,0.066,0.44,0.748,TRUE,
+OP0286,"[(5~{S},7~{R},8~{R},9~{R},10~{R},13~{S},17~{S})-17-[(3~{R},5~{R})-5-hydroxytetrahydrofuran-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,456.62,4.83,1,5,72.8,2,TRUE,FALSE,,0.476,0,0.188,0.4,0.614,TRUE,
+OP0287,"[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{S},17~{S})-17-[(3~{R},5~{S})-5-hydroxytetrahydrofuran-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,456.62,4.83,1,5,72.8,2,TRUE,FALSE,,0.476,0,0.188,0.4,0.614,TRUE,
+OP0288,KULACTONE,Azadirachta indica,452.68,7.06,0,3,43.4,3,TRUE,FALSE,,0.34,1,0.086,0.527,0.552,TRUE,
+OP0289,"(5~{R},9~{R},10~{R},13~{S},14~{S},17~{R})-17-[(2~{R})-2-[(1~{R},2~{R})-1,3-dihydroxy-2-methyl-propyl]-2,3-dihydrofuran-4-yl]-4,4,10,13,14-pentamethyl-1,2,5,6,9,11,12,15,16,17-decahydrocyclopenta[a]phenanthren-3-one",Azadirachta indica,470.69,5.82,2,4,66.8,4,TRUE,FALSE,,0.508,1,0.372,0.413,0.568,TRUE,
+OP0290,"[(5~{R},6~{R},7~{S},8~{R},9~{R},10~{S},11~{S},12~{R},13~{S},17~{R})-12-acetoxy-17-(2,5-dioxo-3-furyl)-6-hydroxy-11-methoxy-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,570.64,2.63,1,10,142.5,4,FALSE,FALSE,,0.232,1,0.162,0.537,0.483,TRUE,
+OP0291,"(3~{R},4~{R})-4-[4-(2-cyanoethoxy)phenyl]-3,4-dihydroxy-butanenitrile",Azadirachta indica,246.27,1.29,2,5,97.3,6,TRUE,FALSE,,0.737,0,0.537,0.297,0.645,TRUE,
+OP0292,Beta-Nimolactone,Azadirachta indica,386.49,3.77,0,5,69.7,1,TRUE,FALSE,,0.642,0,0.302,0.413,0.642,TRUE,
+OP0293,Alpha-Nimolactone,Azadirachta indica,386.49,3.77,0,5,69.7,1,TRUE,FALSE,,0.642,0,0.302,0.413,0.642,TRUE,
+OP0294,1-DODECANOL,Azadirachta indica,186.34,3.9,1,1,20.2,10,TRUE,FALSE,,0.513,0,0.288,0.103,0.688,TRUE,
+OP0295,Yinyanghuo D,Azadirachta indica,338.36,4.09,3,5,90.9,3,TRUE,FALSE,,0.626,0,0.429,0.64,0.53,TRUE,
+OP0296,D-Limonene,Azadirachta indica,136.24,3.31,0,0,0,1,TRUE,FALSE,,0.485,0,0.192,0.29,0.649,TRUE,
+OP0297,Alloaromadendrene,Azadirachta indica,204.36,4.27,0,0,0,0,TRUE,FALSE,,0.517,0,0.074,0.303,0.693,TRUE,
+OP0298,"(1~{a}~{R},4~{a}~{R},7~{R},7~{a}~{S},7~{b}~{S})-1,1,7-trimethyl-4-methylene-2,3,4~{a},5,6,7,7~{a},7~{b}-octahydro-1~{a}~{H}-cyclopropa[e]azulene",Azadirachta indica,204.36,4.27,0,0,0,0,TRUE,FALSE,,0.517,0,0.074,0.303,0.693,TRUE,
+OP0299,AZADIRADIONOLIDE,Azadirachta indica,466.57,4.14,0,6,86.7,2,TRUE,FALSE,,0.569,0,0.294,0.43,0.61,TRUE,
+OP0300,AZADIRADIONOLIDE,Azadirachta indica,466.57,4.14,0,6,86.7,2,TRUE,FALSE,,0.569,0,0.294,0.43,0.61,TRUE,
+OP0301,"[(5~{S},7~{R},8~{R},9~{R},10~{R},13~{R},17~{R})-4,4,8,10,13-pentamethyl-3,16-dioxo-17-(5-oxo-2~{H}-furan-4-yl)-6,7,9,11,12,17-hexahydro-5~{H}-cyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,466.57,4.14,0,6,86.7,2,TRUE,FALSE,,0.569,0,0.294,0.43,0.61,TRUE,
+OP0302,120092-51-5,Azadirachta indica,300.4,4.36,1,3,54.4,1,TRUE,FALSE,,0.838,0,0.014,0.587,0.755,TRUE,
+OP0303,"(2~{S})-5,7-dihydroxy-2-[4-methoxy-3-(3-methylbut-3-enyl)phenyl]-8-(3-methylbut-2-enyl)chroman-4-one",Azadirachta indica,422.52,5.83,2,5,76,7,TRUE,FALSE,,0.549,1,0.318,0.58,0.55,TRUE,
+OP0304,"(2S,4aS,10aR)-2,6-dihydroxy-1,1,4a-trimethyl-7-propan-2-yl-3,4,10,10a-tetrahydro-2H-phenanthren-9-one",Azadirachta indica,316.44,4.16,2,3,57.5,1,TRUE,FALSE,,0.818,0,0.139,0.38,0.772,TRUE,
+OP0305,"(2~{S},4~{a}~{S},10~{a}~{S})-2,6-dihydroxy-7-isopropyl-1,1,4~{a}-trimethyl-3,4,10,10~{a}-tetrahydro-2~{H}-phenanthren-9-one",Azadirachta indica,316.44,4.16,2,3,57.5,1,TRUE,FALSE,,0.818,0,0.139,0.38,0.772,TRUE,
+OP0306,Nerylacetone,Azadirachta indica,194.32,4.05,0,1,17.1,6,TRUE,FALSE,,0.583,0,0.047,0.18,0.765,TRUE,
+OP0307,"[(1R,2R,5S,6R,10R,11S,12S,15R,16R,18S,19R)-18-acetyloxy-6-(furan-3-yl)-11-hydroxy-1,5,10,15-tetramethyl-13-oxapentacyclo[10.6.1.02,10.05,9.015,19]nonadec-8-en-16-yl] acetate",Azadirachta indica,512.64,4.79,1,7,95.2,3,TRUE,FALSE,,0.46,1,0.297,0.473,0.553,TRUE,
+OP0308,"1,3-diacetylvilasinin",Azadirachta indica,512.64,4.79,1,7,95.2,3,TRUE,FALSE,,0.46,1,0.297,0.473,0.553,TRUE,
+OP0309,"[(5R,6R,7S,8R,9R,10R,13S,17R)-17-(furan-3-yl)-6-hydroxy-4,4,8,10,13-pentamethyl-3-oxo-1,2,5,6,7,9,11,12,16,17-decahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,454.61,5.43,1,5,76.7,2,TRUE,FALSE,,0.476,1,0.378,0.53,0.518,TRUE,
+OP0310,ISOMELDENIN,Azadirachta indica,454.61,5.43,1,5,76.7,2,TRUE,FALSE,,0.476,1,0.378,0.53,0.518,TRUE,
+OP0311,CAMPESTEROL,Azadirachta indica,400.69,7.63,1,1,20.2,5,TRUE,FALSE,,0.47,1,0.525,0.237,0.56,TRUE,
+OP0312,kaempferol,Azadirachta indica,286.24,2.28,4,6,111.1,1,TRUE,FALSE,,0.546,0,0.017,0.647,0.619,TRUE,
+OP0313,(-)-Epicatechin,Azadirachta indica,290.27,1.55,5,6,110.4,1,TRUE,TRUE,catechol_A(92),0.51,0,0.421,0.363,0.469,FALSE,ranked_below_cap
+OP0314,Cianidanol,Azadirachta indica,290.27,1.55,5,6,110.4,1,TRUE,TRUE,catechol_A(92),0.51,0,0.421,0.363,0.469,FALSE,ranked_below_cap
+OP0315,"(2~{S})-5,7,8-trihydroxy-2-[4-hydroxy-3-(3-methylbut-3-enyl)phenyl]chroman-4-one",Azadirachta indica,356.37,3.72,4,6,107.2,4,TRUE,TRUE,catechol_A(92),0.378,0,0.124,0.607,0.432,FALSE,ranked_below_cap
+OP0316,"2-[(1~{R},2~{S},4~{R},6~{S},9~{R},10~{R},11~{R},12~{S},14~{R},15~{R},18~{R})-6-(3-furyl)-12,14-dihydroxy-7,9,11,15-tetramethyl-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadec-7-en-10-yl]acetic acid",Azadirachta indica,458.55,3.11,3,7,109.4,3,TRUE,FALSE,,0.597,0,0.066,0.637,0.628,TRUE,
+OP0317,Salannic acid,Azadirachta indica,458.55,3.11,3,7,109.4,3,TRUE,FALSE,,0.597,0,0.066,0.637,0.628,TRUE,
+OP0318,(E)-beta-ocimene,Azadirachta indica,136.24,3.48,0,0,0,3,TRUE,FALSE,,0.411,0,0.135,0.14,0.682,TRUE,
+OP0319,2-Methyltricosane,Azadirachta indica,338.66,9.46,0,0,0,20,FALSE,FALSE,,0.194,1,0.422,0.13,0.512,TRUE,
+OP0320,Methyl propyl disulfide,Azadirachta indica,122.26,2.41,0,0,0,3,TRUE,FALSE,,0.416,0,0.155,0.15,0.675,TRUE,
+OP0321,azadirachtin B,Azadirachta indica,662.69,-0.09,3,14,189,5,FALSE,FALSE,,0.153,2,0.134,0.557,0.454,FALSE,lipinski_over_1
+OP0322,"(4~{a}~{S},10~{a}~{S})-6-hydroxy-7-isopropyl-1,1,4~{a}-trimethyl-3,4,10,10~{a}-tetrahydrophenanthrene-2,9-dione",Azadirachta indica,314.43,4.37,1,3,54.4,1,TRUE,FALSE,,0.837,0,0.165,0.407,0.763,TRUE,
+OP0323,"(4~{a}~{S},10~{a}~{R})-6-ethyl-7-methoxy-1,1,4~{a}-trimethyl-4,9,10,10~{a}-tetrahydro-3~{H}-phenanthren-2-one",Azadirachta indica,300.44,4.47,0,2,26.3,2,TRUE,FALSE,,0.805,0,0.727,0.37,0.593,FALSE,herg_risk_high
+OP0324,TRIDECYLBENZENE,Azadirachta indica,260.46,6.54,0,0,0,12,FALSE,FALSE,,0.374,1,0.908,0.173,0.425,FALSE,herg_risk_high
+OP0325,Azadirachtin A+B,Azadirachta indica,720.72,-0.2,3,16,215.3,6,FALSE,FALSE,,0.14,2,0.252,0.613,0.396,FALSE,lipinski_over_1
+OP0326,"dimethyl (1S,4S,5R,6S,7S,11S,12R,14S,15R)-12-acetyloxy-4,7-dihydroxy-6-[(1S,2S,6S,9R,11S)-2-hydroxy-11-methyl-5,7,10-trioxatetracyclo[6.3.1.02,6.09,11]dodec-3-en-9-yl]-6-methyl-14-[(E)-2-methylbut-2-enoyl]oxy-3,9-dioxatetracyclo[6.6.1.01,5.011,15]pentadecane-4,11-dicarboxylate",Azadirachta indica,720.72,-0.2,3,16,215.3,6,FALSE,FALSE,,0.14,2,0.252,0.613,0.396,FALSE,lipinski_over_1
+OP0327,azadirachtin,Azadirachta indica,720.72,-0.2,3,16,215.3,6,FALSE,FALSE,,0.14,2,0.252,0.613,0.396,FALSE,lipinski_over_1
+OP0328,azadirachtin B,Azadirachta indica,720.72,-0.2,3,16,215.3,6,FALSE,FALSE,,0.14,2,0.252,0.613,0.396,FALSE,lipinski_over_1
+OP0329,Azadirachtin A,Azadirachta indica,720.72,-0.2,3,16,215.3,6,FALSE,FALSE,,0.14,2,0.252,0.613,0.396,FALSE,lipinski_over_1
+OP0330,Nimbanal,Azadirachta indica,510.58,3.95,0,8,109.1,5,TRUE,FALSE,,0.333,1,0.285,0.7,0.438,FALSE,hepatotox_risk_high
+OP0331,,Azadirachta indica,484.68,5.45,1,5,80.7,5,TRUE,FALSE,,0.525,1,0.294,0.33,0.623,TRUE,
+OP0332,"[(5~{R},7~{R},8~{S},9~{S},10~{R},11~{S},12~{R},13~{S},17~{R})-7-acetoxy-12-hydroxy-17-[(2~{R})-2-hydroxy-5-oxo-2~{H}-furan-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-11-yl] 2-hydroxy-2-methyl-propanoate",Azadirachta indica,586.68,2.54,3,10,156.7,4,FALSE,FALSE,,0.254,1,0.036,0.44,0.559,TRUE,
+OP0333,7-Deacetyl-7-benzoylgedunin,Azadirachta indica,544.64,5.85,0,7,95.3,3,TRUE,FALSE,,0.353,2,0.584,0.473,0.424,FALSE,lipinski_over_1
+OP0334,"[(1~{R},2~{S},5~{S},6~{S},10~{R},11~{S},12~{R},15~{R},16~{R},18~{S},19~{R})-16-acetoxy-11-hydroxy-1,5,10,15-tetramethyl-6-[(3~{S})-5-oxotetrahydrofuran-3-yl]-13-oxapentacyclo[10.6.1.0^{2,10}.0^{5,9}.0^{15,19}]nonadec-8-en-18-yl] 3-methylbut-2-enoate",Azadirachta indica,570.72,4.53,1,8,108.4,4,TRUE,FALSE,,0.227,1,0.016,0.557,0.519,TRUE,
+OP0335,"[(5~{S},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S},17~{R})-17-(3-furyl)-7-hydroxy-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-6-yl] acetate",Azadirachta indica,452.59,5.21,1,5,76.7,2,TRUE,FALSE,,0.492,1,0.202,0.497,0.587,TRUE,
+OP0336,"[(1~{S},2~{S},3~{S},4~{R},5~{R},7~{R},8~{R},9~{S},10~{S},13~{R},15~{S})-2-acetoxy-4-formyl-13-(3-furyl)-5-hydroxy-9-(2-methoxy-2-oxo-ethyl)-4,8,10,12-tetramethyl-16-oxatetracyclo[8.6.0.0^{3,8}.0^{11,15}]hexadec-11-en-7-yl] (~{E})-2-methylbut-2-enoate",Azadirachta indica,612.72,4.45,1,10,138.6,7,TRUE,FALSE,,0.154,1,0.522,0.637,0.314,FALSE,ranked_below_cap
+OP0337,2-Undecanone,Azadirachta indica,170.3,3.72,0,1,17.1,8,TRUE,FALSE,,0.507,0,0.203,0.127,0.704,TRUE,
+OP0338,delta-Elemene,Azadirachta indica,204.36,4.75,0,0,0,3,TRUE,FALSE,,0.582,0,0.349,0.213,0.664,TRUE,
+OP0339,"methyl 2-[(1~{R},4~{R},5~{R},7~{S},8~{S},9~{R},10~{S},11~{S},12~{S})-5,7-diacetoxy-11-hydroxy-10-[(1~{S},2~{S},6~{S},8~{S},9~{R},11~{S})-2-hydroxy-11-methyl-5,7,10-trioxatetracyclo[6.3.1.0^{2,6}.0^{9,11}]dodec-3-en-9-yl]-4,8,10-trimethyl-2-oxatricyclo[6.3.1.0^{4,12}]dodecan-9-yl]-2-oxo-acetate",Azadirachta indica,620.65,0.57,2,13,176.7,5,FALSE,FALSE,,0.189,2,0.126,0.517,0.483,FALSE,lipinski_over_1
+OP0340,"[(1~{R},2~{R},3~{S},5~{S},8~{R},10~{R},11~{S},12~{R},14~{S},16~{S},17~{S})-16-(3-furyl)-2,7,7,11,17-pentamethyl-6,15-dioxo-4,13-dioxahexacyclo[9.8.0.0^{2,8}.0^{3,5}.0^{12,14}.0^{12,17}]nonadecan-10-yl] acetate",Azadirachta indica,482.57,3.84,0,7,98.6,2,TRUE,FALSE,,0.466,0,0.407,0.44,0.532,TRUE,
+OP0341,"[(5~{R},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S},17~{R})-17-(2-furyl)-7-hydroxy-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-6-yl] acetate",Azadirachta indica,452.59,5.21,1,5,76.7,2,TRUE,FALSE,,0.492,1,0.25,0.463,0.583,TRUE,
+OP0342,Nimbiol,Azadirachta indica,272.39,4.37,1,2,37.3,0,TRUE,FALSE,,0.761,0,0.042,0.383,0.777,TRUE,
+OP0343,"dimethyl (1~{S},4~{S},5~{S},6~{R},7~{S},8~{R},11~{S},12~{R},14~{S},15~{R})-12-acetoxy-4,7-dihydroxy-6-[(1~{R},2~{R},6~{S},8~{S})-2-hydroxy-10-methyl-5,7-dioxatricyclo[6.2.1.0^{2,6}]undeca-3,9-dien-9-yl]-6-methyl-14-[(~{E})-2-methylbut-2-enoyl]oxy-3,9-dioxatetracyclo[6.6.1.0^{1,5}.0^{11,15}]pentadecane-4,11-dicarboxylate",Azadirachta indica,704.72,0.59,3,15,202.8,6,FALSE,FALSE,,0.15,2,0.134,0.677,0.417,FALSE,lipinski_over_1
+OP0344,ETHYL PROPYL DISULFIDE,Azadirachta indica,136.28,2.8,0,0,0,4,TRUE,FALSE,,0.43,0,0.104,0.2,0.681,TRUE,
+OP0345,"[(5~{R},7~{R},8~{S},9~{S},10~{S},13~{R},17~{S})-17-acetoxy-17-[(2~{R})-2-hydroxy-5-oxo-2~{H}-furan-3-yl]-4,4,8,10,13-pentamethyl-3,16-dioxo-5,6,7,9,11,12-hexahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,540.61,3.14,1,9,133.3,3,TRUE,FALSE,,0.423,1,0.298,0.44,0.548,TRUE,
+OP0346,Daucosterol,Azadirachta indica,576.86,5.85,4,6,99.4,9,TRUE,FALSE,,0.257,2,0.688,0.317,0.401,FALSE,lipinski_over_1
+OP0347,"(2~{R},3~{R},4~{S},5~{S},6~{R})-2-[[(3~{S},8~{R},9~{R},10~{R},13~{R},14~{R},17~{R})-17-[(1~{R},4~{R})-4-ethyl-1,5-dimethyl-hexyl]-10,13-dimethyl-2,3,4,7,8,9,11,12,14,15,16,17-dodecahydro-1~{H}-cyclopenta[a]phenanthren-3-yl]oxy]-6-(hydroxymethyl)tetrahydropyran-3,4,5-triol",Azadirachta indica,576.86,5.85,4,6,99.4,9,TRUE,FALSE,,0.257,2,0.688,0.317,0.401,FALSE,lipinski_over_1
+OP0348,,Azadirachta indica,194.19,1.28,2,4,66.8,2,TRUE,FALSE,,0.423,0,0.036,0.323,0.661,TRUE,
+OP0349,"(2~{S})-5,7-dihydroxy-2-[4-hydroxy-3-(3-methylbut-3-enyl)phenyl]chroman-4-one",Azadirachta indica,340.38,4.02,3,5,87,4,TRUE,FALSE,,0.732,0,0.406,0.59,0.594,TRUE,
+OP0350,NONANAL,Azadirachta indica,142.24,2.94,0,1,17.1,7,TRUE,FALSE,,0.394,0,0.638,0.123,0.529,TRUE,
+OP0351,Dipropyl disulfide,Azadirachta indica,150.31,3.19,0,0,0,5,TRUE,FALSE,,0.436,0,0.09,0.173,0.696,TRUE,
+OP0352,"[(1~{R},2~{S},4~{R},6~{R},9~{R},10~{R},11~{R},12~{S},14~{R},15~{R},18~{R})-6-(3-furyl)-14-hydroxy-10-(2-methoxy-2-oxo-ethyl)-7,9,11,15-tetramethyl-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadec-7-en-12-yl] 2,3-dimethylbut-2-enoate",Azadirachta indica,568.71,5.11,1,8,104.4,5,TRUE,FALSE,,0.297,2,0.7,0.6,0.329,FALSE,lipinski_over_1
+OP0353,"(4~{b}~{R},8~{a}~{S})-2-isopropyl-4~{b},8,8-trimethyl-5,6,7,8~{a},9,10-hexahydrophenanthrene-1,4-diol",Azadirachta indica,302.46,5.25,2,2,40.5,1,TRUE,FALSE,,0.695,1,0.319,0.16,0.734,TRUE,
+OP0354,Azadirachtol,Azadirachta indica,580.58,-1.61,4,13,183,3,FALSE,FALSE,,0.221,2,0.061,0.547,0.506,FALSE,lipinski_over_1
+OP0355,,Azadirachta indica,454.61,5.43,1,5,76.7,2,TRUE,FALSE,,0.476,1,0.381,0.523,0.519,TRUE,
+OP0356,"[(5~{S},6~{R},7~{S},8~{R},9~{S},10~{R},11~{S},12~{R},13~{S},17~{R})-17-[(2~{R},5~{S})-2,5-dihydroxy-2,5-dihydrofuran-3-yl]-11,12-dihydroxy-6-methoxy-4,4,8,10,13-pentamethyl-1,16-dioxo-6,7,9,11,12,17-hexahydro-5~{H}-cyclopenta[a]phenanthren-7-yl] 3-methylbut-2-enoate",Azadirachta indica,586.68,1.76,4,10,159.8,4,FALSE,FALSE,,0.217,1,0.013,0.603,0.502,TRUE,
+OP0357,"[(1~{S},2~{R},7~{R},8~{S},9~{R},10~{S},11~{R},15~{R},16~{S})-15-(3-furyl)-7,9-dihydroxy-2,7,11,16-tetramethyl-5-oxo-10-tetracyclo[9.7.0.0^{2,8}.0^{12,16}]octadeca-3,12-dienyl] acetate",Azadirachta indica,468.59,4.32,2,6,97,2,TRUE,FALSE,,0.496,0,0.309,0.513,0.552,TRUE,
+OP0358,"(~{Z})-5-[(5~{S},6~{S},7~{S},8~{R},9~{R},10~{R},13~{S},17~{S})-6-acetoxy-7-hydroxy-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-17-yl]hex-4-enoic acid",Azadirachta indica,498.66,5.26,2,6,100.9,5,TRUE,FALSE,,0.396,1,0.069,0.39,0.621,TRUE,
+OP0359,,Azadirachta indica,498.66,5.26,2,6,100.9,5,TRUE,FALSE,,0.396,1,0.069,0.39,0.621,TRUE,
+OP0360,"[6-(3-furyl)-14-hydroxy-10-(2-methoxy-2-oxo-ethyl)-7,9,11,15-tetramethyl-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadec-7-en-12-yl] benzoate",Azadirachta indica,576.69,5.07,1,8,104.4,5,TRUE,FALSE,,0.389,2,0.674,0.657,0.356,FALSE,lipinski_over_1
+OP0361,"[(5~{S},7~{R},8~{R},9~{R},10~{R},13~{R},17~{R})-17-[(2~{S})-2-hydroxy-5-oxo-2~{H}-furan-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,468.59,4.28,1,6,89.9,2,TRUE,FALSE,,0.481,0,0.225,0.437,0.594,TRUE,
+OP0362,"[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{S},17~{R})-17-[(2~{S})-2-hydroxy-5-oxo-2~{H}-furan-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,468.59,4.28,1,6,89.9,2,TRUE,FALSE,,0.481,0,0.225,0.437,0.594,TRUE,
+OP0363,m-cresol,Azadirachta indica,108.14,1.7,1,1,20.2,0,TRUE,FALSE,,0.536,0,0.181,0.26,0.682,TRUE,
+OP0364,(+)-delta-Cadinene,Azadirachta indica,204.36,4.73,0,0,0,1,TRUE,FALSE,,0.542,0,0.32,0.277,0.638,TRUE,
+OP0365,"(2~{S})-5,7-dihydroxy-2-[3-(3-hydroxy-3-methyl-butyl)-4-methoxy-phenyl]-8-(3-methylbut-2-enyl)chroman-4-one",Azadirachta indica,440.54,5.03,3,6,96.2,7,TRUE,FALSE,,0.523,1,0.466,0.503,0.519,TRUE,
+OP0366,6-Methoxymellein,Azadirachta indica,208.21,1.5,1,4,55.8,1,TRUE,FALSE,,0.71,0,0.097,0.57,0.684,TRUE,
+OP0367,Mahmoodin,Azadirachta indica,526.63,4.47,1,8,112.3,5,TRUE,FALSE,,0.56,1,0.131,0.417,0.66,TRUE,
+OP0368,2-NONANONE,Azadirachta indica,142.24,2.94,0,1,17.1,6,TRUE,FALSE,,0.521,0,0.203,0.127,0.71,TRUE,
+OP0369,"[(1~{R},2~{R},7~{S},8~{R},9~{R},10~{S},11~{R},15~{R},16~{S})-15-(3-furyl)-7,9-dihydroxy-2,6,6,11,16-pentamethyl-5,14-dioxo-10-tetracyclo[9.7.0.0^{2,8}.0^{12,16}]octadeca-3,12-dienyl] acetate",Azadirachta indica,496.6,3.75,2,7,114,2,TRUE,FALSE,,0.6,0,0.132,0.553,0.634,TRUE,
+OP0370,l-ascorbic acid,Azadirachta indica,176.12,-1.41,4,6,107.2,2,TRUE,FALSE,,0.385,0,0.013,0.083,0.725,TRUE,
+OP0371,KULINONE,Azadirachta indica,440.71,7.51,1,2,37.3,4,TRUE,FALSE,,0.459,1,0.1,0.267,0.674,TRUE,
+OP0372,(-)-Linalool,Azadirachta indica,154.25,2.67,1,1,20.2,4,TRUE,FALSE,,0.617,0,0.136,0.107,0.774,TRUE,
+OP0373,"[(1~{R},2~{R},5~{R},6~{R},11~{R},12~{S},13~{R},16~{R},17~{R},19~{S},20~{R})-6-(2-furyl)-12,17-dihydroxy-1,5,11,16-tetramethyl-8-oxo-7,14-dioxapentacyclo[11.6.1.0^{2,11}.0^{5,10}.0^{16,20}]icos-9-en-19-yl] 2,3-dimethylbut-2-enoate",Azadirachta indica,554.68,4.66,2,8,115.4,3,TRUE,FALSE,,0.41,1,0.23,0.453,0.559,TRUE,
+OP0374,"methyl 2-[(1~{S},2~{R},3~{R},4~{R},8~{R},9~{S},10~{R},13~{R},15~{R})-4-formyl-13-(3-furyl)-2-hydroxy-4,8,10,12-tetramethyl-7-oxo-16-oxatetracyclo[8.6.0.0^{3,8}.0^{11,15}]hexadeca-5,11-dien-9-yl]acetate",Azadirachta indica,468.55,3.38,1,7,103,4,TRUE,FALSE,,0.41,0,0.231,0.667,0.495,TRUE,
+OP0375,17-Hydroxyazadiradione,Azadirachta indica,466.57,4.52,1,6,93.8,2,TRUE,FALSE,,0.644,0,0.215,0.417,0.668,TRUE,
+OP0376,17-epi-17-Hydroxyazadiradione,Azadirachta indica,466.57,4.52,1,6,93.8,2,TRUE,FALSE,,0.644,0,0.215,0.417,0.668,TRUE,
+OP0377,Tamarixin,Azadirachta indica,478.41,-0.24,7,12,199.5,5,FALSE,FALSE,,0.254,2,0.064,0.617,0.497,FALSE,lipinski_over_1
+OP0378,"[(5~{R},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S},17~{R})-6-hydroxy-17-[(2~{S})-2-methoxy-5-oxo-2~{H}-furan-4-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,498.62,3.9,1,7,99.1,3,TRUE,FALSE,,0.465,0,0.26,0.533,0.548,TRUE,
+OP0379,"[(5~{R},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S},17~{R})-6-hydroxy-17-(2-methoxy-5-oxo-2~{H}-furan-4-yl)-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,498.62,3.9,1,7,99.1,3,TRUE,FALSE,,0.465,0,0.26,0.533,0.548,TRUE,
+OP0380,STIGMASTEROL,Azadirachta indica,412.7,7.8,1,1,20.2,5,TRUE,FALSE,,0.457,1,0.622,0.19,0.539,TRUE,
+OP0381,"[(5~{S},6~{R},7~{S},8~{R},9~{R},10~{S},13~{S},17~{S})-17-[(1~{S})-1-formylpropyl]-6-methoxy-4,4,8,10,13-pentamethyl-3,16-dioxo-6,7,9,11,12,17-hexahydro-5~{H}-cyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,484.63,4.51,0,6,86.7,5,TRUE,FALSE,,0.422,0,0.297,0.397,0.561,TRUE,
+OP0382,"[(5~{R},6~{R},7~{S},8~{R},9~{R},10~{R},13~{S},17~{S})-17-[(1~{S})-1-formylpropyl]-6-methoxy-4,4,8,10,13-pentamethyl-3,16-dioxo-6,7,9,11,12,17-hexahydro-5~{H}-cyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,484.63,4.51,0,6,86.7,5,TRUE,FALSE,,0.422,0,0.297,0.397,0.561,TRUE,
+OP0383,Isofraxidin,Azadirachta indica,222.2,1.52,1,5,68.9,2,TRUE,FALSE,,0.78,0,0.132,0.607,0.69,TRUE,
+OP0384,"[(1~{S},4~{b}~{R},5~{R},6~{a}~{R},10~{a}~{R},10~{b}~{R},12~{a}~{R})-1-methoxy-4~{b},7,7,10~{a},12~{a}-pentamethyl-1-[(~{E})-1-methylpent-1-enyl]-3,8-dioxo-5,6,6~{a},10~{b},11,12-hexahydronaphtho[2,1-f]isochromen-5-yl] acetate",Azadirachta indica,512.69,6.1,0,6,78.9,5,TRUE,FALSE,,0.327,2,0.804,0.393,0.371,FALSE,lipinski_over_1;herg_risk_high
+OP0385,"[(5~{R},7~{R},8~{R},9~{S},10~{S},11~{S},12~{R},13~{S},17~{R})-11-acetoxy-12-hydroxy-17-[(2~{R})-2-hydroxy-5-oxo-2~{H}-furan-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,542.63,2.79,2,9,136.4,3,TRUE,FALSE,,0.313,1,0.09,0.533,0.538,TRUE,
+OP0386,"[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{S},17~{S})-17-[(2~{S},3~{R})-2-ethoxytetrahydrofuran-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,16,17-octahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,484.68,5.88,0,5,61.8,4,TRUE,FALSE,,0.368,1,0.251,0.433,0.542,TRUE,
+OP0387,"[(1~{R},2~{S},4~{R},6~{R},9~{R},10~{R},11~{R},12~{S},14~{R},15~{R},18~{R})-14-acetoxy-10-(2-methoxy-2-oxo-ethyl)-7,9,11,15-tetramethyl-6-(5-oxo-1,2-dihydropyrrol-4-yl)-3,17-dioxapentacyclo[9.6.1.0^{2,9}.0^{4,8}.0^{15,18}]octadec-7-en-12-yl] (~{E})-2-methylbut-2-enoate",Azadirachta indica,611.73,3.59,1,10,126.5,6,TRUE,FALSE,,0.208,1,0.139,0.62,0.455,FALSE,ranked_below_cap
+OP0388,Mundulea flavanone B,Azadirachta indica,354.4,4.32,2,5,76,4,TRUE,FALSE,,0.8,0,0.661,0.543,0.559,TRUE,
+OP0389,"methyl 2-[(1~{S},2~{R},3~{R},4~{R},8~{R},9~{S},10~{R},13~{R},15~{R})-2-acetoxy-13-(3-furyl)-4-(hydroxymethyl)-4,8,10,12-tetramethyl-7-oxo-16-oxatetracyclo[8.6.0.0^{3,8}.0^{11,15}]hexadeca-5,11-dien-9-yl]acetate",Azadirachta indica,512.6,3.74,1,8,112.3,5,TRUE,FALSE,,0.469,1,0.171,0.657,0.539,TRUE,
+OP0390,2-PHENYLETHANOL,Azadirachta indica,122.17,1.22,1,1,20.2,2,TRUE,FALSE,,0.625,0,0.156,0.14,0.761,TRUE,
+OP0391,3-acetyl-11-methoxy-1-tigloylazadirachtinin,Azadirachta indica,734.75,0.45,2,16,201,6,FALSE,FALSE,,0.216,2,0.597,0.483,0.362,FALSE,lipinski_over_1
+OP0392,palmitic acid,Azadirachta indica,256.43,5.55,1,2,37.3,14,FALSE,FALSE,,0.413,1,0.091,0.11,0.705,TRUE,
+OP0393,,Azadirachta indica,368.47,5.59,2,4,74.6,9,TRUE,FALSE,,0.557,1,0.015,0.663,0.619,TRUE,
+OP0394,"[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{R},14~{R},17~{R})-17-hydroxy-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,14,15,16,17-decahydrocyclopenta[a]phenanthren-7-yl] (~{E})-3-(3-hydroxy-4-methoxy-phenyl)prop-2-enoate",Azadirachta indica,522.68,5.71,2,6,93.1,4,TRUE,FALSE,,0.389,2,0.79,0.347,0.415,FALSE,lipinski_over_1;herg_risk_high
+OP0395,"(1~{R},2~{R},5~{R},6~{R},11~{R},12~{S},13~{R},16~{R},17~{R},19~{S},20~{R})-19-(2,3-dimethylbut-2-enoyl)-6-(3-furyl)-12,17-dihydroxy-1,5,11,16-tetramethyl-7,14-dioxapentacyclo[11.6.1.0^{2,11}.0^{5,10}.0^{16,20}]icos-9-en-8-one",Azadirachta indica,538.68,4.93,2,7,106.2,3,TRUE,FALSE,,0.415,1,0.081,0.5,0.592,TRUE,
+OP0396,Flowerone,Azadirachta indica,356.37,3.72,4,6,107.2,3,TRUE,TRUE,catechol_A(92),0.379,0,0.369,0.607,0.359,FALSE,ranked_below_cap
+OP0397,Propanedial,Azadirachta indica,72.06,-0.23,0,2,34.1,2,TRUE,FALSE,,0.333,0,0.085,0.17,0.657,TRUE,
+OP0398,SALANNIN PP,Azadirachta indica,628.72,3.33,1,11,143.9,6,FALSE,FALSE,,0.2,2,0.181,0.603,0.445,FALSE,lipinski_over_1
+OP0399,,Azadirachta indica,230.44,5.08,0,0,0,7,TRUE,FALSE,,0.442,1,0.145,0.153,0.687,TRUE,
+OP0400,,Azadirachta indica,230.44,5.08,0,0,0,7,TRUE,FALSE,,0.442,1,0.145,0.153,0.687,TRUE,
+OP0401,2-Furfuryl-5-methylfuran,Azadirachta indica,162.19,2.77,0,2,26.3,2,TRUE,FALSE,,0.678,0,0.262,0.37,0.682,TRUE,
+OP0402,"[(5~{R},7~{R},8~{R},9~{R},10~{R},13~{R})-4,4,8,10,13-pentamethyl-3,16,17-trioxo-5,6,7,9,11,12-hexahydrocyclopenta[a]phenanthren-7-yl] acetate",Azadirachta indica,398.5,3.61,0,5,77.5,1,TRUE,TRUE,imine_one_A(321),0.498,0,0.071,0.44,0.546,TRUE,
+OP0403,"dimethyl (1~{S},5~{R},6~{S},7~{S},8~{R},11~{S},12~{R},14~{R},15~{R})-7,14-dihydroxy-6-[(1~{S},2~{S},6~{S},8~{S},9~{R},11~{S})-3-hydroxy-11-methyl-5,7,10-trioxatetracyclo[6.3.1.0^{2,6}.0^{9,11}]dodec-3-en-9-yl]-6-methyl-12-[(~{E})-2-methylbut-2-enoyl]oxy-3,9-dioxatetracyclo[6.6.1.0^{1,5}.0^{11,15}]pentadecane-4,11-dicarboxylate",Azadirachta indica,662.69,0.68,3,14,189,5,FALSE,FALSE,,0.161,2,0.07,0.587,0.467,FALSE,lipinski_over_1
+OP0404,Methyl butyl disulfide,Azadirachta indica,136.28,2.8,0,0,0,4,TRUE,FALSE,,0.43,0,0.512,0.14,0.576,TRUE,
+OP0405,trithiacyclononane,Azadirachta indica,180.36,3.59,0,0,0,0,TRUE,FALSE,,0.523,0,0.015,0.063,0.786,TRUE,
+OP0406,10-Undecyn-1-ol,Azadirachta indica,168.28,2.73,1,1,20.2,8,TRUE,FALSE,,0.436,0,0.028,0.147,0.722,TRUE,
+OP0407,eicosatrienoic acid methylester,Azadirachta indica,320.52,6.53,0,2,26.3,15,FALSE,FALSE,,0.148,1,0.246,0.167,0.535,TRUE,
+OP0408,"5-benzyloxy-5-methyl-cyclohexa-1,3-dien-1-ol",Azadirachta indica,216.28,3.36,1,2,29.5,3,TRUE,FALSE,,0.839,0,0.849,0.163,0.632,FALSE,herg_risk_high
+OP0409,"D9,11-Nimolinone",Azadirachta indica,422.61,6.2,0,3,43.4,2,TRUE,FALSE,,0.393,1,0.147,0.407,0.591,TRUE,
+OP0410,3'-epi-Taxol,Azadirachta indica,853.92,3.74,4,15,221.3,10,FALSE,FALSE,,0.13,2,0.766,0.903,0.151,FALSE,lipinski_over_1;herg_risk_high;hepatotox_risk_high
+OP0411,Nimocinolide,Azadirachta indica,500.59,2.57,3,8,130.4,2,TRUE,FALSE,,0.3,1,0.573,0.453,0.412,FALSE,ranked_below_cap
+OP0412,"[(5~{R},7~{R},8~{R},9~{R},10~{R},12~{S},13~{S},14~{S},17~{S})-12-hydroxy-17-[(3~{R})-2-hydroxy-5-(hydroxymethyl)tetrahydrofuran-3-yl]-4,4,8,10,13-pentamethyl-3-oxo-5,6,7,9,11,12,14,15,16,17-decahydrocyclopenta[a]phenanthren-7-yl] (~{E})-3-(4-acetoxy-3-methoxy-phenyl)prop-2-enoate",Azadirachta indica,680.84,4.87,3,10,148.8,7,FALSE,FALSE,,0.207,1,0.566,0.553,0.347,FALSE,ranked_below_cap
+OP0413,NIMBIC ACID,Azadirachta indica,470.52,3.03,3,8,134.3,4,TRUE,FALSE,,0.572,0,0.129,0.627,0.602,TRUE,
+OP0414,Naheedin,Azadirachta indica,528.73,5.22,2,6,93.1,4,TRUE,FALSE,,0.384,2,0.054,0.533,0.577,FALSE,lipinski_over_1
+OP0415,,Azadirachta indica,484.63,3.81,2,6,100.9,4,TRUE,FALSE,,0.465,0,0.421,0.437,0.529,TRUE,
+OP0416,,Azadirachta indica,608.81,3.53,5,9,153.8,8,FALSE,FALSE,,0.206,1,0.231,0.313,0.519,TRUE,
+OP0417,CHEMBL182932,Azadirachta indica,346.38,3.37,4,6,99.4,5,TRUE,TRUE,catechol_A(92),0.489,0,0.968,0.377,0.292,FALSE,herg_risk_high
+OP0418,,Azadirachta indica,362.38,3.08,5,7,119.6,5,TRUE,TRUE,catechol_A(92),0.409,0,0.969,0.427,0.245,FALSE,herg_risk_high
+OP0419,,Azadirachta indica,933.49,15.87,3,8,122.5,52,FALSE,FALSE,,0.031,2,0.751,0.207,0.325,FALSE,lipinski_over_1;herg_risk_high
+OP0420,,Azadirachta indica,572.61,1.96,1,11,151.7,5,FALSE,FALSE,,0.292,2,0.12,0.583,0.506,FALSE,lipinski_over_1
+OP0421,,Azadirachta indica,484.68,5.88,0,5,61.8,4,TRUE,FALSE,,0.368,1,0.25,0.41,0.549,TRUE,
+OP0422,,Azadirachta indica,496.6,3.61,0,7,103.8,4,TRUE,FALSE,,0.433,0,0.159,0.603,0.545,TRUE,
+OP0423,"7-acetyl-6-hydroxy-1,1,4a-trimethyl-3,4,10,10a-tetrahydro-2H-phenanthren-9-one",Azadirachta indica,300.4,4.27,1,3,54.4,1,TRUE,FALSE,,0.788,0,0.053,0.433,0.769,TRUE,
+OP0424,,Azadirachta indica,586.68,2.54,3,10,156.7,4,FALSE,FALSE,,0.254,1,0.12,0.423,0.539,TRUE,
+OP0425,,Azadirachta indica,548.72,5.9,1,6,82.1,4,TRUE,FALSE,,0.373,2,0.6,0.533,0.409,FALSE,lipinski_over_1
+OP0426,,Azadirachta indica,572.61,1.96,1,11,151.7,5,FALSE,FALSE,,0.292,2,0.269,0.6,0.456,FALSE,lipinski_over_1
+OP0427,,Azadirachta indica,528.77,6.81,1,5,65,2,TRUE,FALSE,,0.315,2,0.031,0.43,0.588,FALSE,lipinski_over_1
+OP0428,,Azadirachta indica,526.76,7.02,0,5,61.8,2,TRUE,FALSE,,0.286,2,0.039,0.45,0.568,FALSE,lipinski_over_1
+OP0429,,Azadirachta indica,524.65,4.34,2,7,106.2,3,TRUE,FALSE,,0.344,1,0.054,0.63,0.532,TRUE,
+OP0430,,Azadirachta indica,714.85,6.69,1,10,130.7,7,TRUE,FALSE,,0.143,2,0.439,0.657,0.328,FALSE,lipinski_over_1
+OP0431,,Azadirachta indica,190.16,1.89,1,5,76,2,TRUE,FALSE,,0.446,0,0.05,0.817,0.518,FALSE,hepatotox_risk_high
+OP0432,,Azadirachta indica,596.72,4.88,1,9,121.5,5,TRUE,FALSE,,0.219,1,0.503,0.573,0.365,FALSE,ranked_below_cap
+OP0433,,Azadirachta indica,316.44,4.3,2,3,57.5,1,TRUE,FALSE,,0.812,0,0.126,0.307,0.795,TRUE,
+OP0434,,Azadirachta indica,700.83,6.3,1,10,130.7,7,TRUE,FALSE,,0.152,2,0.407,0.667,0.339,FALSE,lipinski_over_1
+OP0435,,Azadirachta indica,426.55,5.99,2,5,76,8,TRUE,FALSE,,0.542,1,0.151,0.523,0.614,TRUE,
+OP0436,,Azadirachta indica,496.6,3.75,2,7,114,2,TRUE,FALSE,,0.6,0,0.144,0.6,0.617,TRUE,
+OP0437,115321-79-4,Azadirachta indica,162.32,3.7,0,0,0,5,TRUE,FALSE,,0.446,0,0.311,0.157,0.638,TRUE,
