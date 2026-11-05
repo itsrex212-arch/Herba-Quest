@@ -218,3 +218,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# added by the OmniPhyto sync notebook
+*.pyc
+.venv/
+data/output/
+.DS_Store
