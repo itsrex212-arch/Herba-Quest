@@ -27,7 +27,7 @@ OUTPUT_DIR = ROOT / "data" / "output"
 SETTINGS_PATH = ROOT / "data" / "input" / "project_settings.json"
 COLUMN_MAP_PATH = ROOT / "data" / "input" / "compound_columns.json"
 MANIFEST = OUTPUT_DIR / "manifest.csv"
-PAGES = ["Welcome", "Overview", "Upload compounds", "Run Pipeline", "Ligand prep", "Docking", "Results", "MD simulation", "Compound explorer", "Settings"]
+PAGES = ["Welcome", "Overview", "Upload compounds", "Run Pipeline", "Ligand prep", "Docking", "Results", "MD simulation", "Compound explorer", "Settings", "Ranked results", "3D pose viewer", "Docking summary", "MD summary", "Limitations"]
 
 
 def saved_column_map() -> dict[str, str]:
@@ -2596,7 +2596,11 @@ elif page == "Run Pipeline":
                 st.error("Pipeline blocked. Missing ligand-preparation tools: " + ", ".join(missing_tools) + ". No output was created.")
             elif st.button("Run ligand preparation", type="primary"):
                 try:
-                    succeeded, total = run_pipeline(INPUT_PATH, OUTPUT_DIR, id_column=mapping["id_column"], smiles_column=mapping["smiles_column"], seed=2026, overwrite=False)
+                    try:
+                        succeeded, total = run_pipeline(INPUT_PATH, OUTPUT_DIR, id_column=mapping["id_column"], smiles_column=mapping["smiles_column"], seed=2026, overwrite=False)
+                    except (RuntimeError, NotImplementedError) as exc:
+                        st.error(f"Ligand preparation could not run: {exc}")
+                        st.stop()
                     st.success(f"Ligand preparation finished: {succeeded}/{total} compounds prepared. See Ligand prep for per-compound status and errors.")
                     st.warning("Docking and scoring were not run. No ranking or binding score is available from this action.")
                 except Exception as exc:
@@ -2772,3 +2776,133 @@ elif page == "Settings":
             save_settings(SETTINGS_PATH, values)
             st.success(f"Settings saved to {SETTINGS_PATH.relative_to(ROOT)}")
     panel("For future docking work", "A scientifically prepared receptor PDBQT, justified target-specific box coordinates, a documented approved protocol, and a verified docking implementation would be required. None are fabricated or implied here.", "SCIENTIFIC INPUTS")
+
+
+# Integrated result pages read the archive's documented processed/results/md_report paths.
+# They display supplied files only and never create scientific data.
+elif page == "Ranked results":
+    page_header("Ranked results", "Display supplied ranking records only; scores are not calculated here.", "OMNIPHYTO / VERIFIED RESULTS")
+    ranking_path = ROOT / "data" / "processed" / "ranking.csv"
+    if not ranking_path.is_file():
+        st.info("No ranking file is present at data/processed/ranking.csv.")
+    else:
+        try:
+            ranking = pd.read_csv(ranking_path, keep_default_na=True)
+            if ranking.empty:
+                st.info("The ranking file exists but has no records.")
+            elif not {"compound_id", "rank"}.issubset(ranking.columns):
+                st.error("Ranking table needs compound_id and rank columns; see docs/data_dictionary.md.")
+            else:
+                if "selectivity_adjusted_efficacy_score" in ranking.columns:
+                    st.caption("Metric label: selectivity-adjusted efficacy score. Supplied as-is; no formula or value is calculated here.")
+                st.dataframe(ranking, hide_index=True, use_container_width=True)
+                st.download_button("Download ranking CSV", ranking.to_csv(index=False), "ranking.csv", "text/csv")
+                if "record_status" in ranking.columns and ranking["record_status"].astype(str).eq("FAKE_SAMPLE").any():
+                    st.warning("This file includes FAKE_SAMPLE rows. They are placeholders, not rankings or scientific results.")
+        except (OSError, UnicodeError, pd.errors.ParserError) as exc:
+            st.error(f"Could not read ranking.csv: {exc}")
+    st.caption("An empty or synthetic table is not evidence of compound activity or selectivity.")
+
+elif page == "3D pose viewer":
+    import streamlit.components.v1 as components
+    page_header("3D pose viewer", "Render a supplied pose file only; no pose is generated or predicted.", "OMNIPHYTO / VERIFIED STRUCTURES")
+    docking_path = ROOT / "data" / "processed" / "docking_target.csv"
+    options = []
+    if docking_path.is_file():
+        try:
+            docking_rows = pd.read_csv(docking_path, keep_default_na=True)
+            if "pose_file" in docking_rows.columns:
+                for _, row in docking_rows.iterrows():
+                    filename = row.get("pose_file")
+                    if not isinstance(filename, str) or not filename.strip():
+                        continue
+                    file_path = (ROOT / filename).resolve()
+                    try:
+                        file_path.relative_to(ROOT.resolve())
+                    except ValueError:
+                        continue
+                    if file_path.is_file() and file_path.suffix.lower() in {".pdb", ".pdbqt", ".sdf", ".mol"}:
+                        options.append((str(row.get("compound_id", "unknown")), filename, file_path))
+        except (OSError, UnicodeError, pd.errors.ParserError) as exc:
+            st.error(f"Could not read docking_target.csv: {exc}")
+    pose_dir = ROOT / "results" / "poses"
+    if pose_dir.is_dir():
+        for file_path in sorted(pose_dir.iterdir()):
+            if file_path.is_file() and file_path.suffix.lower() in {".pdb", ".pdbqt", ".sdf", ".mol"} and all(item[2] != file_path for item in options):
+                options.append((file_path.stem, str(file_path.relative_to(ROOT)), file_path))
+    if not options:
+        st.info("No pose file found. Add a PDB, PDBQT, SDF, or MOL file under results/poses/ and reference it from docking_target.csv.")
+    else:
+        labels = [f"{cid} · {filename}" for cid, filename, _ in options]
+        selected = st.selectbox("Pose file", labels)
+        cid, filename, file_path = options[labels.index(selected)]
+        try:
+            import py3Dmol
+            formats = {".pdb": "pdb", ".pdbqt": "pdbqt", ".sdf": "sdf", ".mol": "mol"}
+            view = py3Dmol.view(width=900, height=560)
+            view.addModel(file_path.read_text(encoding="utf-8", errors="replace"), formats[file_path.suffix.lower()])
+            view.setStyle({"stick": {}})
+            view.zoomTo()
+            components.html(view._make_html(), height=580, scrolling=False)
+            st.caption(f"Source: {filename}. A rendered pose is not evidence of binding or efficacy.")
+        except ImportError:
+            st.error("py3Dmol is unavailable. Install requirements with python -m pip install -r requirements.txt.")
+        except (OSError, ValueError, KeyError, RuntimeError) as exc:
+            st.error(f"Could not render this pose file: {exc}")
+
+elif page == "Docking summary":
+    page_header("Docking summary", "Review supplied target and antitarget tables. This app does not run docking.", "OMNIPHYTO / VERIFIED RESULTS")
+    st.warning("Docking scores are supplied file values only, not measured binding affinities or clinical results.")
+    for title, filename in [("Target docking", "docking_target.csv"), ("Antitarget docking", "docking_antitargets.csv")]:
+        st.subheader(title)
+        path = ROOT / "data" / "processed" / filename
+        if not path.is_file():
+            st.info(f"No {filename} found in data/processed.")
+            continue
+        try:
+            table = pd.read_csv(path, keep_default_na=True)
+            if table.empty:
+                st.info(f"{filename} exists but has no rows.")
+            else:
+                st.dataframe(table, hide_index=True, use_container_width=True)
+                if "record_status" in table.columns and table["record_status"].astype(str).eq("FAKE_SAMPLE").any():
+                    st.caption("Includes FAKE_SAMPLE placeholder rows.")
+                if "vina_affinity_kcal_mol" in table.columns and not table["vina_affinity_kcal_mol"].notna().any():
+                    st.info("No docking scores are populated; no docking result is available.")
+        except (OSError, UnicodeError, pd.errors.ParserError) as exc:
+            st.error(f"Could not read {filename}: {exc}")
+
+elif page == "MD summary":
+    page_header("MD summary", "Preview supplied files in md_report; no simulation is run.", "OMNIPHYTO / VERIFIED REPORTS")
+    report_dir = ROOT / "md_report"
+    files = sorted(path for path in report_dir.rglob("*") if path.is_file()) if report_dir.is_dir() else []
+    if not files:
+        st.info("No MD report files are available in md_report yet.")
+    for file_path in files:
+        relative = file_path.relative_to(ROOT)
+        suffix = file_path.suffix.lower()
+        with st.expander(str(relative), expanded=suffix in {".md", ".txt"}):
+            try:
+                if suffix in {".md", ".txt"}:
+                    st.markdown(file_path.read_text(encoding="utf-8", errors="replace"))
+                elif suffix == ".csv":
+                    st.dataframe(pd.read_csv(file_path), hide_index=True, use_container_width=True)
+                elif suffix == ".json":
+                    st.json(json.loads(file_path.read_text(encoding="utf-8")))
+                else:
+                    st.download_button("Download file", file_path.read_bytes(), file_name=file_path.name, key=str(relative))
+            except (OSError, UnicodeError, ValueError, pd.errors.ParserError) as exc:
+                st.error(f"Could not preview file: {exc}")
+    st.caption("Report previews do not validate simulation workflow or interpret missing values as results.")
+
+elif page == "Limitations":
+    page_header("Limitations", "Research workflow only. Interpret every result within its evidence and provenance.", "OMNIPHYTO / SCIENTIFIC BOUNDARIES")
+    st.markdown("""
+- Docking and molecular dynamics are not run by these result pages. They display supplied files only.
+- A docking score is a scoring-function output, not experimentally measured binding affinity or proof of binding.
+- The selectivity-adjusted efficacy score is a display label only. This project defines no formula, inputs, weights, calibration, or interpretation for it.
+- The dashboard does not establish efficacy, safety, toxicity, dosage, diagnosis, or suitability for human or veterinary use.
+- A 3D pose viewer renders an existing structure file. It does not validate pose quality or biological relevance.
+- MD report previews do not validate parameters, software, analysis, or conclusions.
+- Bundled rows labelled FAKE_SAMPLE are fictional placeholders, not chemical identities or scientific evidence.
+""")
