@@ -1,4 +1,4 @@
-# Meeko is installed with pip. RDKit and Open Babel must be installed in the same environment for real ligand preparation.
+rdkit
 meeko>=0.6,<1.0
 streamlit>=1.30,<2.0
 pandas>=2.0,<3.0
