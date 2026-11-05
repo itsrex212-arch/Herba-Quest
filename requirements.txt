@@ -1,4 +1,8 @@
 rdkit
-meeko>=0.6,<1.0
-streamlit>=1.30,<2.0
-pandas>=2.0,<3.0
+   numpy<2
+   scipy
+   gemmi
+   prody
+   meeko>=0.6,<1.0
+   streamlit>=1.30,<2.0
+   pandas>=2.0,<3.0
