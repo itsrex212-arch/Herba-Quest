@@ -1,0 +1,5 @@
+receptor,ligand,verdict,top1_rmsd,best_rmsd,ref_score
+dpp4,605,PASS,0.33,0.33,-10.077
+herg,XB7,PARTIAL,3.95,0.86,-12.555
+cyp3a4,KLN,PASS,0.7,0.7,-10.735
+cyp2d6,PN0,PASS,1.48,1.48,-10.959
