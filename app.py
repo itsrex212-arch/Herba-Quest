@@ -28,6 +28,7 @@ import zipfile
 from pathlib import Path
 
 import numpy as np
+import altair as alt
 import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
@@ -707,6 +708,9 @@ def inject_css(dark: bool):
 .op-foot {{ border-top:1px solid var(--op-line); margin-top:22px; padding-top:6px; font-size:13px; color:var(--op-muted); }}
 .op-kv td {{ padding:3px 12px 3px 0; vertical-align:top; font-size:14px; }} .op-kv td:first-child {{ color:var(--op-muted); white-space:nowrap; }}
 a {{ color:#4c8dff; }}
+.op-tbl {{ border-collapse:collapse; width:100%; }}
+.op-tbl th, .op-tbl td {{ border-bottom:1px solid var(--op-line); padding:6px 8px; font-size:14px; text-align:left; vertical-align:top; }}
+.op-tbl th {{ color:var(--op-muted); font-weight:600; }}
 </style>""", unsafe_allow_html=True)
 
 
@@ -715,7 +719,7 @@ CHIP_KIND = {
     "PARTIAL": "amber", "FLAGGED": "amber", "LOW CONFIDENCE": "amber", "PROBLEMS": "amber",
     "FAIL": "red", "INVALID": "red",
     "NO VALID POSE": "grey", "NOT TESTED": "outline", "NOT FLAGGED": "outline",
-    "WAITING": "blue", "PENDING": "blue", "MISSING": "blue",
+    "WAITING": "blue", "PENDING": "blue", "MISSING": "blue", "BENCHMARK PENDING": "blue",
 }
 
 
@@ -842,11 +846,11 @@ const P = __PAYLOAD__;
       L.styles.forEach(function(S){ m.setStyle(S.sel, S.style); });
     });
     if (P.around) {
-      const sel = {within: {distance: P.around.distance, sel: {model: models[P.around.layer]}}, byres: true, chain: 'A', hetflag: false};
+      const sel = {within: {distance: P.around.distance, sel: Object.assign({model: models[P.around.layer]}, P.around.sel || {})}, byres: true, chain: 'A', hetflag: false};
       v.addStyle(sel, {stick: {radius: 0.12, colorscheme: 'whiteCarbon'}});
       v.addResLabels(sel, {font: 'sans-serif', fontSize: 11, fontColor: P.labelfg, showBackground: true, backgroundColor: P.labelbg, backgroundOpacity: 0.7});
     }
-    v.zoomTo({model: models[P.zoom_layer]});
+    v.zoomTo(P.zoom_sel || {model: models[P.zoom_layer]});
     v.render();
     document.getElementById('leg').innerHTML = P.legend.map(function(x){return '<span style="color:'+x[1]+'">&#9632;</span> '+x[0];}).join(' &nbsp; ');
   } catch (e) { msg.textContent = '3D viewer problem: ' + e; }
@@ -855,15 +859,19 @@ const P = __PAYLOAD__;
 
 
 def viewer(layers: list[dict], legend: list[tuple[str, str]], dark: bool, height: int = 520,
-           around: dict | None = None, zoom_layer: int = 0):
+           around: dict | None = None, zoom_layer: int = 0, zoom_sel: dict | None = None):
     """Embed 3Dmol.js. layers = [{"data": text, "fmt": "pdb"|"pdbqt", "styles": [{"sel": {...}, "style": {...}}]}].
-    around = {"layer": index, "distance": 4} labels the protein residues near that layer."""
-    payload = {"layers": layers, "legend": legend, "around": around, "zoom_layer": zoom_layer,
+    around = {"layer": index, "distance": 4, "sel": {...}} labels the protein residues near that ligand;
+    zoom_sel (optional) is the atom selection to zoom to."""
+    payload = {"layers": layers, "legend": legend, "around": around, "zoom_layer": zoom_layer, "zoom_sel": zoom_sel,
                "bg": "#0e1117" if dark else "#ffffff",
                "labelfg": "#ffffff" if dark else "#111111", "labelbg": "#2b323d" if dark else "#e9edf2"}
     page = (_VIEWER.replace("__H__", str(height)).replace("__PAYLOAD__", json.dumps(payload).replace("</", "<\\/"))
             .replace("__LBG__", "#171b22" if dark else "#f1f3f6").replace("__LFG__", "#e8eaed" if dark else "#1d2430"))
-    components.html(page, height=height + 6)
+    if hasattr(st, "iframe"):          # newer Streamlit: components.html is being retired
+        st.iframe(page, height=height + 6)
+    else:
+        components.html(page, height=height + 6)
 
 
 PROTEIN_STYLE = {"sel": {"chain": "A", "hetflag": False}, "style": {"cartoon": {"color": "#9aa0a6"}}}
@@ -1216,8 +1224,1051 @@ def section_inbox():
 
 
 # ===== PART 2 GOES HERE =====  (sections 1-5: section_target, section_structures, section_admet, section_docking, section_safety)
+# =============================================================================
+# PART 2 - SHARED HELPERS FOR SECTIONS 1-9
+# =============================================================================
+GREEN_POSE = "#2EA043"     # compound pose in the 3D viewer
+ORANGE_XTL = "#E8872B"     # known (crystal) drug in the 3D viewer
+SAFETY_PROTEINS = ["herg", "cyp3a4", "cyp2d6"]
+PROT_LABEL = {k: v["name"] for k, v in PROTEINS.items()}
+
+
+def style_chart(ch):
+    """Make an Altair chart readable in both light and dark theme (text >= 13 px)."""
+    fg = "#e8eaed" if is_dark() else "#1d2430"
+    return (ch.properties(background="transparent")
+            .configure_axis(labelColor=fg, titleColor=fg, gridColor="#8883", labelFontSize=13, titleFontSize=13)
+            .configure_legend(labelColor=fg, titleColor=fg, labelFontSize=13, titleFontSize=13)
+            .configure_title(color=fg, fontSize=15).configure_view(strokeWidth=0))
+
+
+def compounds_frame(data):
+    """One row per DPP-4-docked compound, with names and ML columns added. None if no docking file."""
+    dt = data.get("docking_target")
+    if dt is None:
+        return None
+    df = dt.copy()
+    df["name"] = df["compound_id"].map(lambda c: display_name(data, c))
+    ml, _ = get_ml(data)
+    if ml is not None:
+        cols = [c for c in ["source_plant", "qed", "lipinski_violations", "herg_risk", "hepatotox_risk",
+                            "admet_score", "pass_flag", "fail_reason"] if c in ml.columns and c not in df.columns]
+        df = df.merge(ml[["compound_id"] + cols], on="compound_id", how="left")
+    return df
+
+
+def safety_matrix(data) -> dict:
+    """{compound_id: {'herg': score, 'cyp3a4': score, 'cyp2d6': score}}. Antitarget file first,
+    summary_report columns as a fallback. Missing = not in the dict (shown as 'not tested')."""
+    out: dict[str, dict] = {}
+    at = data.get("docking_antitargets")
+    if at is not None:
+        for _, r in at.iterrows():
+            k = ANTITARGET_KEY.get(r["antitarget"])
+            if k:
+                out.setdefault(r["compound_id"], {})[k] = r["vina_score_kcal"]
+    sr = data.get("summary_report")
+    if sr is not None:
+        for _, r in sr.iterrows():
+            for k, col in (("herg", "hERG_score_kcal"), ("cyp3a4", "CYP3A4_score_kcal"), ("cyp2d6", "CYP2D6_score_kcal")):
+                if col in sr.columns and not is_missing(r[col]) and k not in out.get(r["compound_id"], {}):
+                    out.setdefault(r["compound_id"], {})[k] = r[col]
+    return out
+
+
+def safety_status(score, ref) -> str:
+    """Flagged = valid pose AND as good as or better (more negative) than the protein's OWN reference drug."""
+    if is_missing(score):
+        return "NOT TESTED"
+    if not is_valid_pose(score):
+        return "NO VALID POSE"
+    if is_missing(ref):
+        return "BENCHMARK PENDING"
+    return "FLAGGED" if float(score) <= float(ref) else "NOT FLAGGED"
+
+
+def ref_score(redock: dict, prot: str):
+    v = redock.get(prot, {}).get("ref_score")
+    return None if is_missing(v) else float(v)
+
+
+def parse_conf(text: str) -> dict:
+    out = {}
+    for line in text.splitlines():
+        m = re.match(r"\s*([A-Za-z_]+)\s*=\s*(-?[\d.]+)", line)
+        if m:
+            out[m.group(1).lower()] = float(m.group(2))
+    return out
+
+
+def conf_for(data, prot: str):
+    """Box centre / size from the prepared receptor's *_vina.conf, or None."""
+    pdb = PROTEINS[prot]["pdb"].lower()
+    for p in data.get("receptors_prepared", []):
+        n = Path(p).name.lower()
+        if n.endswith("_vina.conf") and (prot in n or pdb in n):
+            txt = read_text_safe(p, 1)
+            if txt:
+                c = parse_conf(txt)
+                if all(k in c for k in ("center_x", "center_y", "center_z", "size_x", "size_y", "size_z")):
+                    return c
+    return None
+
+
+def file_for(data, key: str, *needles: str):
+    """First repo-relative path in data[key] whose file name contains any needle (case-insensitive)."""
+    for p in data.get(key, []):
+        n = Path(p).name.lower()
+        if any(x.lower() in n for x in needles):
+            return p
+    return None
+
+
+def pdb_residue_lines(text: str, resn: str) -> str:
+    """Keep only the HETATM lines of one residue name (used to pull the crystal drug 605 'XTL')."""
+    keep = [ln for ln in text.splitlines() if ln.startswith(("HETATM", "ATOM")) and ln[17:20].strip() == resn]
+    return "\n".join(keep) + "\nEND\n" if keep else ""
+
+
+def score_background(df: pd.DataFrame, col: str):
+    """Pandas Styler with a simple colour scale on the score column (best = green)."""
+    s = df[col]
+    valid = s[s.map(is_valid_pose)]
+    lo, hi = (valid.min(), valid.max()) if len(valid) else (0, 1)
+
+    def colour(v):
+        if not is_valid_pose(v) or hi == lo:
+            return ""
+        t = (float(v) - lo) / (hi - lo)            # 0 = best, 1 = worst
+        r, g, b = (int(a + (c - a) * t) for a, c in zip((143, 209, 158), (243, 244, 246)))
+        return f"background-color: rgb({r},{g},{b}); color: #1d2430"
+    return colour
+
+
+def profile_button(cid_options: list[str], key: str, label: str = "Open compound profile"):
+    """A small 'pick a compound -> open its profile' control."""
+    if not cid_options:
+        return
+    c1, c2 = st.columns([3, 1])
+    with c1:
+        pick = st.selectbox("Compound", cid_options, key=f"{key}_pick", label_visibility="collapsed")
+    with c2:
+        st.button(label, key=f"{key}_btn", on_click=open_profile, args=(pick,))
+
+
+def row_selection(event) -> list[int]:
+    try:
+        return list(event.selection.rows)
+    except Exception:
+        return []
+
+
+# =============================================================================
+# SECTION 1: TARGET & LIBRARY
+# =============================================================================
+def card_rows(data) -> list[tuple[str, str]]:
+    g = lambda p, fb="-": card_value(data, p, fb)  # noqa: E731
+    rows = [
+        ("Disease", g("disease", TARGET_FALLBACK["disease"])),
+        ("Target protein", g("target.name", TARGET_FALLBACK["target_name"])),
+        ("Organism · class", f'{g("target.organism", TARGET_FALLBACK["organism"])} · {g("target.target_class")}'),
+        ("PDB structure", f'{g("target.pdb_id", TARGET_FALLBACK["pdb_id"])} · {g("target.resolution_angstrom", TARGET_FALLBACK["resolution"])} Å · '
+                          f'{g("target.method", TARGET_FALLBACK["method"])} · chain {g("target.chain_used", TARGET_FALLBACK["chain"])}'),
+        ("Known drug in the crystal", f'{g("target.reference_ligand_code", TARGET_FALLBACK["ref_code"])} · {g("target.reference_ligand_name")}'),
+        ("Reference paper", g("target.reference")),
+        ("Why this target?", g("biological_rationale")),
+        ("What we try to find", g("drug_discovery_rationale")),
+        ("Plant", f'{g("plant_source.scientific_name", "Azadirachta indica")} ({g("plant_source.common_name", "neem")}; '
+                  f'local name {g("plant_source.local_name")})'),
+        ("Compound source", g("library.source")),
+        ("Event · track", f'{g("hackathon")} · {g("track")}'),
+    ]
+    return rows
+
+
+def section_target():
+    data, status = get_data()
+    sec = SECTION_BY_NAME["1. Target & library"]
+    step = STEP_BY_ID[1]
+    section_header(sec, status)
+    master, card = data.get("master"), data.get("target_card")
+    if master is None and card is None:
+        waiting_card(step, status)
+        section_footer("Step 1 hands the target card and the compound library to everyone else.")
+        return
+    problem_notes(status, ["target_card", "master"])
+    if master is None:
+        waiting_card(step, status, ["master"])
+
+    # --- target card in full
+    st.subheader("Target card")
+    show_html('<table class="op-kv">' + "".join(f"<tr><td>{esc(k)}</td><td>{esc(v)}</td></tr>" for k, v in card_rows(data)) + "</table>")
+    if card is None:
+        waiting_card(step, status, ["target_card"])
+        st.caption("Showing the verified project facts until target_card.json arrives.")
+    panel = (card or {}).get("safety_panel")
+    if isinstance(panel, list) and panel:
+        st.markdown("**Safety proteins (from the target card)**")
+        st.dataframe(pd.DataFrame(panel).rename(columns={"key": "Protein", "pdb_id": "PDB ID", "chains": "Chains",
+                     "reference_ligand_code": "Known drug", "note": "Note"}), hide_index=True)
+
+    # --- library counts
+    st.subheader("Library")
+    ml, _ = get_ml(data)
+    lib = (card or {}).get("library", {}) if isinstance((card or {}).get("library"), dict) else {}
+    total = len(master) if master is not None else lib.get("initial_compound_records")
+    n_pass = int(ml["pass_flag"].fillna(False).sum()) if ml is not None else lib.get("passed_admet_filter")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        metric_card("Neem compound records", str(total) if total else None, f'source: {esc(lib.get("source", "COCONUT"))}')
+    with c2:
+        metric_card("Passed the ML filter", str(n_pass) if n_pass is not None else None, "see 3. ADMET filter")
+    with c3:
+        n_doi = int(master["dois"].map(lambda s: len(doi_list(s)) > 0).sum()) if master is not None and "dois" in master.columns else None
+        metric_card("Compounds with at least one DOI", f"{n_doi} of {total}" if n_doi is not None else None, "literature link in the master table")
+    if master is None:
+        section_footer("Step 1 · Chemist")
+        return
+    st.caption("Every compound here has a neem source in the master table, but botanical provenance and exact identities "
+               "still need confirming against the primary literature.")
+
+    # --- class charts
+    st.subheader("What kinds of molecules?")
+    cc1, cc2 = st.columns(2)
+    for col, label, box in (("chemical_class", "Chemical class (top 10)", cc1), ("np_classifier_class", "NP-Classifier class (top 10)", cc2)):
+        with box:
+            if col not in master.columns:
+                st.caption(f"Column {col} is not in the master table.")
+                continue
+            vc = master[col].dropna().astype(str).value_counts().head(10).rename_axis("class").reset_index(name="compounds")
+            ch = alt.Chart(vc).mark_bar(color=ROLE_COLORS["Chemist"]).encode(
+                x=alt.X("compounds:Q", title="compounds"), y=alt.Y("class:N", sort="-x", title=None),
+                tooltip=["class", "compounds"]).properties(title=label, height=26 * max(len(vc), 3) + 30)
+            st.altair_chart(style_chart(ch))
+            st.caption(f"{int(master[col].isna().sum())} compounds have no {col.replace('_', ' ')} in the table.")
+
+    # --- compound table
+    st.subheader("Compound table")
+    df = master.copy()
+    df["name"] = df["compound_id"].map(lambda c: display_name(data, c))
+    df["n_dois"] = df["dois"].map(lambda s: len(doi_list(s))) if "dois" in df.columns else 0
+    if ml is not None:
+        df = df.merge(ml[["compound_id", "pass_flag"]], on="compound_id", how="left")
+    q = st.text_input("Search by name, ID or class", key="lib_search")
+    prov_opts = sorted(df["provenance_status"].dropna().unique()) if "provenance_status" in df.columns else []
+    prov = st.multiselect("Provenance status (from the master table)", prov_opts, default=prov_opts, key="lib_prov") if prov_opts else []
+    view = df
+    if q:
+        blob = view[["compound_id", "name"] + [c for c in ("chemical_class", "np_classifier_class") if c in view.columns]].astype(str).agg(" ".join, axis=1)
+        view = view[blob.str.contains(re.escape(q), case=False, na=False)]
+    if prov:
+        view = view[view["provenance_status"].isin(prov)]
+    cols = [c for c in ["compound_id", "name", "molecular_formula", "chemical_class", "np_classifier_class",
+                        "provenance_status", "n_dois", "pass_flag"] if c in view.columns]
+    view = view[cols].reset_index(drop=True)
+    cfg = {"compound_id": st.column_config.TextColumn("Compound ID", pinned=True),
+           "name": "Name", "molecular_formula": "Formula", "chemical_class": "Chemical class",
+           "np_classifier_class": "NP-Classifier class", "provenance_status": "Provenance status",
+           "n_dois": st.column_config.NumberColumn("DOIs", help="Number of different DOIs (case duplicates removed)"),
+           "pass_flag": st.column_config.CheckboxColumn("Passed ML filter")}
+    st.caption(f"{len(view)} of {len(df)} compounds. Click a row to see its structure and references.")
+    ev = st.dataframe(view, hide_index=True, column_config=cfg, on_select="rerun", selection_mode="single-row", key="lib_tbl")
+    sel = row_selection(ev)
+    if sel and sel[0] < len(view):
+        cid = view.iloc[sel[0]]["compound_id"]
+        r = master[master["compound_id"] == cid].iloc[0]
+        with st.container(border=True):
+            a, b = st.columns([1, 2])
+            with a:
+                show_structure(r.get("smiles_canonical"))
+            with b:
+                st.markdown(f"**{esc(display_name(data, cid))}** ({esc(cid)})")
+                show_html("<b>References (DOI):</b> " + doi_links_html(r.get("dois")))
+                st.caption(f'Provenance status: {r.get("provenance_status", "-")}')
+                st.button("Open compound profile", key="lib_open", on_click=open_profile, args=(cid,))
+    section_footer("Step 1 · Chemist · the library is the list of compounds every later step works on.")
+
+
+# =============================================================================
+# SECTION 2: STRUCTURES & VALIDATION
+# =============================================================================
+def section_structures():
+    data, status = get_data()
+    sec = SECTION_BY_NAME["2. Structures & validation"]
+    step = STEP_BY_ID[2]
+    section_header(sec, status)
+    rd = get_redock(data)
+    if not rd and not usable(status, "receptors") and not usable(status, "overlays"):
+        waiting_card(step, status)
+        section_footer("Step 2 · Bioinformatics")
+        return
+    problem_notes(status, ["redocking", "receptors", "overlays"])
+    st.info("**Redocking** = remove the known drug, dock it back, and check it lands where the crystal had it. "
+            "Pass = the top pose is under 2 Å from the crystal position.")
+
+    rows = []
+    for k, p in PROTEINS.items():
+        r = rd.get(k, {})
+        conf = conf_for(data, k)
+        centre = f'{conf["center_x"]:.1f}, {conf["center_y"]:.1f}, {conf["center_z"]:.1f}' if conf else "-"
+        size = f'{conf["size_x"]:.0f} × {conf["size_y"]:.0f} × {conf["size_z"]:.0f}' if conf else "-"
+        verdict = r.get("verdict")
+        ref_txt = fmt(r.get("ref_score"), 3)
+        extra = chip("LOW CONFIDENCE") if verdict and str(verdict).upper() == "PARTIAL" else ""
+        rows.append(f"<tr><td><b>{esc(p['name'])}</b><br><span style='font-size:13px'>{esc(p['role'])}</span></td>"
+                    f"<td>{esc(p['pdb'])}</td><td>{esc(p['chains'])}</td><td>{esc(r.get('ligand') if not is_missing(r.get('ligand')) else p['ligand'])}</td>"
+                    f"<td>{esc(centre)}</td><td>{esc(size)}</td><td>{fmt(r.get('top1_rmsd'), 2)}</td><td>{fmt(r.get('best_rmsd'), 2)}</td>"
+                    f"<td>{esc(ref_txt)}</td><td>{verdict_chip(verdict)}{extra}</td></tr>")
+    head = ["Protein", "PDB ID", "Chains", "Crystal ligand", "Box centre (Å)", "Box size (Å)", "Top-pose RMSD (Å)",
+            "Best RMSD (Å)", "Reference score (kcal/mol)", "Result"]
+    show_html('<table class="op-tbl"><tr>' + "".join(f"<th>{h}</th>" for h in head) + "</tr>" + "".join(rows) + "</table>")
+    st.caption("Box = the search box drawn around the pocket (from the crystal drug). Reference score = the known drug redocked, in kcal/mol, predicted.")
+    if str(rd.get("herg", {}).get("verdict", "")).upper() == "PARTIAL":
+        h = rd["herg"]
+        st.warning(f"hERG redocking was PARTIAL: the top pose is {fmt(h.get('top1_rmsd'), 2)} Å from the crystal position, but the best of the "
+                   f"poses is {fmt(h.get('best_rmsd'), 2)} Å. The right pose was found but not ranked first, so **all hERG scores are low confidence**.")
+    if status["receptors"]["state"] != "ok":
+        st.caption(f"Raw receptor files found: {status['receptors']['rows'] or 0} of 4 (data/receptors/).")
+
+    rm = data.get("redock_rmsd")
+    if rm is not None:
+        with st.expander("Detailed redocking RMSD file (data/validation)"):
+            st.dataframe(rm, hide_index=True)
+
+    st.subheader("Crystal drug vs redocked pose")
+    keys = list(PROTEINS)
+    pick = st.selectbox("Protein", keys, format_func=lambda k: f"{PROT_LABEL[k]} ({PROTEINS[k]['pdb']})", key="struct_pick")
+    path = file_for(data, "overlays", pick)
+    if not path:
+        show_html(f'<div class="op-wait">Overlay file for <b>{esc(PROT_LABEL[pick])}</b> not delivered '
+                  f'(expected <code>{esc(pick)}_..._overlay_complex.pdb</code> in data/incoming/validation/).</div>')
+    else:
+        txt = read_text_safe(path, 12)
+        if not txt:
+            st.warning(f"{Path(path).name}: could not be read or is too large.")
+        else:
+            viewer([{"data": txt, "fmt": "pdb", "styles": [PROTEIN_STYLE, ligand_style(ORANGE_XTL, {"resn": "XTL"}),
+                                                           ligand_style(GREEN_POSE, {"resn": "TOP"})]}],
+                   legend=[("Protein", "#9aa0a6"), ("Crystal drug", ORANGE_XTL), ("Redocked pose", GREEN_POSE)],
+                   dark=is_dark(), zoom_sel={"resn": ["XTL", "TOP"]})
+            st.caption("Orange = known drug as found in the crystal. Green = our redocked top pose. The closer they overlap, the better the docking setup.")
+    section_footer("Step 2 · Bioinformatics · a docking setup is only trusted after it can put a known drug back.")
+
+
+# =============================================================================
+# SECTION 3: ADMET FILTER
+# =============================================================================
+ADMET_HELP = {
+    "qed": "QED: a 0-1 score of how drug-like a molecule looks (size, greasiness, etc.). Higher is more drug-like.",
+    "lipinski_violations": "Lipinski's rule of five: quick size/greasiness rules for drug-likeness. This counts how many rules a molecule breaks.",
+    "herg_risk": "Model output (0-1) for predicted risk of blocking the hERG heart channel. Higher = more concern. A prediction, not a test.",
+    "hepatotox_risk": "Model output (0-1) for predicted liver-toxicity concern. Higher = more concern. A prediction, not a test.",
+    "admet_score": "Combined drug-likeness and predicted ADMET score from the ML Engineer (0-1).",
+    "pass_flag": "True if the compound passed the filter and went on to docking.",
+}
+
+
+def section_admet():
+    data, status = get_data()
+    sec = SECTION_BY_NAME["3. ADMET filter"]
+    step = STEP_BY_ID[3]
+    section_header(sec, status)
+    ml, which = get_ml(data)
+    if ml is None:
+        waiting_card(step, status)
+        section_footer("Step 3 · ML Engineer")
+        return
+    problem_notes(status, ["ml_detail"] if which == "detail" else ["ml_compact"])
+    if which == "compact":
+        st.caption("Only the compact ML table is available, so some columns are missing.")
+    n, passed = len(ml), int(ml["pass_flag"].fillna(False).sum())
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        metric_card("Library", str(n), "compounds scored")
+    with c2:
+        metric_card("Passed the filter", f"{passed} of {n}", "go on to docking")
+    with c3:
+        metric_card("Did not pass", str(n - passed), "see the reasons below")
+
+    if "fail_reason" in ml.columns:
+        failed = ml[ml["pass_flag"] == False]  # noqa: E712
+        reasons = failed["fail_reason"].dropna().astype(str).str.split(";").explode().str.strip()
+        rc = reasons[reasons != ""].value_counts().rename_axis("reason").reset_index(name="compounds")
+        if len(rc):
+            st.subheader("Why compounds did not pass")
+            ch = alt.Chart(rc).mark_bar(color=ROLE_COLORS["ML Engineer"]).encode(
+                x=alt.X("compounds:Q"), y=alt.Y("reason:N", sort="-x", title=None), tooltip=["reason", "compounds"]).properties(height=30 * len(rc) + 30)
+            st.altair_chart(style_chart(ch))
+            multi = int(failed["fail_reason"].astype(str).str.contains(";").sum())
+            st.caption(f"{multi} compound(s) had several reasons at once; each reason is counted, so the bars add up to more than {n - passed}.")
+
+    st.subheader("Browse the table")
+    f1, f2, f3, f4 = st.columns(4)
+    with f1:
+        plants = sorted(ml["source_plant"].dropna().unique()) if "source_plant" in ml.columns else []
+        plant = st.multiselect("Plant", plants, default=plants, key="adm_plant") if plants else plants
+    with f2:
+        outcome = st.radio("Outcome", ["All", "Passed", "Did not pass"], horizontal=True, key="adm_out")
+    with f3:
+        hmax = st.slider("hERG risk up to", 0.0, 1.0, 1.0, 0.01, key="adm_herg") if "herg_risk" in ml.columns else 1.0
+    with f4:
+        lmax = st.slider("Liver risk up to", 0.0, 1.0, 1.0, 0.01, key="adm_liv") if "hepatotox_risk" in ml.columns else 1.0
+    v = ml.copy()
+    if plants and plant:
+        v = v[v["source_plant"].isin(plant)]
+    if outcome == "Passed":
+        v = v[v["pass_flag"] == True]  # noqa: E712
+    elif outcome == "Did not pass":
+        v = v[v["pass_flag"] == False]  # noqa: E712
+    if "herg_risk" in v.columns:
+        v = v[v["herg_risk"].fillna(0) <= hmax]
+    if "hepatotox_risk" in v.columns:
+        v = v[v["hepatotox_risk"].fillna(0) <= lmax]
+    v = v.copy()
+    v.insert(1, "name_shown", v["compound_id"].map(lambda c: display_name(data, c)))
+    cols = [c for c in ["compound_id", "name_shown", "qed", "lipinski_violations", "herg_risk", "hepatotox_risk",
+                        "admet_score", "pass_flag", "fail_reason"] if c in v.columns]
+    show = v[cols].reset_index(drop=True)
+    st.caption(f"{len(show)} of {n} compounds shown.")
+    cfg = {"compound_id": st.column_config.TextColumn("Compound ID", pinned=True), "name_shown": "Name",
+           "qed": st.column_config.NumberColumn("QED", format="%.2f", help=ADMET_HELP["qed"]),
+           "lipinski_violations": st.column_config.NumberColumn("Lipinski violations", format="%d", help=ADMET_HELP["lipinski_violations"]),
+           "herg_risk": st.column_config.NumberColumn("hERG risk (0-1)", format="%.2f", help=ADMET_HELP["herg_risk"]),
+           "hepatotox_risk": st.column_config.NumberColumn("Liver risk (0-1)", format="%.2f", help=ADMET_HELP["hepatotox_risk"]),
+           "admet_score": st.column_config.NumberColumn("ADMET score (0-1)", format="%.2f", help=ADMET_HELP["admet_score"]),
+           "pass_flag": st.column_config.CheckboxColumn("Passed", help=ADMET_HELP["pass_flag"]), "fail_reason": "Fail reason"}
+    st.dataframe(show, hide_index=True, column_config=cfg)
+    st.download_button("Download the filtered table (CSV)", show.to_csv(index=False).encode("utf-8"),
+                       file_name="admet_filtered.csv", mime="text/csv", key="adm_dl")
+    with st.expander("What do these words mean?"):
+        for k, t in ADMET_HELP.items():
+            st.markdown(f"- {t}")
+    section_footer("Step 3 · ML Engineer · risk numbers are model predictions, not lab results.")
+
+
+# =============================================================================
+# SECTION 4: DOCKING: DPP-4
+# =============================================================================
+def section_docking():
+    data, status = get_data()
+    sec = SECTION_BY_NAME["4. Docking: DPP-4"]
+    step = STEP_BY_ID[4]
+    section_header(sec, status)
+    df = compounds_frame(data)
+    if df is None:
+        waiting_card(step, status)
+        section_footer("Step 4 · Bioinformatics")
+        return
+    problem_notes(status, ["docking_target", "poses_target"])
+    ml, _ = get_ml(data)
+    n_pass = int(ml["pass_flag"].fillna(False).sum()) if ml is not None else None
+    n = len(df)
+    note = card_value(data, "library.docking_note", None)
+    if n_pass:
+        extra = f" ({note})" if note and n_pass - n == N_STEREO_NOT_DOCKED else (f" ({n_pass - n} not docked)" if n_pass != n else "")
+        st.markdown(f"**{n} of {n_pass} docked**{extra}. Coverage is shown by the app.")
+    else:
+        st.markdown(f"**{n} compounds docked.**")
+    rd = get_redock(data)
+    ref = ref_score(rd, "dpp4")
+    sr = data.get("summary_report")
+    exh = int(sr["exhaustiveness"].dropna().iloc[0]) if sr is not None and "exhaustiveness" in sr.columns and sr["exhaustiveness"].notna().any() else EXHAUSTIVENESS_SCREEN
+    top10 = df.head(10)["vina_score_kcal"]
+    spread = float(top10.max() - top10.min()) if len(top10) == 10 else None
+    msg = f"The screen used a low search effort (exhaustiveness {exh}), so scores within about {NOISE_KCAL} kcal/mol are inside the noise."
+    if spread is not None and spread <= NOISE_KCAL:
+        msg += f" The top 10 span only {spread:.2f} kcal/mol, so they are effectively tied."
+    st.info(msg)
+    if ref is not None and float(df["vina_score_kcal"].min()) > ref:
+        st.caption(f"No compound scores better than the known drug 605 redocked ({ref:.3f} kcal/mol).")
+
+    st.subheader("How the scores are spread")
+    base = alt.Chart(df).mark_bar(color=ROLE_COLORS["Bioinformatics"]).encode(
+        x=alt.X("vina_score_kcal:Q", bin=alt.Bin(step=0.25), title="Vina score (kcal/mol, predicted). More negative = better fit"),
+        y=alt.Y("count():Q", title="compounds"))
+    layers = base
+    if ref is not None:
+        rule = alt.Chart(pd.DataFrame({"x": [ref], "label": [f"Known drug 605: {ref:.3f}"]})).mark_rule(color="#c0392b", strokeWidth=3).encode(x="x:Q")
+        txt = alt.Chart(pd.DataFrame({"x": [ref], "label": [f"Known drug 605: {ref:.3f}"]})).mark_text(
+            align="right", dx=-6, dy=-6, baseline="top", fontSize=13, color="#c0392b").encode(x="x:Q", y=alt.value(4), text="label:N")
+        layers = base + rule + txt
+    else:
+        st.caption("Reference drug score is pending, so no reference line is drawn.")
+    st.altair_chart(style_chart(layers.properties(height=260)))
+
+    st.subheader("All docked compounds")
+    q = st.text_input("Search by name or ID", key="dock_search")
+    view = df
+    if q:
+        blob = view[["compound_id", "name"]].astype(str).agg(" ".join, axis=1)
+        view = view[blob.str.contains(re.escape(q), case=False, na=False)]
+    cols = [c for c in ["rank", "compound_id", "name", "vina_score_kcal", "ligand_efficiency", "heavy_atoms", "qed",
+                        "admet_score", "herg_risk", "hepatotox_risk", "pass_flag"] if c in view.columns]
+    show = view[cols].reset_index(drop=True)
+    fmt_map = {c: "{:.2f}" for c in ("vina_score_kcal", "ligand_efficiency", "qed", "admet_score", "herg_risk", "hepatotox_risk") if c in show.columns}
+    styler = show.style.format(fmt_map, na_rep="-").map(score_background(show, "vina_score_kcal"), subset=["vina_score_kcal"])
+    cfg = {"rank": st.column_config.NumberColumn("Rank", help="Shown by the app: 1 = most negative score"),
+           "compound_id": st.column_config.TextColumn("Compound ID", pinned=True), "name": "Name",
+           "vina_score_kcal": st.column_config.NumberColumn("Vina score (kcal/mol)", help="Predicted docking score. More negative = better predicted fit.", pinned=True),
+           "ligand_efficiency": st.column_config.NumberColumn("Ligand efficiency", help="Score per heavy atom, shown as a positive number. Higher = more efficient."),
+           "heavy_atoms": st.column_config.NumberColumn("Heavy atoms", help="Atoms other than hydrogen"),
+           "qed": st.column_config.NumberColumn("QED", help=ADMET_HELP["qed"]),
+           "admet_score": st.column_config.NumberColumn("ADMET score (0-1)", help=ADMET_HELP["admet_score"]),
+           "herg_risk": st.column_config.NumberColumn("hERG risk (0-1)", help=ADMET_HELP["herg_risk"]),
+           "hepatotox_risk": st.column_config.NumberColumn("Liver risk (0-1)", help=ADMET_HELP["hepatotox_risk"]),
+           "pass_flag": st.column_config.CheckboxColumn("Passed ML filter")}
+    st.caption(f"{len(show)} of {n} compounds. Click a column header to sort; click a row to open its profile.")
+    ev = st.dataframe(styler, hide_index=True, column_config=cfg, on_select="rerun", selection_mode="single-row", key="dock_tbl")
+    sel = row_selection(ev)
+    if sel and sel[0] < len(show):
+        cid = show.iloc[sel[0]]["compound_id"]
+        st.button(f"Open profile of {cid}", key="dock_open", on_click=open_profile, args=(cid,))
+    st.download_button("Download the filtered table (CSV)", show.to_csv(index=False).encode("utf-8"),
+                       file_name="docking_dpp4_filtered.csv", mime="text/csv", key="dock_dl")
+    section_footer("Step 4 · Bioinformatics · Vina scores are predictions, in kcal/mol; lower is better.")
+
+
+# =============================================================================
+# SECTION 5: SAFETY PANEL
+# =============================================================================
+def section_safety():
+    data, status = get_data()
+    sec = SECTION_BY_NAME["5. Safety panel"]
+    step = STEP_BY_ID[5]
+    section_header(sec, status)
+    mat = safety_matrix(data)
+    if not mat:
+        waiting_card(step, status)
+        section_footer("Step 5 · Bioinformatics")
+        return
+    problem_notes(status, ["docking_antitargets"])
+    if status["docking_antitargets"]["state"] in ("missing", "invalid"):
+        st.warning("docking_antitargets.csv is not usable, so only the safety scores listed in summary_report.csv (top 10) are shown.")
+    rd = get_redock(data)
+    dt = data.get("docking_target")
+    dpp = dict(zip(dt["compound_id"], dt["vina_score_kcal"])) if dt is not None else {}
+    sr = data.get("summary_report")
+    if sr is not None:
+        for cid, sc in zip(sr["compound_id"], sr["vina_score_kcal"]):
+            dpp.setdefault(cid, sc)
+    order = sorted(mat, key=lambda c: (dpp.get(c, 0) if not is_missing(dpp.get(c)) else 99, c))
+
+    # redocking chips per protein
+    cols = st.columns(3)
+    for col, k in zip(cols, SAFETY_PROTEINS):
+        r = rd.get(k, {})
+        ref = ref_score(rd, k)
+        v = r.get("verdict")
+        chips = verdict_chip(v)
+        if v and str(v).upper() != "PASS":
+            chips += chip("LOW CONFIDENCE")
+        if ref is None:
+            chips += chip("BENCHMARK PENDING")
+        with col:
+            show_html(f'<div class="op-card"><b>{esc(PROT_LABEL[k])}</b> <span style="font-size:13px">(PDB {PROTEINS[k]["pdb"]})</span><br>'
+                      f'Redocking: {chips}<br><span style="font-size:13px">Known drug {esc(PROTEINS[k]["ligand"])} redocked: '
+                      f'{esc(fmt(ref, 3, "kcal/mol"))}</span></div>')
+    st.info("**Flagged** = docks as strongly as the known drug in this protein. It is a prompt to check, not a verdict.")
+    st.warning("Scores are not comparable between proteins (big greasy pockets give strong scores to almost anything), "
+               "so each protein is compared only with its own known drug.")
+
+    # heatmap data
+    records = []
+    for cid in order:
+        label = f"{cid} · {short(display_name(data, cid), 22)}"
+        records.append({"compound": label, "protein": "DPP-4", "score": dpp.get(cid), "state": "target", "delta": np.nan})
+        for k in SAFETY_PROTEINS:
+            sc = mat[cid].get(k)
+            ref = ref_score(rd, k)
+            stt = safety_status(sc, ref)
+            state = {"NOT TESTED": "missing", "NO VALID POSE": "invalid"}.get(stt, "valid")
+            records.append({"compound": label, "protein": PROT_LABEL[k], "score": sc, "state": state,
+                            "delta": (float(sc) - ref) if state == "valid" and ref is not None else np.nan,
+                            "flag": stt == "FLAGGED"})
+    refrow = "Known drug (redocked)"
+    for k in ["dpp4"] + SAFETY_PROTEINS:
+        records.append({"compound": refrow, "protein": PROT_LABEL[k], "score": ref_score(rd, k), "state": "reference", "delta": np.nan})
+    hm = pd.DataFrame(records)
+    hm["flag"] = hm.get("flag", False)
+    hm["flag"] = hm["flag"].fillna(False).astype(bool)
+
+    def label(r):
+        if r["state"] == "invalid":
+            return "no valid pose"
+        if is_missing(r["score"]):
+            return "-"
+        return f"{r['score']:.2f}" + (" ⚑" if r["flag"] else "")
+    hm["label"] = hm.apply(label, axis=1)
+    y_order = order_labels = list(dict.fromkeys(hm["compound"]))
+    x_order = ["DPP-4"] + [PROT_LABEL[k] for k in SAFETY_PROTEINS]
+    enc = dict(x=alt.X("protein:N", sort=x_order, title=None, axis=alt.Axis(orient="top", labelAngle=0)),
+               y=alt.Y("compound:N", sort=y_order, title=None))
+    base = alt.Chart(hm)
+    fill_valid = base.transform_filter(alt.datum.state == "valid").mark_rect(stroke="#8a939e", strokeWidth=0.5).encode(
+        **enc, color=alt.Color("delta:Q", scale=alt.Scale(domain=[-3, 0, 3], range=["#d9822b", "#f5e6c8", "#e9edf2"], clamp=True),
+                               legend=alt.Legend(title="score minus own known drug (kcal/mol)")),
+        tooltip=["compound", "protein", alt.Tooltip("score:Q", format=".3f"), alt.Tooltip("delta:Q", format=".2f")])
+    fill_grey = base.transform_filter(alt.datum.state == "invalid").mark_rect(color="#8a939e").encode(**enc, tooltip=["compound", "protein"])
+    fill_target = base.transform_filter(alt.datum.state == "target").mark_rect(color="#dce6f2").encode(**enc)
+    fill_ref = base.transform_filter(alt.datum.state == "reference").mark_rect(color="#2f6fd0", opacity=0.35).encode(**enc)
+    flag_box = base.transform_filter(alt.datum.flag == True).mark_rect(fill=None, stroke="#c0392b", strokeWidth=3).encode(**enc)  # noqa: E712
+    text_dark = base.transform_filter("datum.state != 'invalid'").mark_text(fontSize=13, color="#1d2430").encode(**enc, text="label:N")
+    text_light = base.transform_filter(alt.datum.state == "invalid").mark_text(fontSize=13, color="#ffffff").encode(**enc, text="label:N")
+    chart = (fill_target + fill_ref + fill_valid + fill_grey + flag_box + text_dark + text_light).properties(
+        width=140 * len(x_order), height=30 * len(y_order), title="Vina score (kcal/mol, predicted) per protein")
+    st.altair_chart(style_chart(chart))
+    st.caption("Amber = this protein's score is as strong as or stronger than its own known drug. ⚑ + red outline = flagged. "
+               "Grey = no valid pose (score above -2.0 kcal/mol), left out of the colour scale. Blue row = the known drug redocked.")
+
+    # flag table
+    st.subheader("Flags per protein")
+    rows = []
+    for k in SAFETY_PROTEINS:
+        ref = ref_score(rd, k)
+        for cid in order:
+            sc = mat[cid].get(k)
+            rows.append({"Protein": PROT_LABEL[k], "Compound ID": cid, "Name": display_name(data, cid),
+                         "Vina score (kcal/mol)": None if is_missing(sc) else float(sc),
+                         "Known drug (kcal/mol)": ref,
+                         "Result": safety_status(sc, ref).capitalize() if safety_status(sc, ref) != "FLAGGED" else "Flagged",
+                         "Raw difference vs DPP-4 (not comparable across proteins)":
+                             None if is_missing(sc) or is_missing(dpp.get(cid)) or not is_valid_pose(sc) else round(float(sc) - float(dpp[cid]), 2)})
+    ft = pd.DataFrame(rows)
+    for k in SAFETY_PROTEINS:
+        sub = ft[ft["Protein"] == PROT_LABEL[k]]
+        valid = sub[sub["Result"].isin(["Flagged", "Not flagged"])]
+        flagged = sub[sub["Result"] == "Flagged"]["Compound ID"].tolist()
+        closest = valid.sort_values("Vina score (kcal/mol)").head(1)
+        low = " · low confidence (redocking " + str(rd.get(k, {}).get("verdict", "?")).lower() + ")" if str(rd.get(k, {}).get("verdict", "PASS")).upper() != "PASS" else ""
+        cl = f"; closest: {closest.iloc[0]['Compound ID']} at {closest.iloc[0]['Vina score (kcal/mol)']:.3f} kcal/mol" if len(closest) else ""
+        st.markdown(f"**{PROT_LABEL[k]}**: {len(flagged)} flagged" + (f" ({', '.join(flagged)})" if flagged else "") +
+                    f" · {len(valid)} of {len(sub)} with a valid pose{cl}{low}")
+    pick = st.multiselect("Show proteins", [PROT_LABEL[k] for k in SAFETY_PROTEINS], default=[PROT_LABEL[k] for k in SAFETY_PROTEINS], key="saf_prot")
+    st.dataframe(ft[ft["Protein"].isin(pick)], hide_index=True,
+                 column_config={"Vina score (kcal/mol)": st.column_config.NumberColumn(format="%.2f"),
+                                "Known drug (kcal/mol)": st.column_config.NumberColumn(format="%.2f")})
+    profile_button(order, "saf")
+    section_footer("Step 5 · Bioinformatics · flags are prompts to check, not verdicts; nothing here says a compound is safe or harmful.")
+
 
 # ===== PART 3 GOES HERE =====  (sections 6-9: section_ranking, section_md, section_profile, section_evidence)
+# =============================================================================
+# SECTION 6: FINAL RANKING
+# =============================================================================
+COMPOSITE_FORMULA = "Composite = 0.5 × efficacy_norm + 0.3 × selectivity_norm + 0.2 × ADMET score"
+SCORE_NAME = "Selectivity-adjusted efficacy score (in silico proxy)"
+
+
+def section_ranking():
+    data, status = get_data()
+    sec = SECTION_BY_NAME["6. Final ranking"]
+    step = STEP_BY_ID[6]
+    section_header(sec, status)
+    rk = data.get("ranking")
+    if rk is None:
+        show_html('<div class="op-wait"><b>Pending ML ranking</b> &nbsp;|&nbsp; from: <b>ML Engineer</b> &nbsp;|&nbsp; expected: <b>Day 5</b> '
+                  '&nbsp;|&nbsp; Drop it in <code>data/incoming/</code> and refresh.</div>')
+        for p in status["ranking"]["problems"]:
+            st.warning(p)
+        section_footer("Step 6 · ML Engineer · this app never computes a composite score itself.")
+        return
+    problem_notes(status, ["ranking"])
+    st.markdown(f"**{SCORE_NAME}**")
+    st.code(COMPOSITE_FORMULA, language=None)
+    st.caption("Shown exactly as the ML Engineer delivered it. It is a proxy built from predictions, not a therapeutic index.")
+
+    top = rk.iloc[0]
+    cid = top["compound_id"]
+    dt = data.get("docking_target")
+    dpp = dict(zip(dt["compound_id"], dt["vina_score_kcal"])) if dt is not None else {}
+    dpp_rank = dict(zip(dt["compound_id"], dt["rank"])) if dt is not None else {}
+    mat = safety_matrix(data)
+    rd = get_redock(data)
+
+    msg = (f"**#1 in the final ranking: {display_name(data, cid)} ({cid})**, score {float(top['composite_score']):.3f}.")
+    if dt is not None:
+        best = dt.iloc[0]["compound_id"]
+        if best != cid:
+            br = rk[rk["compound_id"] == best]
+            where = f"#{int(br.iloc[0]['rank'])} in the final ranking ({float(br.iloc[0]['composite_score']):.3f})" if len(br) else "not in the final ranking"
+            msg += (f" Note: the best DPP-4 docking score belongs to **{best}** ({float(dt.iloc[0]['vina_score_kcal']):.3f} kcal/mol), "
+                    f"which is {where}. The ranking also weighs the safety-panel scores and drug-likeness.")
+    st.success(msg)
+
+    # enriched table
+    t = rk.copy()
+    t.insert(2, "name", t["compound_id"].map(lambda c: display_name(data, c)))
+    t.insert(3, "dpp4_score", t["compound_id"].map(lambda c: dpp.get(c)))
+    notes = []
+    for c in t["compound_id"]:
+        bad = [PROT_LABEL[k] for k in SAFETY_PROTEINS if k in mat.get(c, {}) and safety_status(mat[c][k], ref_score(rd, k)) == "NO VALID POSE"]
+        notes.append("no valid pose: " + ", ".join(bad) if bad else "")
+    t["safety_note"] = notes
+    cfg = {"rank": st.column_config.NumberColumn("Rank", pinned=True),
+           "compound_id": st.column_config.TextColumn("Compound ID", pinned=True), "name": "Name",
+           "dpp4_score": st.column_config.NumberColumn("DPP-4 score (kcal/mol)", format="%.2f", help="Predicted docking score; more negative = better fit."),
+           "efficacy_norm": st.column_config.NumberColumn("Efficacy (0-1)", format="%.2f", help="Normalised DPP-4 docking performance, as delivered."),
+           "selectivity_norm": st.column_config.NumberColumn("Selectivity (0-1)", format="%.2f", help="Normalised computational selectivity assessment, as delivered."),
+           "admet_score": st.column_config.NumberColumn("ADMET score (0-1)", format="%.2f"),
+           "composite_score": st.column_config.NumberColumn("Composite score (0-1)", format="%.3f", help=COMPOSITE_FORMULA),
+           "safety_note": "Safety note"}
+    if not any(notes):
+        t = t.drop(columns=["safety_note"])
+    ev = st.dataframe(t, hide_index=True, column_config=cfg, on_select="rerun", selection_mode="single-row", key="rank_tbl")
+    sel = row_selection(ev)
+    if sel and sel[0] < len(t):
+        c2 = t.iloc[sel[0]]["compound_id"]
+        st.button(f"Open profile of {c2}", key="rank_open", on_click=open_profile, args=(c2,))
+    if any(notes):
+        show_html(chip("NO VALID POSE") + " One or more safety scores for this compound were not real poses (score above -2.0 kcal/mol). "
+                  "Treat its safety-panel numbers as missing.")
+
+    st.subheader("Composite score by compound")
+    ch = alt.Chart(t.assign(label=t["compound_id"] + " · " + t["name"].map(lambda s: short(s, 24)))).mark_bar(color=ROLE_COLORS["ML Engineer"]).encode(
+        x=alt.X("composite_score:Q", title="composite score (0-1, higher is ranked higher)", scale=alt.Scale(domain=[0, 1])),
+        y=alt.Y("label:N", sort=alt.EncodingSortField("rank", order="ascending"), title=None),
+        tooltip=["compound_id", alt.Tooltip("composite_score:Q", format=".3f"), "rank"]).properties(height=30 * len(t) + 30)
+    st.altair_chart(style_chart(ch))
+
+    sel_note = card_value(data, "composite_scoring.definitions_checked_against_files.selectivity_norm", None)
+    with st.expander("How was selectivity built? (read before quoting this ranking)"):
+        st.markdown("The selectivity part is built from raw differences between a safety-protein score and the DPP-4 score. "
+                    "Vina scores are **not comparable between different proteins**, so treat this part with care and prefer the "
+                    "per-protein comparison with each known drug in 5. Safety panel.")
+        if sel_note:
+            st.caption(f"Note from the target card: {sel_note}")
+    section_footer("Step 6 · ML Engineer · a ranking of predictions, to choose what to test in the lab first.")
+
+
+# =============================================================================
+# SECTION 7: SIMULATION (MD)
+# =============================================================================
+def section_md():
+    data, status = get_data()
+    sec = SECTION_BY_NAME["7. Simulation (MD)"]
+    step = STEP_BY_ID[7]
+    section_header(sec, status)
+    md = data.get("md_summary")
+    if md is None:
+        waiting_card(step, status)
+        st.caption("Expected columns: compound_id, label (candidate|control), length_ns, ligand_rmsd_mean_A, ligand_rmsd_sd_A, "
+                   "protein_rmsd_mean_A, hbond_occupancy_pct, notes. Plots: <compound_id>_rmsd.png, _rmsf.png, _hbonds.png.")
+    else:
+        problem_notes(status, ["md_summary"])
+        st.markdown("Candidate and control (the known crystal drug) side by side. Lower RMSD = steadier in the pocket.")
+        cols = [c for c in ["compound_id", "label", "length_ns", "ligand_rmsd_mean_A", "ligand_rmsd_sd_A",
+                            "protein_rmsd_mean_A", "hbond_occupancy_pct", "notes"] if c in md.columns]
+        cfg = {"compound_id": "Compound ID", "label": "Role", "length_ns": st.column_config.NumberColumn("Length (ns)", format="%.1f"),
+               "ligand_rmsd_mean_A": st.column_config.NumberColumn("Ligand RMSD mean (Å)", format="%.2f"),
+               "ligand_rmsd_sd_A": st.column_config.NumberColumn("Ligand RMSD sd (Å)", format="%.2f"),
+               "protein_rmsd_mean_A": st.column_config.NumberColumn("Protein RMSD mean (Å)", format="%.2f"),
+               "hbond_occupancy_pct": st.column_config.NumberColumn("H-bond occupancy (%)", format="%.1f"), "notes": "Notes"}
+        st.dataframe(md[cols], hide_index=True, column_config=cfg)
+        for cid in list(dict.fromkeys(md["compound_id"])):
+            shown = False
+            for suffix, title in (("_rmsd", "RMSD"), ("_rmsf", "RMSF"), ("_hbonds", "Hydrogen bonds")):
+                p = file_for(data, "md_plots", f"{cid}{suffix}.png")
+                path = safe_path(Path(p).name, ROOT / Path(p).parent) if p else None
+                if path:
+                    if not shown:
+                        st.subheader(f"Plots for {cid}")
+                        shown = True
+                    st.image(str(path), caption=f"{cid} · {title}")
+            if not shown:
+                st.caption(f"No plots delivered yet for {cid}.")
+        st.caption("A simulation of one compound is a plausibility check on its pose, not proof of binding.")
+    st.button("Run simulation (engine not connected)", disabled=True, key="md_run")
+    section_footer("Step 7 · Bioinformatics · the simulation engine connects in a later version (see md_engine_run in app.py).")
+
+
+# =============================================================================
+# SECTION 8: COMPOUND PROFILE
+# =============================================================================
+def _chips(items, color):
+    return "".join(chip(i, color=color) for i in items) if items else '<span style="font-size:13px">none listed</span>'
+
+
+def _pose_layers(data, cid: str, pose_n: int, show_xtl: bool):
+    """Build the 3D viewer layers. Returns (layers, legend, around, zoom_sel, message)."""
+    legend = [("Protein", "#9aa0a6"), ("This compound", GREEN_POSE)]
+    layers, around, zoom_sel, msg = [], None, None, ""
+    plip = file_for(data, "plip", f"{cid}_")
+    pose_rel = None
+    dt = data.get("docking_target")
+    if dt is not None and "pose_file" in dt.columns:
+        pf = dt.loc[dt["compound_id"] == cid, "pose_file"]
+        if len(pf) and not is_missing(pf.iloc[0]):
+            p = safe_path(pf.iloc[0])
+            pose_rel = rel(p) if p else None
+    if not pose_rel:
+        pose_rel = file_for(data, "poses_target", f"{cid}_")
+    if pose_n == 1 and plip and (txt := read_text_safe(plip, 12)):
+        layers.append({"data": txt, "fmt": "pdb", "styles": [PROTEIN_STYLE, ligand_style(GREEN_POSE, {"resn": "LIG"})]})
+        around, zoom_sel = {"layer": 0, "distance": 4, "sel": {"resn": "LIG"}}, {"resn": "LIG"}
+    else:
+        rec = file_for(data, "receptors", "3d4l")
+        rtxt = read_text_safe(rec, 12) if rec else None
+        ptxt = read_text_safe(pose_rel, 12) if pose_rel else None
+        if not pose_rel or not ptxt:
+            return [], legend, None, None, "pose file not delivered"
+        models = split_pdbqt_models(ptxt)
+        if pose_n > len(models):
+            return [], legend, None, None, f"this pose file has only {len(models)} model(s)"
+        if not rtxt:
+            return [], legend, None, None, "protein structure (data/receptors/3D4L.pdb) not delivered"
+        layers.append({"data": rtxt, "fmt": "pdb", "styles": [PROTEIN_STYLE]})
+        layers.append({"data": models[pose_n - 1][0], "fmt": "pdbqt", "styles": [ligand_style(GREEN_POSE)]})
+        around = {"layer": 1, "distance": 4, "sel": {}}
+    if show_xtl:
+        ov = file_for(data, "overlays", "dpp4")
+        otxt = read_text_safe(ov, 12) if ov else None
+        xtl = pdb_residue_lines(otxt, "XTL") if otxt else ""
+        if xtl:
+            layers.append({"data": xtl, "fmt": "pdb", "styles": [ligand_style(ORANGE_XTL)]})
+            legend.append(("Known drug 605 (crystal)", ORANGE_XTL))
+        else:
+            msg = "known drug 605 file not available (needs the DPP-4 overlay file)"
+    return layers, legend, around, zoom_sel, msg
+
+
+def section_profile():
+    data, status = get_data()
+    sec = SECTION_BY_NAME["8. Compound profile"]
+    step = STEP_BY_ID[4]
+    section_header(sec, status)
+    dt = data.get("docking_target")
+    master, ml = data.get("master"), get_ml(data)[0]
+    pool = list(dt["compound_id"]) if dt is not None else (list(master["compound_id"]) if master is not None else (list(ml["compound_id"]) if ml is not None else []))
+    if not pool:
+        waiting_card(step, status, ["docking_target"])
+        section_footer("Profile · everyone")
+        return
+    cur = st.session_state.get("profile_cid")
+    if cur and cur not in pool:
+        pool = pool + [cur]
+    if cur not in pool:
+        st.session_state["profile_cid"] = pool[0]            # default = rank 1
+    cid = st.selectbox("Compound", pool, key="profile_cid",
+                       format_func=lambda c: f"{c} · {short(display_name(data, c), 40)}")
+    problem_notes(status, ["docking_target", "summary_report"])
+
+    mrow = master[master["compound_id"] == cid].iloc[0] if master is not None and (master["compound_id"] == cid).any() else None
+    drow = dt[dt["compound_id"] == cid].iloc[0] if dt is not None and (dt["compound_id"] == cid).any() else None
+    mlrow = ml[ml["compound_id"] == cid].iloc[0] if ml is not None and (ml["compound_id"] == cid).any() else None
+    srow = data["summary_report"][data["summary_report"]["compound_id"] == cid] if data.get("summary_report") is not None else None
+    srow = srow.iloc[0] if srow is not None and len(srow) else None
+
+    a, b = st.columns([1, 2])
+    with a:
+        show_structure(mrow.get("smiles_canonical") if mrow is not None else None)
+    with b:
+        st.markdown(f"### {esc(display_name(data, cid))}")
+        plant = mlrow.get("source_plant") if mlrow is not None else None
+        kv = [("Compound ID", cid), ("Plant", plant if not is_missing(plant) else "-"),
+              ("Formula", mrow.get("molecular_formula") if mrow is not None else "-"),
+              ("Chemical class", mrow.get("chemical_class") if mrow is not None else "-"),
+              ("NP-Classifier class", mrow.get("np_classifier_class") if mrow is not None else "-"),
+              ("Provenance status", mrow.get("provenance_status") if mrow is not None else "-")]
+        show_html('<table class="op-kv">' + "".join(f"<tr><td>{esc(k)}</td><td>{esc('-' if is_missing(v) else v)}</td></tr>" for k, v in kv) + "</table>")
+        show_html("<b>References (DOI):</b> " + doi_links_html(mrow.get("dois") if mrow is not None else None))
+
+    # docking + ranking + ML
+    st.subheader("Scores")
+    c1, c2, c3 = st.columns(3)
+    rd = get_redock(data)
+    with c1:
+        if drow is None:
+            metric_card("DPP-4 score", None)
+            st.caption("This compound was not docked into DPP-4.")
+        else:
+            metric_card("DPP-4 score (kcal/mol, predicted)", f"{float(drow['vina_score_kcal']):.3f}",
+                        f"rank {int(drow['rank'])} of {len(dt)} (shown by the app) · ligand efficiency {fmt(drow.get('ligand_efficiency'), 3)}")
+    with c2:
+        rk = data.get("ranking")
+        r = rk[rk["compound_id"] == cid] if rk is not None else None
+        if r is not None and len(r):
+            metric_card(SCORE_NAME, f"{float(r.iloc[0]['composite_score']):.3f}", f"final rank {int(r.iloc[0]['rank'])} of {len(rk)}")
+        else:
+            metric_card("Final ranking", None, "not in the final ranking" if rk is not None else "")
+    with c3:
+        if mlrow is None:
+            metric_card("ML filter", None)
+        else:
+            metric_card("ML filter", "Passed" if mlrow.get("pass_flag") is True else "Did not pass",
+                        f"QED {fmt(mlrow.get('qed'), 2)} · ADMET {fmt(mlrow.get('admet_score'), 2)} · Lipinski violations {fmt(mlrow.get('lipinski_violations'), 0)}")
+    if mlrow is not None:
+        st.caption(f"Predicted risk (0-1): hERG {fmt(mlrow.get('herg_risk'), 2)} · liver {fmt(mlrow.get('hepatotox_risk'), 2)}"
+                   + (f" · fail reason: {mlrow.get('fail_reason')}" if not is_missing(mlrow.get("fail_reason")) else ""))
+
+    st.subheader("Safety panel")
+    mat = safety_matrix(data).get(cid, {})
+    cols = st.columns(3)
+    for col, k in zip(cols, SAFETY_PROTEINS):
+        sc, ref = mat.get(k), ref_score(rd, k)
+        stt = safety_status(sc, ref)
+        low = chip("LOW CONFIDENCE") if str(rd.get(k, {}).get("verdict", "PASS")).upper() != "PASS" else ""
+        with col:
+            show_html(f'<div class="op-card"><b>{esc(PROT_LABEL[k])}</b><br><span style="font-size:20px;font-weight:700">'
+                      f'{esc(fmt(sc, 3) if not is_missing(sc) and is_valid_pose(sc) else "-")}</span> '
+                      f'<span style="font-size:13px">kcal/mol</span><br>{chip(stt)}{low}<br>'
+                      f'<span style="font-size:13px">own known drug: {esc(fmt(ref, 3))}</span></div>')
+    if not mat:
+        st.caption("This compound was not sent to the safety panel (only the top 10 were).")
+
+    st.subheader("Interactions with DPP-4")
+    if srow is None:
+        st.info("Interaction analysis was only done for the top 10 compounds.")
+    else:
+        for label, col, color in (("Hydrogen bonds", "hbond_residues", "#1F5FA8"), ("Hydrophobic", "hydrophobic_residues", "#5F6B73"),
+                                  ("Salt bridges", "salt_bridge_residues", "#D9822B"), ("Pi interactions", "pi_residues", "#2E7D4F")):
+            if col in srow.index:
+                items = [i.replace("(A)", "").strip() for i in split_list(srow[col])]
+                show_html(f"<b>{label}:</b> " + _chips(items, color))
+        st.caption("Residue names are shown as in the report (e.g. SER209 = serine at position 209).")
+
+    # 3D viewer
+    st.subheader("3D view")
+    pose_options = [1, 2, 3, 4, 5]
+    ptxt = None
+    pf = file_for(data, "poses_target", f"{cid}_")
+    if pf:
+        ptxt = read_text_safe(pf, 8)
+        if ptxt:
+            n = len(split_pdbqt_models(ptxt))
+            pose_options = list(range(1, min(max(n, 1), 5) + 1))
+    v1, v2 = st.columns([1, 1])
+    with v1:
+        pose_n = st.radio("Pose (1 = best)", pose_options, horizontal=True, key=f"pose_{cid}")
+    with v2:
+        show_xtl = st.toggle("Show known drug 605 (orange)", value=True, key="show_xtl")
+    layers, legend, around, zoom_sel, msg = _pose_layers(data, cid, pose_n, show_xtl)
+    if not layers:
+        show_html(f'<div class="op-wait">3D view unavailable: <b>{esc(msg or "pose file not delivered")}</b>.</div>')
+    else:
+        viewer(layers, legend, dark=is_dark(), around=around, zoom_sel=zoom_sel)
+        st.caption("Grey = DPP-4 protein, green = this compound, orange = known drug 605. Labelled residues are within 4 Å of the compound.")
+        if msg:
+            st.caption(msg)
+    if pf and ptxt:
+        scores = [s for _, s in split_pdbqt_models(ptxt)]
+        if any(s is not None for s in scores):
+            st.caption("Vina score per pose (kcal/mol): " + ", ".join(f"{i}: {s:.2f}" for i, s in enumerate(scores[:5], 1) if s is not None))
+    section_footer("Profile · everything above is predicted, not measured.")
+
+
+# =============================================================================
+# SECTION 9: EVIDENCE & METHODS
+# =============================================================================
+GLOSSARY = {
+    "Protein": "A tiny machine in the body. Many diseases involve a protein that is working wrongly.",
+    "Target": "The protein we want a medicine to block or switch off (here DPP-4).",
+    "Anti-target (safety protein)": "A protein we do not want a medicine to hit, because that can cause side effects. Ours are hERG, CYP3A4 and CYP2D6.",
+    "hERG": "A channel in heart cells. Blocking it can cause dangerous heart rhythm problems.",
+    "CYP450 (CYP3A4, CYP2D6)": "Liver enzymes that break down most medicines. Blocking them can cause liver trouble or harmful interactions with other drugs.",
+    "Ligand": "A chemical molecule once it is being fitted into a protein.",
+    "PDB ID": "A 4-character code for a 3D protein structure in the free public PDB library (rcsb.org), for example 3D4L.",
+    "SMILES": "A way of writing a chemical structure as one line of text. For example, CCO is ethanol.",
+    "Docking": "The computer tries to fit a chemical into a protein pocket and scores the fit (AutoDock Vina).",
+    "Vina score": "The docking score in kcal/mol. More negative is better (a stronger predicted fit). A prediction, not a lab measurement.",
+    "Pose": "The position and angle in which the chemical sits in the pocket.",
+    "Redocking": "Take the known drug out of its protein, dock it back in, and check the computer puts it where it was found.",
+    "RMSD": "How far apart two positions are, in Å (angstrom, a tiny unit of length). Under 2 Å means close enough.",
+    "ADMET": "How the body Absorbs, Distributes, Metabolizes and Excretes a chemical, and how Toxic it is.",
+    "QED": "A 0-1 score of how drug-like a molecule looks.",
+    "Lipinski's rule": "Quick size and greasiness rules for drug-likeness. We count how many a molecule breaks.",
+    "PAINS": "Compounds that look active in many tests for the wrong reasons. We flag them.",
+    "Ligand efficiency": "Docking score per heavy atom, shown as a positive number (higher = more efficient), so small compounds are not punished.",
+    "MD (molecular dynamics)": "A computer simulation of how atoms move over time, used to see whether the best compound stays in the pocket (GROMACS is the software).",
+    "Composite score": "One number that combines efficacy, selectivity and drug-likeness, used to rank compounds. Here: a selectivity-adjusted efficacy score (in silico proxy), not a therapeutic index.",
+}
+
+
+def section_evidence():
+    data, status = get_data()
+    sec = SECTION_BY_NAME["9. Evidence & methods"]
+    section_header(sec, status)
+    st.info("**Predictions, not lab measurements.** Docking scores and risk numbers are computer predictions. "
+            "They help decide what to test first; they do not show that any compound works or is safe.")
+
+    rd = get_redock(data)
+    red_txt = ", ".join(f"{PROT_LABEL[k]} {rd[k]['verdict']}" for k in PROTEINS if k in rd and rd[k].get("verdict")) or "redocking results pending"
+    criteria = [
+        ("Clearly defined problem", "Natural products are usually ranked by potency alone and safety is looked at late. OmniPhyto adds an early safety check "
+                                    "for neem compounds against DPP-4, a type 2 diabetes target.", "1. Target & library"),
+        ("Computational / data-driven approach", "Open data (COCONUT, PDB), an ML drug-likeness and ADMET filter, AutoDock Vina docking into DPP-4 "
+                                                 "and three safety proteins.", "3. ADMET filter"),
+        ("Working prototype", "This app: every step of the pipeline appears as a section and fills in when its file is added.", "10. Data inbox"),
+        ("Evidence supporting the approach", f"Redocking of the known drug in each protein: {red_txt}. The limits of that evidence are listed below.", "2. Structures & validation"),
+        ("Clear documentation", "Methods, limits and a plain-English glossary on this page, plus the team guide.", "9. Evidence & methods"),
+        ("Real-world relevance", "A short list of neem compounds to test next in the lab (DPP-4 enzyme assay, then selectivity and toxicity checks).", "6. Final ranking"),
+    ]
+    st.subheader("The six judging criteria")
+    for i, (crit, shows, target) in enumerate(criteria):
+        c1, c2, c3 = st.columns([2, 5, 2])
+        c1.markdown(f"**{crit}**")
+        c2.write(shows)
+        if target != "9. Evidence & methods":
+            c3.button(f"See: {target}", key=f"crit_{i}", on_click=go, args=(target,))
+        else:
+            c3.caption("You are here")
+
+    st.subheader("Limits you should know about")
+    n_pass = int(get_ml(data)[0]["pass_flag"].fillna(False).sum()) if get_ml(data)[0] is not None else None
+    n_dock = len(data["docking_target"]) if data.get("docking_target") is not None else None
+    stereo = f"{n_pass - n_dock} stereoisomer duplicates of docked structures were not docked." if n_pass and n_dock and n_pass > n_dock else "Stereoisomer duplicates of docked structures were not docked."
+    limits = [
+        "Vina scores are predictions. They do not show real binding or enzyme inhibition.",
+        "Scores are not comparable between proteins, so each safety protein is compared only with its own known drug.",
+        "hERG docking is a flag, not a verdict, and its redocking was only PARTIAL, so hERG scores are low confidence.",
+        f"The screen used the lowest search effort (exhaustiveness {EXHAUSTIVENESS_SCREEN}); scores within about {NOISE_KCAL} kcal/mol are inside the noise.",
+        "No neem compound scores better than the known drug 605 in predicted DPP-4 fit." if (data.get("docking_target") is not None and not is_missing(ref_score(rd, "dpp4")) and float(data["docking_target"]["vina_score_kcal"].min()) > ref_score(rd, "dpp4")) else "Compare every neem score with the known drug 605 before drawing conclusions.",
+        stereo,
+        "ADMET risk numbers are model predictions and need experimental validation.",
+        "Botanical provenance and exact compound identities need confirming against the primary literature.",
+        "Everything needs laboratory confirmation. No experimental DPP-4 inhibition results are reported.",
+    ]
+    st.warning("\n".join(f"- {x}" for x in limits))
+    nxt = (data.get("target_card") or {}).get("proposed_next_steps")
+    if isinstance(nxt, list) and nxt:
+        with st.expander("Proposed next steps (from the target card)"):
+            for x in nxt:
+                st.markdown(f"- {x}")
+
+    st.subheader("Methods in short")
+    st.markdown(
+        "- **Library:** neem (*Azadirachta indica*) compounds from COCONUT, with literature DOIs.\n"
+        "- **Filter:** drug-likeness (RDKit: Lipinski, Veber, QED, PAINS) plus ML risk scores for hERG and liver toxicity.\n"
+        "- **Docking:** AutoDock Vina 1.2.x with ligands prepared by Meeko and receptors prepared with PDBFixer; the search box comes from the crystal drug.\n"
+        f"- **Search effort:** exhaustiveness {EXHAUSTIVENESS_SCREEN} for the screen; higher for the redocking checks (as recorded in the files).\n"
+        "- **Interactions:** PLIP, for the top 10 compounds.\n"
+        "- **Safety panel:** hERG (8ZYO), CYP3A4 (2V0M), CYP2D6 (3TDA); each compared with its own redocked known drug.")
+
+    st.subheader("Glossary")
+    with st.expander("Plain-English glossary (20 terms)", expanded=False):
+        for k, v in GLOSSARY.items():
+            st.markdown(f"**{k}** — {v}")
+
+    st.subheader("Evidence pack for judges")
+    buf = io.BytesIO()
+    parts = []
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
+        for key, name in (("ranking", "ranking.csv"), ("docking_antitargets", "safety_panel.csv")):
+            if data.get(key) is not None:
+                z.writestr(name, data[key].to_csv(index=False)); parts.append(name)
+        if rd:
+            rt = pd.DataFrame([{"receptor": k, "ligand": v.get("ligand"), "verdict": v.get("verdict"), "top1_rmsd_A": v.get("top1_rmsd"),
+                                "best_rmsd_A": v.get("best_rmsd"), "ref_score_kcal_mol": v.get("ref_score")} for k, v in rd.items()])
+            z.writestr("redocking.csv", rt.to_csv(index=False)); parts.append("redocking.csv")
+        z.writestr("README.txt", "OmniPhyto evidence pack. All values are computer predictions, not lab measurements.\n"
+                                 "Vina scores are in kcal/mol (lower = better predicted fit) and are not comparable between proteins.\n")
+    if parts:
+        st.download_button("Download evidence pack (ZIP)", buf.getvalue(), file_name="omniphyto_evidence_pack.zip",
+                           mime="application/zip", key="evi_dl")
+        st.caption("Contains: " + ", ".join(parts))
+    else:
+        st.button("Download evidence pack (waiting for files)", disabled=True, key="evi_dl_off")
+    section_footer("Evidence & methods · Project Manager · calibrated honesty beats inflated claims.")
+
 
 
 # =============================================================================
