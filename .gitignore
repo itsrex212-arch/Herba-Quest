@@ -224,3 +224,11 @@ __marimo__/
 .venv/
 data/output/
 .DS_Store
+
+# exceptions so result files are not ignored (added by the sync notebook)
+!/data/
+!/data/incoming/
+!/data/incoming/results/
+!/data/incoming/results/target/
+!/data/incoming/results/target/poses/
+!/data/incoming/results/target/poses/**
