@@ -1,8 +1,7 @@
+streamlit>=1.40
+pandas
+numpy
+altair
+# Optional: draws 2D molecule pictures. If it fails to install, delete this line;
+# the app then shows the SMILES text instead.
 rdkit
-   numpy<2
-   scipy
-   gemmi
-   prody
-   meeko>=0.6,<1.0
-   streamlit>=1.30,<2.0
-   pandas>=2.0,<3.0
