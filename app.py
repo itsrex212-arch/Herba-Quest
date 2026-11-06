@@ -2316,4 +2316,96 @@ def main():
         st.caption("Other sections still work. Check 10. Data inbox for file problems.")
 
 
+# =============================================================================
+# 11. SAGE & CREAM THEME   (ADDED block. It restyles the app and changes no existing code.)
+#     It wraps inject_css(), so main() picks it up on its own. Delete this block to go back.
+# =============================================================================
+SAGE_PALETTES = {
+    False: {  # light: cream page, sage sidebar, orange call-to-action
+        "BG": "#f7f0e5", "CARD": "#fffaf1", "LINE": "#dfd4c0", "INK": "#2b3a2e", "MUTED": "#5d6b5f",
+        "SIDE1": "#a9bba7", "SIDE2": "#94a894", "SIDEINK": "#1f2d22",
+        "BLOB1": "rgba(135,153,137,.30)", "BLOB2": "rgba(231,151,107,.16)",
+        "ACCENT": "#c2561a", "ACCENTHOVER": "#a94a15", "ACCENTINK": "#ffffff", "LINK": "#2f6b4f",
+        "PILL": "rgba(255,255,255,.35)", "PILLON": "#fffaf1", "SAGE": "#59725d", "SHADOW": "rgba(60,80,60,.10)",
+    },
+    True: {  # dark: deep forest green with the same sage and orange accents
+        "BG": "#17211b", "CARD": "#1f2d25", "LINE": "#33473a", "INK": "#f1efe4", "MUTED": "#a9b8ab",
+        "SIDE1": "#22332a", "SIDE2": "#1a261f", "SIDEINK": "#eaf0e4",
+        "BLOB1": "rgba(111,148,120,.16)", "BLOB2": "rgba(232,121,63,.08)",
+        "ACCENT": "#f08a4b", "ACCENTHOVER": "#f39a63", "ACCENTINK": "#1b130c", "LINK": "#9fd3a9",
+        "PILL": "rgba(255,255,255,.07)", "PILLON": "#2f4538", "SAGE": "#7fa088", "SHADOW": "rgba(0,0,0,.30)",
+    },
+}
+
+SAGE_CSS = """<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap');
+.stApp, [data-testid="stAppViewContainer"] {
+  background:
+    radial-gradient(circle at 96% -4%, __BLOB1__ 0, __BLOB1__ 190px, transparent 191px),
+    radial-gradient(ellipse at -6% 106%, __BLOB2__ 0, transparent 46%),
+    __BG__ !important; background-attachment: fixed !important; color: __INK__; }
+[data-testid="stHeader"] { background: transparent !important; }
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp p, .stApp li, .stApp label,
+.stApp button, .stApp [data-testid="stMarkdownContainer"], .stApp [data-testid="stCaptionContainer"] {
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; }
+.stApp h1, .stApp h2, .stApp h3, .stApp h4 { color: __INK__; font-weight: 800; letter-spacing: -0.015em; }
+.stApp h1 { font-weight: 900; line-height: 1.12; }
+.stApp, .stApp p, .stApp li, .stApp label { color: __INK__; }
+[data-testid="stCaptionContainer"], .stApp small { color: __MUTED__ !important; }
+.stApp a { color: __LINK__ !important; text-decoration: underline; text-underline-offset: 2px; }
+
+[data-testid="stSidebar"] { background: linear-gradient(180deg, __SIDE1__ 0%, __SIDE2__ 100%) !important;
+  border-right: 0; border-radius: 0 30px 30px 0; box-shadow: 8px 0 28px __SHADOW__; }
+[data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] p,
+[data-testid="stSidebar"] label, [data-testid="stSidebar"] [data-testid="stCaptionContainer"] { color: __SIDEINK__ !important; }
+[data-testid="stSidebar"] [data-testid="stRadio"] label { background: __PILL__; border: 1px solid transparent;
+  border-radius: 999px; padding: 6px 14px; margin: 3px 0; transition: background .15s; }
+[data-testid="stSidebar"] [data-testid="stRadio"] label:hover { background: __PILLON__; }
+[data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) { background: __PILLON__;
+  border-color: __SAGE__; font-weight: 800; box-shadow: 0 4px 12px __SHADOW__; }
+
+.stApp .stButton > button, .stApp .stDownloadButton > button, .stApp [data-testid^="stBaseButton"] {
+  border-radius: 999px; font-weight: 800; padding: .5rem 1.4rem; border: 1.5px solid __SAGE__;
+  background: __CARD__; color: __INK__; }
+.stApp [data-testid="stBaseButton-primary"], .stApp .stButton > button[kind="primary"] {
+  background: __ACCENT__ !important; color: __ACCENTINK__ !important; border-color: __ACCENT__ !important;
+  box-shadow: 0 8px 18px rgba(194,86,26,.28); }
+.stApp [data-testid="stBaseButton-primary"]:hover { background: __ACCENTHOVER__ !important; }
+.stApp [data-testid="stBaseButton-primary"] p, .stApp [data-testid="stBaseButton-primary"] span { color: __ACCENTINK__ !important; }
+
+.op-card, .op-wait { background: __CARD__; border: 1px solid __LINE__; border-radius: 22px;
+  box-shadow: 0 10px 26px __SHADOW__; }
+.op-wait { border-left: 6px solid __SAGE__; }
+.op-metric-v { color: __INK__; font-weight: 800; }
+.op-metric-l, .op-metric-s, .op-foot, .op-kv td:first-child, .op-tbl th { color: __MUTED__; }
+.op-tbl th, .op-tbl td { border-bottom-color: __LINE__; }
+.op-chip { font-weight: 700; }
+.op-green { background: #3f7a50; color: #fff; } .op-blue { background: #2f6b7a; color: #fff; }
+.op-red { background: #b0392b; color: #fff; } .op-grey { background: #6a756d; color: #fff; }
+.op-amber { background: #f2b64a; color: #2b2a1d; } .op-outline { color: __INK__; border-color: __MUTED__; }
+
+[data-testid="stExpander"] { background: __CARD__; border: 1px solid __LINE__ !important; border-radius: 20px; overflow: hidden; }
+[data-testid="stAlert"] { border-radius: 18px; }
+[data-testid="stDataFrame"] { border: 1px solid __LINE__; border-radius: 18px; overflow: hidden; }
+[data-baseweb="input"], [data-baseweb="select"] > div, [data-baseweb="textarea"] { border-radius: 14px !important; }
+button[data-baseweb="tab"] { font-weight: 700; }
+.block-container { padding-top: 2.2rem; }
+</style>"""
+
+
+def inject_sage_theme(dark: bool) -> None:
+    css = SAGE_CSS
+    for token, value in SAGE_PALETTES[bool(dark)].items():
+        css = css.replace(f"__{token}__", value)
+    st.markdown(css, unsafe_allow_html=True)
+
+
+_inject_css_original = inject_css
+
+
+def inject_css(dark: bool):  # noqa: F811  (same name on purpose, so main() uses the themed version)
+    _inject_css_original(dark)
+    inject_sage_theme(dark)
+
+
 main()
