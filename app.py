@@ -245,7 +245,7 @@ FILES: dict[str, dict] = {
         feeds=["7 Simulation (MD)"]),
 }
 # Files we know about but that no section needs (so they do not appear as "not used").
-EXTRA_RECOGNISED = [("data/incoming/md_report", "README.md")]
+EXTRA_RECOGNISED = [("data/incoming/md_report", "README.md"), ("data/incoming/md_report", "*_hbonds_detail.csv")]
 
 
 # =============================================================================
@@ -1949,13 +1949,16 @@ def section_md():
     step = STEP_BY_ID[7]
     section_header(sec, status)
     md = data.get("md_summary")
+    md_dir = ROOT / "data" / "incoming" / "md_report"
     if md is None:
         waiting_card(step, status)
         st.caption("Expected columns: compound_id, label (candidate|control), length_ns, ligand_rmsd_mean_A, ligand_rmsd_sd_A, "
-                   "protein_rmsd_mean_A, hbond_occupancy_pct, notes. Plots: <compound_id>_rmsd.png, _rmsf.png, _hbonds.png.")
+                   "protein_rmsd_mean_A, hbond_occupancy_pct, notes. Plots: <compound_id>_rmsd.png, _rmsf.png, _hbonds.png. "
+                   "Optional: <compound_id>_hbonds_detail.csv.")
     else:
         problem_notes(status, ["md_summary"])
-        st.markdown("Candidate and control (the known crystal drug) side by side. Lower RMSD = steadier in the pocket.")
+        st.markdown("Molecular dynamics results from supplied files; no simulation is run here. "
+                    "Candidate and control (the known crystal drug) side by side. Lower RMSD = steadier in the pocket.")
         cols = [c for c in ["compound_id", "label", "length_ns", "ligand_rmsd_mean_A", "ligand_rmsd_sd_A",
                             "protein_rmsd_mean_A", "hbond_occupancy_pct", "notes"] if c in md.columns]
         cfg = {"compound_id": "Compound ID", "label": "Role", "length_ns": st.column_config.NumberColumn("Length (ns)", format="%.1f"),
@@ -1964,19 +1967,39 @@ def section_md():
                "protein_rmsd_mean_A": st.column_config.NumberColumn("Protein RMSD mean (Å)", format="%.2f"),
                "hbond_occupancy_pct": st.column_config.NumberColumn("H-bond occupancy (%)", format="%.1f"), "notes": "Notes"}
         st.dataframe(md[cols], hide_index=True, column_config=cfg)
-        for cid in list(dict.fromkeys(md["compound_id"])):
-            shown = False
-            for suffix, title in (("_rmsd", "RMSD"), ("_rmsf", "RMSF"), ("_hbonds", "Hydrogen bonds")):
-                p = file_for(data, "md_plots", f"{cid}{suffix}.png")
-                path = safe_path(Path(p).name, ROOT / Path(p).parent) if p else None
-                if path:
-                    if not shown:
-                        st.subheader(f"Plots for {cid}")
-                        shown = True
-                    st.image(str(path), caption=f"{cid} · {title}")
-            if not shown:
-                st.caption(f"No plots delivered yet for {cid}.")
-        st.caption("A simulation of one compound is a plausibility check on its pose, not proof of binding.")
+        st.caption("Ligand RMSD is measured against the first production frame after fitting on the protein backbone. "
+                   "A flat, low curve (like the crystal-drug control) means the pose held; a rising curve means it moved. "
+                   "H-bond occupancy = share of frames with at least one ligand-protein hydrogen bond.")
+
+        ids = list(dict.fromkeys(md["compound_id"].astype(str)))
+        control = [str(c) for c, lab in zip(md["compound_id"], md["label"]) if str(lab).strip().lower() == "control"]
+        default = (control[:1] + [i for i in ids if i not in control])[:3]
+        picked = st.multiselect("Compounds to compare side by side", ids, default=default, key="md_compare")
+        plots = [("rmsd", "RMSD over time"), ("hbonds", "Ligand-protein H-bonds"), ("rmsf", "Protein flexibility (C-alpha RMSF)")]
+        if picked:
+            for col, cid in zip(st.columns(len(picked)), picked):
+                row = md[md["compound_id"].astype(str) == cid].iloc[0]
+                with col:
+                    st.markdown(f"**{cid}** · {row['label']}")
+                    for kind, title in plots:
+                        p = file_for(data, "md_plots", f"{cid}_{kind}.png")
+                        path = safe_path(Path(p).name, ROOT / Path(p).parent) if p else None
+                        if path:
+                            st.image(str(path), caption=title)
+                        else:
+                            st.caption(f"{title}: plot not delivered")
+                    detail = safe_path(f"{cid}_hbonds_detail.csv", md_dir)
+                    if detail is None and md_dir.is_dir():  # compound ids are upper-cased on load; match file names ignoring case
+                        want = f"{cid}_hbonds_detail.csv".lower()
+                        detail = next((q for q in md_dir.glob("*_hbonds_detail.csv") if q.name.lower() == want), None)
+                    if detail is not None:
+                        with st.expander("H-bond partners"):
+                            try:
+                                st.dataframe(pd.read_csv(detail), hide_index=True)
+                            except (OSError, ValueError, pd.errors.ParserError) as exc:
+                                st.caption(f"Could not read {detail.name}: {exc}")
+        st.caption("A simulation of one compound is a plausibility check on its pose, not proof of binding. "
+                   "Report previews do not validate simulation workflow or interpret missing values as results.")
     st.button("Run simulation (engine not connected)", disabled=True, key="md_run")
     section_footer("Step 7 · Bioinformatics · the simulation engine connects in a later version (see md_engine_run in app.py).")
 
