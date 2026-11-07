@@ -290,13 +290,25 @@ def safe_path(rel, base: Path = INCOMING):
     return p if p.is_file() else None
 
 
-def read_text_safe(rel_from_root: str, max_mb: float = 8.0):
-    """Read a repo file (path given relative to the repo root). None if missing / unsafe / too big."""
-    p = safe_path(rel_from_root, ROOT)
-    if p is None or p.stat().st_size > max_mb * 1_000_000:
+@st.cache_data(show_spinner=False, max_entries=64)
+def _read_cached(abs_path: str, mtime_ns: int, max_mb: float):
+    p = Path(abs_path)
+    if p.stat().st_size > max_mb * 1_000_000:
         return None
     try:
         return p.read_text(errors="replace")
+    except OSError:
+        return None
+
+
+def read_text_safe(rel_from_root: str, max_mb: float = 8.0):
+    """Read a repo file (path given relative to the repo root). None if missing / unsafe / too big.
+    TOUR EDIT: cached by file path + modified time, so big structure files are read once, not on every click."""
+    p = safe_path(rel_from_root, ROOT)
+    if p is None:
+        return None
+    try:
+        return _read_cached(str(p), p.stat().st_mtime_ns, max_mb)
     except OSError:
         return None
 
@@ -497,6 +509,12 @@ def _signature():
     return tuple(sorted(items))
 
 
+@st.cache_data(ttl=15, show_spinner=False)
+def _signature_cached():
+    """TOUR EDIT: the folder fingerprint is reused for 15 seconds, so clicks no longer re-scan every file."""
+    return _signature()
+
+
 def _load_all_uncached():
     data: dict = {}
     status: dict = {}
@@ -597,7 +615,7 @@ def _load_all_cached(sig):
 def load_all():
     """Find and read every file ONCE per change. Returns (data, status)."""
     try:
-        return _load_all_cached(_signature())
+        return _load_all_cached(_signature_cached())
     except Exception as exc:  # never crash the app
         st.error(f"Could not read the data folder: {exc}")
         return {"names": {}, "unrecognised": []}, {k: {"key": k, "label": v["label"], "feeds": v["feeds"],
@@ -832,8 +850,9 @@ def show_structure(smiles, w: int = 260, h: int = 200):
 _VIEWER = """<div style="position:relative;width:100%;height:__H__px;font-family:sans-serif">
 <div id="v" style="width:100%;height:100%;position:relative"></div>
 <div id="leg" style="position:absolute;left:8px;bottom:8px;font:13px sans-serif;padding:4px 8px;border-radius:6px;background:__LBG__;color:__LFG__;z-index:5"></div>
-<div id="msg" style="position:absolute;left:12px;top:12px;font:14px sans-serif;color:__LFG__;z-index:5"></div></div>
-<script src="https://3dmol.org/build/3Dmol-min.js"></script>
+<div id="msg" style="position:absolute;left:12px;top:12px;font:14px sans-serif;color:__LFG__;z-index:5">Loading 3D viewer. Please wait, this can take about 5 seconds...</div></div>
+<script src="https://cdn.jsdelivr.net/npm/3dmol/build/3Dmol-min.js"></script>
+<script>if (typeof $3Dmol === 'undefined') { document.write('<scr'+'ipt src="https://3dmol.org/build/3Dmol-min.js"></scr'+'ipt>'); }</script>
 <script>
 const P = __PAYLOAD__;
 (function(){
@@ -853,6 +872,7 @@ const P = __PAYLOAD__;
     }
     v.zoomTo(P.zoom_sel || {model: models[P.zoom_layer]});
     v.render();
+    msg.textContent = '';
     document.getElementById('leg').innerHTML = P.legend.map(function(x){return '<span style="color:'+x[1]+'">&#9632;</span> '+x[0];}).join(' &nbsp; ');
   } catch (e) { msg.textContent = '3D viewer problem: ' + e; }
 })();
@@ -864,6 +884,7 @@ def viewer(layers: list[dict], legend: list[tuple[str, str]], dark: bool, height
     """Embed 3Dmol.js. layers = [{"data": text, "fmt": "pdb"|"pdbqt", "styles": [{"sel": {...}, "style": {...}}]}].
     around = {"layer": index, "distance": 4, "sel": {...}} labels the protein residues near that ligand;
     zoom_sel (optional) is the atom selection to zoom to."""
+    st.caption("⏳ 3D viewers need about 5 seconds to load. Please be patient, it is working.")
     payload = {"layers": layers, "legend": legend, "around": around, "zoom_layer": zoom_layer, "zoom_sel": zoom_sel,
                "bg": "#0e1117" if dark else "#ffffff",
                "labelfg": "#ffffff" if dark else "#111111", "labelbg": "#2b323d" if dark else "#e9edf2"}
@@ -2436,6 +2457,195 @@ _inject_css_original = inject_css
 def inject_css(dark: bool):  # noqa: F811  (same name on purpose, so main() uses the themed version)
     _inject_css_original(dark)
     inject_sage_theme(dark)
+
+
+
+# =============================================================================
+# 12. GUIDED TOUR  (ADDED block for the pitch video. It adds a "Start guided tour" button to the sidebar.
+#     It changes no existing section. Delete this block (and the 4 small edits marked "TOUR EDIT") to remove it.)
+# =============================================================================
+TOUR = [
+    dict(sec=None, look="none", title="What we built",
+         say="Intro page. Explain the problem, the solution and the four rounds, then press Start walkthrough."),
+    dict(sec="0. Home", look="cards", title="Home: the whole project on one page",
+         say="This is the home page. The cards give the headline numbers, and the pipeline shows which steps are ready, "
+             "partial or still waiting. The sidebar on the left is how we move from step to step."),
+    dict(sec="1. Target & library", look="table", title="Step 1: the disease protein and the neem compounds",
+         say="We picked DPP-4, a protein involved in type 2 diabetes, because its 3D structure is well known. "
+             "The table is our library of neem compounds, each with an ID, a structure and literature references. "
+             "Leaf evidence is a column, so we can say which compounds are supported for neem leaf."),
+    dict(sec="2. Structures & validation", look="viewer", wait=True, title="Step 2: can we trust our docking?",
+         say="Before trusting any score we test the method. We put the known crystal drug back into DPP-4 and check "
+             "that the computer places it where the crystal had it. The RMSD is the distance between the two poses, "
+             "and under 2 Angstrom counts as a pass."),
+    dict(sec="3. ADMET filter", look="table", title="Round 1: the filter",
+         say="A quick filter for drug-likeness and predicted risk, such as Lipinski's rule, heart (hERG) risk and liver risk. "
+             "Compounds that fail are not docked. This saves computing time and is a screening aid, not a verdict."),
+    dict(sec="4. Docking: DPP-4", look="table", title="Round 2: fit to the disease protein",
+         say="Every compound that passed is docked into DPP-4. The Vina score is the predicted fit in kcal per mol: "
+             "more negative means a stronger predicted fit. Ligand efficiency divides by size, so big molecules do not "
+             "win just by being big. These are predictions, not lab measurements."),
+    dict(sec="5. Safety panel", look="cards", title="Round 3: the safety check",
+         say="The best compounds are docked into three safety proteins: hERG for the heart, and CYP3A4 and CYP2D6 for the liver. "
+             "Each is compared with a known drug that blocks that protein. If a compound binds as strongly as that known "
+             "blocker, it is flagged. A flag is a warning to check, not a safety verdict."),
+    dict(sec="6. Final ranking", look="table", title="Round 4: one ranked list",
+         say="Fit, safety and drug-likeness are combined into one score. Read it as a priority list for lab testing. "
+             "It is a proxy score, not a therapeutic index and not proof that a compound works."),
+    dict(sec="7. Simulation (MD)", look="table", wait=True, title="New: the molecular dynamics simulation",
+         say="A simulation shows whether the best compound stays in the pocket over time. A flat, low RMSD curve, like the "
+             "crystal-drug control, means the pose held. A rising curve means it moved. One simulation is a plausibility "
+             "check, not proof of binding."),
+    dict(sec="8. Compound profile", look="viewer", wait=True, title="One compound in detail",
+         say="Everything about one compound: its structure, scores, safety flags and references, and its 3D pose inside "
+             "the protein with the touching residues labelled. Drag to rotate and scroll to zoom."),
+    dict(sec="9. Evidence & methods", look="none", title="Evidence and honest limits",
+         say="This page maps the project to the judging criteria and states the limits openly: docking scores are "
+             "predictions, hERG and CYP results are flags, and the final score is a proxy."),
+    dict(sec="10. Data inbox", look="table", title="Built to be reused",
+         say="New result files dropped here update every page. The same pipeline can run on a different protein "
+             "or a different plant list."),
+    dict(sec="0. Home", look="none", title="Impact and next steps",
+         say="Impact: a free, reproducible triage tool that gives a safety-aware shortlist from traditional medicine "
+             "before expensive lab work. Next steps are lab tests: a DPP-4 enzyme assay, hERG patch-clamp and CYP inhibition."),
+]
+
+TOUR_LOOK = {
+    "sidebar": '[data-testid="stSidebar"] [data-testid="stRadio"]',
+    "table": '.block-container [data-testid="stDataFrame"]',
+    "cards": '.block-container .op-card',
+    "viewer": '.block-container iframe',
+}
+PATIENCE_NOTE = "⏳ 3D viewers and big tables need about 5 seconds to load. Please wait, it is working."
+
+
+def tour_goto(i: int):
+    """Button callback: go to tour step i and open its section."""
+    i = max(0, min(int(i), len(TOUR) - 1))
+    st.session_state["tour_step"] = i
+    if TOUR[i]["sec"]:
+        st.session_state["section"] = TOUR[i]["sec"]
+
+
+def tour_start():
+    st.session_state["tour_on"] = True
+    tour_goto(0)
+
+
+def tour_stop():
+    st.session_state["tour_on"] = False
+    st.session_state["section"] = "0. Home"
+
+
+def tour_flip():
+    st.session_state["tour_top"] = not st.session_state.get("tour_top", False)
+
+
+def tour_intro():
+    """Full-page introduction shown at the start of the tour."""
+    st.markdown("# 🍃 OmniPhyto")
+    st.markdown("### Finding safe plant medicines with computers")
+    show_html(
+        '<div class="op-card" style="padding:18px 22px;font-size:18px;line-height:1.55">'
+        "<b>The problem.</b> Plants have been used as medicine for generations, but testing thousands of plant chemicals in a lab "
+        "is slow and expensive. Many drug candidates also fail late because of safety, such as heart or liver side effects.<br><br>"
+        "<b>What we built.</b> A computer pipeline that asks two questions of every compound: "
+        "<b>does it fit the disease protein?</b> and <b>does it also fit proteins that cause side effects?</b> "
+        "We rank compounds on both answers, then simulate the best one to see if its fit holds."
+        "<br><br><b>Our case.</b> Type 2 diabetes, the protein DPP-4 (PDB 3D4L), and compounds reported from the neem plant."
+        "</div>")
+    st.markdown("#### The four rounds")
+    for col, (n, t, d) in zip(st.columns(4), [
+            ("1", "Filter", "Drop compounds that look risky or unlike real drugs."),
+            ("2", "Disease docking", "Test how well each survivor fits DPP-4."),
+            ("3", "Safety check", "Test the best ones against heart and liver proteins."),
+            ("4", "Rank and simulate", "One ranked list, then a simulation of the best hit.")]):
+        with col:
+            show_html(f'<div class="op-card" style="padding:12px 14px"><b>Round {n}: {t}</b><br>{d}</div>')
+    st.markdown("")
+    st.info(PATIENCE_NOTE)
+    c1, c2, _ = st.columns([1, 1, 3])
+    c1.button("Start walkthrough →", type="primary", on_click=tour_goto, args=(1,), key="tour_intro_go")
+    c2.button("Skip to the app", on_click=tour_stop, key="tour_intro_skip")
+
+
+def tour_coach():
+    """Highlight the part of the page being explained and show the coach box with the words to say."""
+    ss = st.session_state
+    i = ss.get("tour_step", 0)
+    step = TOUR[i]
+    pal = SAGE_PALETTES[bool(is_dark())]
+    top = bool(ss.get("tour_top", False))
+    sel = TOUR_LOOK.get(step["look"])
+    css = ["<style>@keyframes opPulse{0%{box-shadow:0 0 0 0 rgba(232,121,63,.8)}70%{box-shadow:0 0 0 18px rgba(232,121,63,0)}"
+           "100%{box-shadow:0 0 0 0 rgba(232,121,63,0)}}"]
+    if sel:
+        css.append(f"{sel}{{outline:4px solid #e8793f !important;outline-offset:4px;border-radius:14px;animation:opPulse 1.6s infinite;}}")
+        if step["look"] in ("table", "viewer"):
+            css.append(f'.block-container [data-testid="stElementContainer"]:has({sel}){{position:relative;}}'
+                       f'.block-container [data-testid="stElementContainer"]:has({sel})::before{{content:"👇 LOOK HERE";'
+                       "position:absolute;top:-34px;left:8px;background:#e8793f;color:#fff;font-weight:800;padding:3px 12px;"
+                       "border-radius:999px;font-size:14px;z-index:60;}")
+    where = "top:72px;bottom:auto;" if top else "bottom:22px;top:auto;"
+    css.append(f".st-key-tour_box{{position:fixed;right:22px;{where}width:min(440px,92vw);z-index:99999;"
+               f"background:{pal['CARD']};border:3px solid {pal['ACCENT']};border-radius:22px;padding:14px 18px;"
+               "box-shadow:0 18px 50px rgba(0,0,0,.35);max-height:68vh;overflow:auto;}"
+               ".st-key-tour_box p{font-size:17px;line-height:1.5;}"
+               "@keyframes opBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}</style>")
+    st.markdown("".join(css), unsafe_allow_html=True)
+    arrow = "⬅" if step["look"] == "sidebar" else ("⬇" if top else "⬆")
+    try:
+        box = st.container(key="tour_box")
+    except TypeError:                      # older Streamlit: the box simply appears in the page instead of floating
+        box = st.container()
+    with box:
+        show_html(f'<div style="display:flex;align-items:center;gap:10px"><span style="font-size:34px;color:{pal["ACCENT"]};'
+                  f'display:inline-block;animation:opBob 1.2s infinite">{arrow}</span>'
+                  f'<span style="font-weight:800;font-size:13px;color:{pal["MUTED"]}">STEP {i} OF {len(TOUR) - 1}</span></div>')
+        st.markdown(f"**{step['title']}**")
+        st.markdown(step["say"])
+        if step.get("wait"):
+            st.caption(PATIENCE_NOTE)
+        b1, b2, b3, b4 = st.columns([1, 1.2, 1, 1])
+        b1.button("← Back", on_click=tour_goto, args=(i - 1,), disabled=(i <= 0), key="tour_back")
+        if i < len(TOUR) - 1:
+            b2.button("Next →", type="primary", on_click=tour_goto, args=(i + 1,), key="tour_next")
+        else:
+            b2.button("Finish", type="primary", on_click=tour_stop, key="tour_finish")
+        b3.button("⇅ Move", on_click=tour_flip, key="tour_flip", help="Move this panel up or down")
+        b4.button("End", on_click=tour_stop, key="tour_end")
+
+
+_sidebar_original = sidebar
+
+
+def sidebar(status: dict):  # noqa: F811  (same name on purpose, so main() shows the tour button)
+    _sidebar_original(status)
+    st.sidebar.divider()
+    st.sidebar.button("▶ Start guided tour", on_click=tour_start, key="tour_start_btn",
+                      help="Step-by-step walkthrough for the demo video")
+
+
+_main_original = main
+
+
+def main():  # noqa: F811
+    ss = st.session_state
+    ss.setdefault("tour_on", False)
+    ss.setdefault("tour_step", 0)
+    ss.setdefault("tour_top", False)
+    if ss["tour_on"] and TOUR[min(ss["tour_step"], len(TOUR) - 1)]["sec"] is None:
+        ss.setdefault("section", "0. Home")
+        ss.setdefault("dark", False)
+        data_status = get_data()
+        inject_css(is_dark())
+        sidebar(data_status[1])
+        tour_intro()
+        return
+    _main_original()
+    if ss["tour_on"]:
+        tour_coach()
+
 
 
 main()
