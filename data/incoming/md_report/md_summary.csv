@@ -1,0 +1,5 @@
+compound_id,label,length_ns,ligand_rmsd_mean_A,ligand_rmsd_sd_A,protein_rmsd_mean_A,hbond_occupancy_pct,notes
+605,control,10.0,0.92,0.21,1.14,42.0,"main contacts: TYR662 100%, PHE357 100%, GLU206 100%, GLU205 100%, ASN710 100%, TYR666 99%"
+OP0145,candidate,10.0,5.9,1.37,1.77,51.1,"main contacts: TYR662 100%, SER630 100%, TYR547 96%, TYR666 95%, TYR631 89%, ARG125 82%"
+OP0048,candidate,10.0,3.68,1.02,1.52,99.8,"main contacts: ARG358 100%, PHE357 99%, SER209 97%, SER552 79%, ARG125 54%, TYR547 47%"
+OP0437,candidate,10.0,4.39,0.88,1.6,0.0,"main contacts: TYR662 99%, TYR666 96%, SER630 96%, TYR631 86%, TYR547 85%, VAL656 79% | negative control: weak binder (Vina -4.2), not expected to hold a pose"
