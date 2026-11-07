@@ -194,7 +194,7 @@ FILES: dict[str, dict] = {
         dest="data/validation", required=[], feeds=["2 Structures & validation"]),
     "md_summary": dict(
         label="md_report/md_summary.csv", kind="csv", owner="Bioinformatics", day="5-6",
-        patterns=[("data/incoming/md_report", "md_summary*.csv")], canonical="md_summary.csv",
+        patterns=[("data/incoming/md_report", "md_summary*.csv"), ("md_report", "md_summary*.csv")], canonical="md_summary.csv",
         dest="data/incoming/md_report", required=["compound_id", "label"],
         numeric=["length_ns", "ligand_rmsd_mean_A", "ligand_rmsd_sd_A", "protein_rmsd_mean_A", "hbond_occupancy_pct"],
         aliases={"compound_id": ID_ALIASES}, feeds=["7 Simulation (MD)"]),
@@ -241,11 +241,12 @@ FILES: dict[str, dict] = {
         feeds=["2 Structures & validation"]),
     "md_plots": dict(
         label="md_report/*.png (MD plots)", kind="folder", owner="Bioinformatics", day="5-6",
-        patterns=[("data/incoming/md_report", "*.png")], expected=None, dest="data/incoming/md_report",
+        patterns=[("data/incoming/md_report", "*.png"), ("md_report", "*.png")], expected=None, dest="data/incoming/md_report",
         feeds=["7 Simulation (MD)"]),
 }
 # Files we know about but that no section needs (so they do not appear as "not used").
-EXTRA_RECOGNISED = [("data/incoming/md_report", "README.md"), ("data/incoming/md_report", "*_hbonds_detail.csv")]
+EXTRA_RECOGNISED = [("data/incoming/md_report", "README.md"), ("data/incoming/md_report", "*_hbonds_detail.csv"),
+                     ("md_report", "README.md"), ("md_report", "*_hbonds_detail.csv")]
 
 
 # =============================================================================
@@ -1950,6 +1951,12 @@ def section_md():
     section_header(sec, status)
     md = data.get("md_summary")
     md_dir = ROOT / "data" / "incoming" / "md_report"
+    try:  # use the folder the summary was actually found in (data/incoming/md_report or md_report at the repo root)
+        found = find_files(FILES["md_summary"]["patterns"])
+        if found:
+            md_dir = found[0].parent
+    except Exception:
+        pass
     if md is None:
         waiting_card(step, status)
         st.caption("Expected columns: compound_id, label (candidate|control), length_ns, ligand_rmsd_mean_A, ligand_rmsd_sd_A, "
