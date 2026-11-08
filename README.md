@@ -8,7 +8,7 @@ HerbaQuest (the OmniPhyto pipeline) screens neem (*Azadirachta indica*) compound
 
 > These are computational predictions only. Nothing here is a clinical claim, a measured affinity, or a validated drug lead. Wet-lab confirmation is required.
 
-**Quick links:** [Demo video](https://drive.google.com/file/d/1z15GzfTW1MqKvd9rE-A__TIVJWt1mtJ0/view?usp=sharing) ·  [Slide Deck](https://drive.google.com/file/d/1z15GzfTW1MqKvd9rE-A__TIVJWt1mtJ0/view?usp=drive_link) · [Live app](https://omniphyto.streamlit.app/)
+**Quick links:** [Demo video](https://drive.google.com/file/d/1z15GzfTW1MqKvd9rE-A__TIVJWt1mtJ0/view?usp=drivesdk) · [Slide deck](https://drive.google.com/file/d/1QVGHBE8M1ZejWChsCYdc2nYm2II9UBtP/view?usp=drivesdk) · [Live app](https://omniphyto.streamlit.app/)
 
 ## 1. Project description
 
@@ -127,8 +127,8 @@ config/secrets.json
 
 ## 6. Presentation
 
-- **Demo video (max 10 minutes):** https://drive.google.com/file/d/1z15GzfTW1MqKvd9rE-A__TIVJWt1mtJ0/view?usp=sharing
-- **Slide deck (max 10 slides):** https://drive.google.com/file/d/18bvgKlF9fZf_KsIwqIzolrPGjZkZv0KY/view?usp=drive_link
+- **Demo video (max 10 minutes):** https://drive.google.com/file/d/1z15GzfTW1MqKvd9rE-A__TIVJWt1mtJ0/view?usp=drivesdk
+- **Slide deck (max 10 slides):** https://drive.google.com/file/d/1QVGHBE8M1ZejWChsCYdc2nYm2II9UBtP/view?usp=drivesdk
 - **Live app:** https://omniphyto.streamlit.app/
 - **Screenshots:** <!-- add images to docs/ and uncomment: docs/screenshot_ranking.png, docs/screenshot_3d.png, docs/screenshot_md.png -->
 
