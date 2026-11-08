@@ -8,7 +8,7 @@ HerbaQuest (the OmniPhyto pipeline) screens neem (*Azadirachta indica*) leaf com
 
 > These are computational predictions only. Nothing here is a clinical claim, a measured affinity, or a validated drug lead. Wet-lab confirmation is required.
 
-**Quick links:** [Demo video](https://drive.google.com/file/d/1z15GzfTW1MqKvd9rE-A__TIVJWt1mtJ0/view?usp=sharing) · Slide deck: [add link] · Live app: [add URL]
+**Quick links:** [Demo video](https://drive.google.com/file/d/1z15GzfTW1MqKvd9rE-A__TIVJWt1mtJ0/view?usp=sharing) · Slide deck: [[add link]](https://drive.google.com/file/d/18bvgKlF9fZf_KsIwqIzolrPGjZkZv0KY/view?usp=drive_link) · Live app: [[add URL]](https://omniphyto.streamlit.app/)
 
 ## 1. Project description
 
