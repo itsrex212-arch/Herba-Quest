@@ -4,7 +4,7 @@
 
 Repository: `makeathon-2026-herbaquest-track-02-natural-products-for-drug-discovery`
 
-HerbaQuest (the OmniPhyto pipeline) screens neem (*Azadirachta indica*) leaf compounds against DPP-4, a validated type 2 diabetes target, and checks every top candidate against three safety proteins before ranking it. A Streamlit web app presents every step, with a built-in guided demo.
+HerbaQuest (the OmniPhyto pipeline) screens neem (*Azadirachta indica*) compounds against DPP-4, a validated type 2 diabetes target, and checks every top candidate against three safety proteins before ranking it. A Streamlit web app presents every step, with a built-in guided demo.
 
 > These are computational predictions only. Nothing here is a clinical claim, a measured affinity, or a validated drug lead. Wet-lab confirmation is required.
 
@@ -19,7 +19,7 @@ Track 02: Natural Products for Drug Discovery.
 589 million adults (aged 20-79) live with diabetes and 252 million of them are undiagnosed (IDF Diabetes Atlas, 11th edition, 2025). DPP-4 inhibitors are an established treatment, but a compound that binds DPP-4 is useless if it also blocks hERG (heart rhythm) or CYP3A4 and CYP2D6 (drug metabolism). Many leads fail late for exactly this reason. Our question: can compounds from neem block DPP-4 and pass an early safety check?
 
 ### Our solution
-1. **Filter.** 437 neem-leaf compounds are scored for drug-likeness (Lipinski, QED, PAINS) and by machine-learning hERG and liver-injury risk models. 300 pass (at most one Lipinski violation, hERG and liver risk both below 0.70).
+1. **Filter.** 437 neem-Tree compounds are scored for drug-likeness (Lipinski, QED, PAINS) and by machine-learning hERG and liver-injury risk models. 300 pass (at most one Lipinski violation, hERG and liver risk both below 0.70).
 2. **Dock.** 238 of those are docked on DPP-4 (PDB 3D4L). The top 10 are also docked on hERG (8ZYO), CYP3A4 (2V0M) and CYP2D6 (3TDA). Each protocol is validated by redocking the crystal ligand.
 3. **Rank.** Composite = 0.5 efficacy + 0.3 selectivity + 0.2 ADMET. Weight sensitivity was checked over 27 weight sets.
 4. **Simulate.** 10 ns molecular dynamics on the two leads (OP0048, OP0145), the crystal ligand 605 (control) and OP0437 (negative control).
