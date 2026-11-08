@@ -290,25 +290,18 @@ def safe_path(rel, base: Path = INCOMING):
     return p if p.is_file() else None
 
 
-@st.cache_data(show_spinner=False, max_entries=64)
-def _read_cached(abs_path: str, mtime_ns: int, max_mb: float):
-    p = Path(abs_path)
-    if p.stat().st_size > max_mb * 1_000_000:
-        return None
-    try:
-        return p.read_text(errors="replace")
-    except OSError:
-        return None
+@st.cache_data(show_spinner=False, max_entries=48)
+def _read_cached(path_str: str, mtime_ns: int):          # ADDED: avoid re-reading big files on every click
+    return Path(path_str).read_text(errors="replace")
 
 
 def read_text_safe(rel_from_root: str, max_mb: float = 8.0):
-    """Read a repo file (path given relative to the repo root). None if missing / unsafe / too big.
-    TOUR EDIT: cached by file path + modified time, so big structure files are read once, not on every click."""
+    """Read a repo file (path given relative to the repo root). None if missing / unsafe / too big."""
     p = safe_path(rel_from_root, ROOT)
-    if p is None:
+    if p is None or p.stat().st_size > max_mb * 1_000_000:
         return None
     try:
-        return _read_cached(str(p), p.stat().st_mtime_ns, max_mb)
+        return _read_cached(str(p), p.stat().st_mtime_ns)
     except OSError:
         return None
 
@@ -509,12 +502,6 @@ def _signature():
     return tuple(sorted(items))
 
 
-@st.cache_data(ttl=15, show_spinner=False)
-def _signature_cached():
-    """TOUR EDIT: the folder fingerprint is reused for 15 seconds, so clicks no longer re-scan every file."""
-    return _signature()
-
-
 def _load_all_uncached():
     data: dict = {}
     status: dict = {}
@@ -607,7 +594,7 @@ def entry_n(entry) -> int:
     return int(entry["rows"] or 0)
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner="Loading the OmniPhyto data. The first load takes about 10 seconds, please wait...")
 def _load_all_cached(sig):
     return _load_all_uncached()
 
@@ -615,7 +602,7 @@ def _load_all_cached(sig):
 def load_all():
     """Find and read every file ONCE per change. Returns (data, status)."""
     try:
-        return _load_all_cached(_signature_cached())
+        return _load_all_cached(_signature())
     except Exception as exc:  # never crash the app
         st.error(f"Could not read the data folder: {exc}")
         return {"names": {}, "unrecognised": []}, {k: {"key": k, "label": v["label"], "feeds": v["feeds"],
@@ -850,9 +837,8 @@ def show_structure(smiles, w: int = 260, h: int = 200):
 _VIEWER = """<div style="position:relative;width:100%;height:__H__px;font-family:sans-serif">
 <div id="v" style="width:100%;height:100%;position:relative"></div>
 <div id="leg" style="position:absolute;left:8px;bottom:8px;font:13px sans-serif;padding:4px 8px;border-radius:6px;background:__LBG__;color:__LFG__;z-index:5"></div>
-<div id="msg" style="position:absolute;left:12px;top:12px;font:14px sans-serif;color:__LFG__;z-index:5">Loading 3D viewer. Please wait, this can take about 5 seconds...</div></div>
-<script src="https://cdn.jsdelivr.net/npm/3dmol/build/3Dmol-min.js"></script>
-<script>if (typeof $3Dmol === 'undefined') { document.write('<scr'+'ipt src="https://3dmol.org/build/3Dmol-min.js"></scr'+'ipt>'); }</script>
+<div id="msg" style="position:absolute;left:12px;top:12px;font:14px sans-serif;color:__LFG__;z-index:5">Loading the 3D view... this can take up to 5 seconds, please wait.</div></div>
+<script src="https://3dmol.org/build/3Dmol-min.js"></script>
 <script>
 const P = __PAYLOAD__;
 (function(){
@@ -884,7 +870,13 @@ def viewer(layers: list[dict], legend: list[tuple[str, str]], dark: bool, height
     """Embed 3Dmol.js. layers = [{"data": text, "fmt": "pdb"|"pdbqt", "styles": [{"sel": {...}, "style": {...}}]}].
     around = {"layer": index, "distance": 4, "sel": {...}} labels the protein residues near that ligand;
     zoom_sel (optional) is the atom selection to zoom to."""
-    st.caption("⏳ 3D viewers need about 5 seconds to load. Please be patient, it is working.")
+    if zoom_sel is None and around is not None:        # ADDED: zoom to the ligand, not the whole protein
+        zoom_layer = around["layer"]
+    trimmed = False
+    if st.session_state.get("fast3d", True):           # ADDED: send only the pocket area (much smaller)
+        layers, trimmed = _trim_layers(layers, zoom_layer, zoom_sel, around)
+    st.caption("⏳ The 3D view can take about 5 seconds to appear. Please be patient."
+               + (" Fast mode: showing the pocket area (switch it off in the sidebar to see the whole protein)." if trimmed else ""))
     payload = {"layers": layers, "legend": legend, "around": around, "zoom_layer": zoom_layer, "zoom_sel": zoom_sel,
                "bg": "#0e1117" if dark else "#ffffff",
                "labelfg": "#ffffff" if dark else "#111111", "labelbg": "#2b323d" if dark else "#e9edf2"}
@@ -911,6 +903,8 @@ def is_dark() -> bool:
 # 6. SECTION REGISTRY  (order = sidebar order)
 # =============================================================================
 SECTIONS = [
+    dict(id=99, name="What we built", owner="Everyone", step=None, func="section_intro",
+         blurb="The problem, what we built, and a guided tour of the app."),   # ADDED
     dict(id=0, name="Home", owner="Everyone", step=None, func="section_home",
          blurb="The project in one page: what we did, what we found, and what is still waiting."),
     dict(id=1, name="Target & library", owner="Chemist", step=1, func="section_target",
@@ -934,7 +928,7 @@ SECTIONS = [
     dict(id=10, name="Data inbox", owner="Developer", step=None, func="section_inbox",
          blurb="Shows which files the app found, which section each one feeds, and lets you add new files."),
 ]
-SECTION_NAMES = [f"{s['id']}. {s['name']}" if s["id"] else "0. Home" for s in SECTIONS]
+SECTION_NAMES = ["▶ What we built" if s["id"] == 99 else (f"{s['id']}. {s['name']}" if s["id"] else "0. Home") for s in SECTIONS]   # ADDED: intro entry
 SECTION_BY_NAME = dict(zip(SECTION_NAMES, SECTIONS))
 NAME_BY_STEP = {s["step"]: n for n, s in SECTION_BY_NAME.items() if s["step"]}
 
@@ -2337,6 +2331,9 @@ def sidebar(status: dict):
     sb.markdown("## 🍃 OmniPhyto")
     sb.caption("DPP-4 | PDB 3D4L | type 2 diabetes")
     sb.toggle("Dark theme", key="dark")
+    sb.toggle("Guided demo", key="demo_on", on_change=_demo_toggled, help="Step-by-step tour with pointers, for the presentation")   # ADDED
+    sb.toggle("Fast 3D view (pocket only)", key="fast3d", help="Sends only the pocket area to the browser. Turn off to see the whole protein.")   # ADDED
+    sb.caption("⏳ First load and 3D views can take about 5 to 10 seconds. Please be patient.")   # ADDED
     labels = {}
     for name, sec in SECTION_BY_NAME.items():
         labels[name] = f"{ROLE_DOT[sec['owner']]} {name} · {section_state(sec, status)}"
@@ -2349,11 +2346,14 @@ def sidebar(status: dict):
 
 
 def main():
-    st.session_state.setdefault("section", "0. Home")
+    st.session_state.setdefault("section", INTRO_NAME)   # ADDED: landing page is the intro
     st.session_state.setdefault("dark", False)
+    st.session_state.setdefault("fast3d", True)
     data_status = get_data()
     inject_css(is_dark())
     sidebar(data_status[1])
+    if st.session_state.get("demo_on"):   # ADDED: guided tour panel
+        demo_bar(data_status[0])
     name = st.session_state["section"]
     sec = SECTION_BY_NAME.get(name, SECTIONS[0])
     fn = globals().get(sec["func"])
@@ -2459,192 +2459,338 @@ def inject_css(dark: bool):  # noqa: F811  (same name on purpose, so main() uses
     inject_sage_theme(dark)
 
 
-
 # =============================================================================
-# 12. GUIDED TOUR  (ADDED block for the pitch video. It adds a "Start guided tour" button to the sidebar.
-#     It changes no existing section. Delete this block (and the 4 small edits marked "TOUR EDIT") to remove it.)
+# 12. INTRO PAGE + GUIDED DEMO + SPEED   (ADDED block; the pages above keep working on their own.)
+#     - "What we built" page (new landing page)
+#     - Guided demo: a step-by-step tour with pointers and plain-English interpretation, for the pitch video
+#     - Faster 3D views: only the pocket area is sent to the browser (toggle in the sidebar)
+#     Delete this block (and the 4 small ADDED edits above) to go back to the previous app.
 # =============================================================================
-TOUR = [
-    dict(sec=None, look="none", title="What we built",
-         say="Intro page. Explain the problem, the solution and the four rounds, then press Start walkthrough."),
-    dict(sec="0. Home", look="cards", title="Home: the whole project on one page",
-         say="This is the home page. The cards give the headline numbers, and the pipeline shows which steps are ready, "
-             "partial or still waiting. The sidebar on the left is how we move from step to step."),
-    dict(sec="1. Target & library", look="table", title="Step 1: the disease protein and the neem compounds",
-         say="We picked DPP-4, a protein involved in type 2 diabetes, because its 3D structure is well known. "
-             "The table is our library of neem compounds, each with an ID, a structure and literature references. "
-             "Leaf evidence is a column, so we can say which compounds are supported for neem leaf."),
-    dict(sec="2. Structures & validation", look="viewer", wait=True, title="Step 2: can we trust our docking?",
-         say="Before trusting any score we test the method. We put the known crystal drug back into DPP-4 and check "
-             "that the computer places it where the crystal had it. The RMSD is the distance between the two poses, "
-             "and under 2 Angstrom counts as a pass."),
-    dict(sec="3. ADMET filter", look="table", title="Round 1: the filter",
-         say="A quick filter for drug-likeness and predicted risk, such as Lipinski's rule, heart (hERG) risk and liver risk. "
-             "Compounds that fail are not docked. This saves computing time and is a screening aid, not a verdict."),
-    dict(sec="4. Docking: DPP-4", look="table", title="Round 2: fit to the disease protein",
-         say="Every compound that passed is docked into DPP-4. The Vina score is the predicted fit in kcal per mol: "
-             "more negative means a stronger predicted fit. Ligand efficiency divides by size, so big molecules do not "
-             "win just by being big. These are predictions, not lab measurements."),
-    dict(sec="5. Safety panel", look="cards", title="Round 3: the safety check",
-         say="The best compounds are docked into three safety proteins: hERG for the heart, and CYP3A4 and CYP2D6 for the liver. "
-             "Each is compared with a known drug that blocks that protein. If a compound binds as strongly as that known "
-             "blocker, it is flagged. A flag is a warning to check, not a safety verdict."),
-    dict(sec="6. Final ranking", look="table", title="Round 4: one ranked list",
-         say="Fit, safety and drug-likeness are combined into one score. Read it as a priority list for lab testing. "
-             "It is a proxy score, not a therapeutic index and not proof that a compound works."),
-    dict(sec="7. Simulation (MD)", look="table", wait=True, title="New: the molecular dynamics simulation",
-         say="A simulation shows whether the best compound stays in the pocket over time. A flat, low RMSD curve, like the "
-             "crystal-drug control, means the pose held. A rising curve means it moved. One simulation is a plausibility "
-             "check, not proof of binding."),
-    dict(sec="8. Compound profile", look="viewer", wait=True, title="One compound in detail",
-         say="Everything about one compound: its structure, scores, safety flags and references, and its 3D pose inside "
-             "the protein with the touching residues labelled. Drag to rotate and scroll to zoom."),
-    dict(sec="9. Evidence & methods", look="none", title="Evidence and honest limits",
-         say="This page maps the project to the judging criteria and states the limits openly: docking scores are "
-             "predictions, hERG and CYP results are flags, and the final score is a proxy."),
-    dict(sec="10. Data inbox", look="table", title="Built to be reused",
-         say="New result files dropped here update every page. The same pipeline can run on a different protein "
-             "or a different plant list."),
-    dict(sec="0. Home", look="none", title="Impact and next steps",
-         say="Impact: a free, reproducible triage tool that gives a safety-aware shortlist from traditional medicine "
-             "before expensive lab work. Next steps are lab tests: a DPP-4 enzyme assay, hERG patch-clamp and CYP inhibition."),
-]
-
-TOUR_LOOK = {
-    "sidebar": '[data-testid="stSidebar"] [data-testid="stRadio"]',
-    "table": '.block-container [data-testid="stDataFrame"]',
-    "cards": '.block-container .op-card',
-    "viewer": '.block-container iframe',
-}
-PATIENCE_NOTE = "⏳ 3D viewers and big tables need about 5 seconds to load. Please wait, it is working."
+INTRO_NAME = "▶ What we built"
 
 
-def tour_goto(i: int):
-    """Button callback: go to tour step i and open its section."""
-    i = max(0, min(int(i), len(TOUR) - 1))
-    st.session_state["tour_step"] = i
-    if TOUR[i]["sec"]:
-        st.session_state["section"] = TOUR[i]["sec"]
+def _nz(x, nd: int = 3, unit: str = "") -> str:
+    """Number as text, or '-' when missing. Never invents a value."""
+    return "-" if is_missing(x) else fmt(x, nd, unit)
 
 
-def tour_start():
-    st.session_state["tour_on"] = True
-    tour_goto(0)
-
-
-def tour_stop():
-    st.session_state["tour_on"] = False
-    st.session_state["section"] = "0. Home"
-
-
-def tour_flip():
-    st.session_state["tour_top"] = not st.session_state.get("tour_top", False)
-
-
-def tour_intro():
-    """Full-page introduction shown at the start of the tour."""
-    st.markdown("# 🍃 OmniPhyto")
-    st.markdown("### Finding safe plant medicines with computers")
-    show_html(
-        '<div class="op-card" style="padding:18px 22px;font-size:18px;line-height:1.55">'
-        "<b>The problem.</b> Plants have been used as medicine for generations, but testing thousands of plant chemicals in a lab "
-        "is slow and expensive. Many drug candidates also fail late because of safety, such as heart or liver side effects.<br><br>"
-        "<b>What we built.</b> A computer pipeline that asks two questions of every compound: "
-        "<b>does it fit the disease protein?</b> and <b>does it also fit proteins that cause side effects?</b> "
-        "We rank compounds on both answers, then simulate the best one to see if its fit holds."
-        "<br><br><b>Our case.</b> Type 2 diabetes, the protein DPP-4 (PDB 3D4L), and compounds reported from the neem plant."
-        "</div>")
-    st.markdown("#### The four rounds")
-    for col, (n, t, d) in zip(st.columns(4), [
-            ("1", "Filter", "Drop compounds that look risky or unlike real drugs."),
-            ("2", "Disease docking", "Test how well each survivor fits DPP-4."),
-            ("3", "Safety check", "Test the best ones against heart and liver proteins."),
-            ("4", "Rank and simulate", "One ranked list, then a simulation of the best hit.")]):
-        with col:
-            show_html(f'<div class="op-card" style="padding:12px 14px"><b>Round {n}: {t}</b><br>{d}</div>')
-    st.markdown("")
-    st.info(PATIENCE_NOTE)
-    c1, c2, _ = st.columns([1, 1, 3])
-    c1.button("Start walkthrough →", type="primary", on_click=tour_goto, args=(1,), key="tour_intro_go")
-    c2.button("Skip to the app", on_click=tour_stop, key="tour_intro_skip")
-
-
-def tour_coach():
-    """Highlight the part of the page being explained and show the coach box with the words to say."""
-    ss = st.session_state
-    i = ss.get("tour_step", 0)
-    step = TOUR[i]
-    pal = SAGE_PALETTES[bool(is_dark())]
-    top = bool(ss.get("tour_top", False))
-    sel = TOUR_LOOK.get(step["look"])
-    css = ["<style>@keyframes opPulse{0%{box-shadow:0 0 0 0 rgba(232,121,63,.8)}70%{box-shadow:0 0 0 18px rgba(232,121,63,0)}"
-           "100%{box-shadow:0 0 0 0 rgba(232,121,63,0)}}"]
-    if sel:
-        css.append(f"{sel}{{outline:4px solid #e8793f !important;outline-offset:4px;border-radius:14px;animation:opPulse 1.6s infinite;}}")
-        if step["look"] in ("table", "viewer"):
-            css.append(f'.block-container [data-testid="stElementContainer"]:has({sel}){{position:relative;}}'
-                       f'.block-container [data-testid="stElementContainer"]:has({sel})::before{{content:"👇 LOOK HERE";'
-                       "position:absolute;top:-34px;left:8px;background:#e8793f;color:#fff;font-weight:800;padding:3px 12px;"
-                       "border-radius:999px;font-size:14px;z-index:60;}")
-    where = "top:72px;bottom:auto;" if top else "bottom:22px;top:auto;"
-    css.append(f".st-key-tour_box{{position:fixed;right:22px;{where}width:min(440px,92vw);z-index:99999;"
-               f"background:{pal['CARD']};border:3px solid {pal['ACCENT']};border-radius:22px;padding:14px 18px;"
-               "box-shadow:0 18px 50px rgba(0,0,0,.35);max-height:68vh;overflow:auto;}"
-               ".st-key-tour_box p{font-size:17px;line-height:1.5;}"
-               "@keyframes opBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}</style>")
-    st.markdown("".join(css), unsafe_allow_html=True)
-    arrow = "⬅" if step["look"] == "sidebar" else ("⬇" if top else "⬆")
+def demo_facts(data) -> dict:
+    """Numbers for the intro and the tour, all read from the delivered files."""
+    F: dict = {"library": None, "passed": None, "docked": None, "best_id": None, "best_score": None, "ref": None,
+               "redock": {}, "rank1": None, "rank2": None, "top_fail": None, "md": None}
     try:
-        box = st.container(key="tour_box")
-    except TypeError:                      # older Streamlit: the box simply appears in the page instead of floating
-        box = st.container()
-    with box:
-        show_html(f'<div style="display:flex;align-items:center;gap:10px"><span style="font-size:34px;color:{pal["ACCENT"]};'
-                  f'display:inline-block;animation:opBob 1.2s infinite">{arrow}</span>'
-                  f'<span style="font-weight:800;font-size:13px;color:{pal["MUTED"]}">STEP {i} OF {len(TOUR) - 1}</span></div>')
-        st.markdown(f"**{step['title']}**")
-        st.markdown(step["say"])
-        if step.get("wait"):
-            st.caption(PATIENCE_NOTE)
-        b1, b2, b3, b4 = st.columns([1, 1.2, 1, 1])
-        b1.button("← Back", on_click=tour_goto, args=(i - 1,), disabled=(i <= 0), key="tour_back")
-        if i < len(TOUR) - 1:
-            b2.button("Next →", type="primary", on_click=tour_goto, args=(i + 1,), key="tour_next")
+        ml, _ = get_ml(data)
+        if ml is not None:
+            F["library"] = len(ml)
+            if "pass_flag" in ml.columns:
+                F["passed"] = int(ml["pass_flag"].astype(str).str.upper().eq("TRUE").sum())
+            if "fail_reason" in ml.columns:
+                fr = ml.loc[~ml["pass_flag"].astype(str).str.upper().eq("TRUE"), "fail_reason"].dropna().astype(str)
+                fr = fr[fr.str.strip() != ""]
+                if len(fr):
+                    vc = fr.value_counts()
+                    F["top_fail"] = (vc.index[0], int(vc.iloc[0]), int(len(fr)))
+        dt = data.get("docking_target")
+        if dt is not None and len(dt) and "vina_score_kcal" in dt.columns:
+            F["docked"] = len(dt)
+            b = dt.sort_values("vina_score_kcal").iloc[0]
+            F["best_id"], F["best_score"] = str(b["compound_id"]), float(b["vina_score_kcal"])
+        rd = get_redock(data)
+        F["redock"] = rd
+        F["ref"] = rd.get("dpp4", {}).get("ref_score")
+        rk = data.get("ranking")
+        if rk is not None and len(rk) and "rank" in rk.columns:
+            r = rk.sort_values("rank")
+            F["rank1"] = str(r.iloc[0]["compound_id"])
+            if len(r) > 1:
+                F["rank2"] = str(r.iloc[1]["compound_id"])
+        F["md"] = data.get("md_summary")
+    except Exception:
+        pass
+    return F
+
+
+def _md_story(F) -> tuple[str, str]:
+    """(what we see, what it means) for the MD stop, from md_summary.csv only."""
+    md = F.get("md")
+    if md is None or not len(md) or "ligand_rmsd_mean_A" not in md.columns:
+        return ("The MD results have not been delivered yet.", "This stop fills in by itself when md_summary.csv arrives.")
+    md = md.copy()
+    notes = md["notes"].astype(str).str.lower() if "notes" in md.columns else pd.Series([""] * len(md), index=md.index)
+    md["_neg"] = notes.str.contains("negative control")
+    md["_ctl"] = md["label"].astype(str).str.lower().eq("control") if "label" in md.columns else False
+    ns = float(md["length_ns"].iloc[0]) if "length_ns" in md.columns and not is_missing(md["length_ns"].iloc[0]) else None
+    parts = []
+    for _, r in md.iterrows():
+        kind = "known drug" if r["_ctl"] else ("negative control" if r["_neg"] else "candidate")
+        h = f", hydrogen bonds in {_nz(r.get('hbond_occupancy_pct'), 1)}% of frames" if "hbond_occupancy_pct" in md.columns else ""
+        parts.append(f"{r['compound_id']} ({kind}): ligand moved {_nz(r['ligand_rmsd_mean_A'], 2)} Å on average{h}")
+    saw = (f"{'A ' + str(int(ns)) + ' ns' if ns else 'A'} simulation of " + str(len(md)) + " systems. " + "; ".join(parts) + ".")
+    cands = md[~md["_ctl"] & ~md["_neg"]]
+    ctl = md[md["_ctl"]]
+    neg = md[md["_neg"]]
+    mean = []
+    if len(ctl) and len(cands):
+        c = float(ctl["ligand_rmsd_mean_A"].iloc[0])
+        if float(cands["ligand_rmsd_mean_A"].min()) > c:
+            mean.append(f"None of the neem candidates held its pose as tightly as the known drug ({_nz(c, 2)} Å).")
+    if len(cands):
+        stable = cands.sort_values("ligand_rmsd_mean_A").iloc[0]
+        mean.append(f"{stable['compound_id']} stayed closest to its starting pose among the candidates ({_nz(stable['ligand_rmsd_mean_A'], 2)} Å).")
+        if "hbond_occupancy_pct" in md.columns:
+            hb = cands.sort_values("hbond_occupancy_pct", ascending=False).iloc[0]
+            mean.append(f"{hb['compound_id']} kept hydrogen bonds in {_nz(hb['hbond_occupancy_pct'], 1)}% of frames.")
+    r1 = F.get("rank1")
+    if r1 and len(neg) and r1 in set(cands["compound_id"].astype(str)):
+        r1v = float(cands.loc[cands["compound_id"].astype(str) == r1, "ligand_rmsd_mean_A"].iloc[0])
+        if r1v > float(neg["ligand_rmsd_mean_A"].iloc[0]):
+            mean.append(f"Worth noting: the #1 ranked compound ({r1}) moved more than the negative control, so its docked pose may not be stable. This tempers its rank.")
+    mean.append("One short run is a plausibility check, not proof.")
+    return saw, " ".join(mean)
+
+
+FAIL_TEXT = {"lipinski_over_1": "more than one Lipinski drug-likeness rule broken", "herg_risk_high": "a high predicted hERG risk",
+             "hepatotox_risk_high": "a high predicted liver-injury risk", "ranked_below_cap": "ranking below the 300-compound cap"}
+
+
+def demo_stops(F) -> list[dict]:
+    best, ref = F.get("best_score"), F.get("ref")
+    rd = F.get("redock", {})
+    d = rd.get("dpp4", {})
+    h = rd.get("herg", {})
+    if best is not None and not is_missing(ref):
+        gap = ("No neem compound beats the known drug in this prediction: the best neem score is "
+               f"{_nz(best)} kcal/mol and the known drug scored {_nz(ref)}." if float(best) > float(ref)
+               else "At least one neem compound matches or beats the known drug in this prediction. Treat that as a prompt to check the pose, not proof.")
+    else:
+        gap = "The docking numbers have not been delivered yet."
+    md_saw, md_mean = _md_story(F)
+    tf = F.get("top_fail")
+    return [
+        dict(section=INTRO_NAME, title="What we built", secs=70,
+             say=f"We built OmniPhyto: a computer pipeline that screens {_nz(F.get('library'), 0)} neem compounds against a type 2 diabetes target, "
+                 "then checks the best ones for safety, before anyone spends money in a lab.",
+             look=["The four number cards: library, docked, best score vs known drug, redocking check.",
+                   "The seven relay chips: each step is owned by one teammate."],
+             meaning="The goal is a short, evidence-backed list of compounds worth testing in a lab. Everything here is a prediction."),
+        dict(section="0. Home", title="Home: the project on one page", secs=45,
+             say="Home shows the target, the key numbers, who did what, and our honest limits.",
+             look=["Target table at the top: DPP-4, PDB 3D4L, the known drug 605.",
+                   "Key numbers row, just below it.", "The relay strip: every step has a status chip and an Open button.",
+                   "The yellow 'Read this first' box at the bottom."],
+             meaning=gap),
+        dict(section="1. Target & library", title="Step 1: target and library", secs=30,
+             say="The Chemist chose DPP-4, a protein that diabetes drugs known as gliptins block, and neem compounds with literature support.",
+             look=["The target card.", "The chemical-class chart.", "The compound table: click a row for the 2D structure and DOIs."],
+             meaning="Each compound comes with literature references, so the library is traceable."),
+        dict(section="2. Structures & validation", title="Step 2: does our docking work?", secs=55,
+             say="Before trusting any score, we remove a known drug from each protein, dock it back, and measure how close it lands to the crystal.",
+             look=["The redocking table: RMSD and the PASS / PARTIAL chips.", "The 3D view: orange = crystal drug, green = our redocked pose."],
+             meaning=f"DPP-4 {d.get('verdict', '-')}: top pose {_nz(d.get('top1_rmsd'), 2)} Å from the crystal (under 2 Å passes). "
+                     f"hERG was {h.get('verdict', '-')}, so every hERG score is low confidence."),
+        dict(section="3. ADMET filter", title="Step 3: the drug-likeness and risk filter", secs=40,
+             say=f"The ML Engineer filtered {_nz(F.get('library'), 0)} compounds down to {_nz(F.get('passed'), 0)} before any docking.",
+             look=["The funnel and the bar chart of reasons for failing.", "The table: QED, Lipinski, hERG and liver risk, pass or fail."],
+             meaning=(f"The most common reason for failing was {FAIL_TEXT.get(tf[0], tf[0].replace('_', ' '))} ({tf[1]} of {tf[2]} failures). " if tf else "")
+                     + "These are model predictions that screen out likely problems early."),
+        dict(section="4. Docking: DPP-4", title="Step 4: docking into DPP-4", secs=50,
+             say=f"{_nz(F.get('docked'), 0)} compounds were docked into DPP-4. A more negative score means a stronger predicted fit.",
+             look=["The coverage line and the effort note at the top.", "The score histogram with the known-drug line.", "The table: click a row to open that compound."],
+             meaning=f"The best is {F.get('best_id') or '-'} at {_nz(best)} kcal/mol, against {_nz(ref)} for the known drug. "
+                     f"The screen used the lowest search effort, so scores within about {NOISE_KCAL} kcal/mol of each other are effectively tied."),
+        dict(section="5. Safety panel", title="Step 5: safety proteins", secs=55,
+             say="The top compounds were also docked into hERG and two liver enzymes, CYP3A4 and CYP2D6, each compared with its own known drug.",
+             look=["The heatmap: grey cells are 'no valid pose'.", "The redocking chips for each safety protein.", "The benchmark rows: a flag means 'docks as strongly as the known drug'."],
+             meaning="A flag is a prompt to check, not a verdict. Scores are not comparable between proteins, and hERG is low confidence."),
+        dict(section="6. Final ranking", title="Step 6: the final ranking", secs=45,
+             say=f"The ML Engineer combined docking fit, selectivity and drug-likeness into one score. Rank 1 is {F.get('rank1') or '-'}, rank 2 is {F.get('rank2') or '-'}.",
+             look=["The ranking table exactly as delivered.", "The formula note next to it.", "The bar chart of the combined score."],
+             meaning="The ranking is an in silico proxy that balances effectiveness and safety. It is not a measured therapeutic index."),
+        dict(section="8. Compound profile", title="One compound in detail", secs=55,
+             say=f"Here is the top-ranked compound, {F.get('rank1') or F.get('best_id') or '-'}, in 3D inside the DPP-4 pocket.",
+             look=["The 3D view: green = this compound, orange = known drug, labelled sticks = amino acids within 4 Å.",
+                   "The interaction table: which amino acids it touches.", "The pose selector: other docked poses."],
+             meaning="A pose that uses the same amino acids as the known drug is more believable. The 3D view can take about 5 seconds to appear."),
+        dict(section="7. Simulation (MD)", title="Step 7: does the pose stay put?", secs=80,
+             say=md_saw,
+             look=["The summary table.", "The RMSD plots: flat and low means the pose held, rising means it moved.", "The hydrogen-bond plots and partner tables."],
+             meaning=md_mean),
+        dict(section="9. Evidence & methods", title="Evidence, limits and next steps", secs=35,
+             say="This page maps our work to the judging criteria and states the limits plainly.",
+             look=["The criteria table.", "The single limitations box.", "The evidence-pack download."],
+             meaning="Next steps: lab testing of the shortlist, a longer docking search, and other targets."),
+    ]
+
+
+def _demo_goto(i: int):
+    F = demo_facts(get_data()[0])
+    stops = demo_stops(F)
+    i = max(0, min(i, len(stops) - 1))
+    st.session_state["demo_i"] = i
+    st.session_state["section"] = stops[i]["section"]
+    if stops[i]["section"] == "8. Compound profile":
+        cid = F.get("rank1") or F.get("best_id")
+        if cid:
+            st.session_state["profile_cid"] = cid
+
+
+def _demo_start():
+    st.session_state["demo_on"] = True
+    _demo_goto(0)
+
+
+def _demo_step(delta: int):
+    _demo_goto(st.session_state.get("demo_i", 0) + delta)
+
+
+def _demo_exit():
+    st.session_state["demo_on"] = False
+    st.session_state["section"] = INTRO_NAME
+
+
+def _demo_toggled():
+    if st.session_state.get("demo_on"):
+        _demo_goto(0)
+
+
+DEMO_CSS = """<style>
+@keyframes opNudge { 0%,100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+.op-ptr { font-size: 17px; margin: 5px 0; display: flex; gap: 10px; align-items: flex-start; }
+.op-ptr .arr { color: #c2561a; font-weight: 900; font-size: 22px; line-height: 1; animation: opNudge 1.1s ease-in-out infinite; }
+.op-demo-t { font-size: 22px; font-weight: 800; margin: 2px 0 6px 0; }
+.op-demo-say { font-size: 18px; line-height: 1.5; margin: 4px 0 8px 0; }
+.op-demo-mean { font-size: 17px; line-height: 1.5; padding: 10px 14px; border-radius: 14px; background: rgba(127,160,136,.18); margin-top: 8px; }
+</style>"""
+
+
+def demo_bar(data):
+    """Top-of-page tour panel (only when the Guided demo toggle is on)."""
+    F = demo_facts(data)
+    stops = demo_stops(F)
+    i = max(0, min(st.session_state.get("demo_i", 0), len(stops) - 1))
+    stop = stops[i]
+    total = sum(s["secs"] for s in stops)
+    st.markdown(DEMO_CSS, unsafe_allow_html=True)
+    with st.container(border=True):
+        st.progress((i + 1) / len(stops), text=f"Guided demo · stop {i + 1} of {len(stops)}")
+        show_html(f'<div class="op-demo-t">{esc(stop["title"])}</div><div class="op-demo-say">{esc(stop["say"])}</div>')
+        show_html("".join(f'<div class="op-ptr"><span class="arr">➜</span><span>{esc(t)}</span></div>' for t in stop["look"]))
+        show_html(f'<div class="op-demo-mean"><b>What this means:</b> {esc(stop["meaning"])}</div>')
+        if st.session_state.get("demo_notes"):
+            used = sum(s["secs"] for s in stops[:i])
+            st.caption(f"Presenter notes · about {stop['secs']} seconds on this stop · {used // 60}:{used % 60:02d} elapsed of about "
+                       f"{total // 60}:{total % 60:02d} for the tour (leave time for the intro and the close).")
+        c1, c2, c3, c4 = st.columns([1, 1, 1, 2])
+        c1.button("◀ Back", key="demo_back", on_click=_demo_step, args=(-1,), disabled=(i == 0))
+        if i < len(stops) - 1:
+            c2.button("Next ▶", key="demo_next", on_click=_demo_step, args=(1,), type="primary")
         else:
-            b2.button("Finish", type="primary", on_click=tour_stop, key="tour_finish")
-        b3.button("⇅ Move", on_click=tour_flip, key="tour_flip", help="Move this panel up or down")
-        b4.button("End", on_click=tour_stop, key="tour_end")
+            c2.button("Finish", key="demo_finish", on_click=_demo_exit, type="primary")
+        c3.button("Exit tour", key="demo_exit", on_click=_demo_exit)
+        c4.toggle("Presenter notes (timing)", key="demo_notes")
 
 
-_sidebar_original = sidebar
+def section_intro():
+    data, status = get_data()
+    F = demo_facts(data)
+    show_html('<div style="padding:6px 0 2px 0"><div style="font-size:15px;letter-spacing:.08em;font-weight:800;color:#59725d">OMNIPHYTO · ETHNOHACK 2026</div>'
+              '<h1 style="margin:2px 0 4px 0">From neem leaves to a ranked, safety-checked shortlist</h1>'
+              '<div style="font-size:18px">A computer pipeline for finding plant compounds that may help with type 2 diabetes, '
+              'and checking early whether they are likely to cause trouble.</div></div>')
+    st.subheader("The problem")
+    st.write("Many drug candidates fail late, after years of work, because they turn out to be harmful, for example by blocking the heart channel hERG "
+             "or key liver enzymes. Plant compounds such as those in neem are promising, but they are usually screened only for how well they "
+             "bind the disease protein.")
+    st.subheader("What we built")
+    st.write(f"OmniPhyto asks two questions of every compound in one pipeline: does it fit the disease protein (DPP-4), and does it also fit the "
+             f"proteins we must avoid (hERG, CYP3A4, CYP2D6)? We filter {_nz(F.get('library'), 0)} neem compounds, dock the survivors, check the best ones "
+             "for safety, combine everything into one ranking, and run a short simulation to see whether the top pose holds.")
+    st.subheader("The team relay")
+    cols = st.columns(len(STEPS))
+    for col, step in zip(cols, STEPS):
+        color = ROLE_COLORS[step["owner"]]
+        with col:
+            show_html(f'<div class="op-card" style="border-top:5px solid {color}"><div style="font-size:13px;color:{color};font-weight:700">'
+                      f'Step {step["id"]} · {esc(step["owner"])}</div><div style="font-size:15px;font-weight:600;margin:3px 0 2px 0">{esc(step["name"])}</div></div>')
+    st.subheader("Key numbers")
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        metric_card("Compounds passed the filter", None if F["passed"] is None else str(F["passed"]),
+                    f"of {F['library']} in the library" if F["library"] else "")
+    with c2:
+        metric_card("Compounds docked into DPP-4", None if F["docked"] is None else str(F["docked"]), "screened by AutoDock Vina")
+    with c3:
+        v = None if F["best_score"] is None else f"{_nz(F['best_score'])} vs {_nz(F['ref'])}"
+        metric_card("Best score vs known drug", v, f"kcal/mol, predicted · best = {F['best_id']}" if F["best_id"] else "")
+    with c4:
+        d = F["redock"].get("dpp4", {})
+        metric_card("Redocking check (DPP-4)", d.get("verdict"), f"top-pose RMSD {_nz(d.get('top1_rmsd'), 2, 'Å')}" if d else "")
+    st.subheader("Take the tour")
+    st.write("The guided demo walks through every page, points at what to look at, and explains what the result means.")
+    b1, b2, _ = st.columns([1.3, 1, 2])
+    b1.button("▶ Start the guided tour", key="intro_start", type="primary", on_click=_demo_start)
+    b2.button("Skip to Home", key="intro_skip", on_click=go, args=("0. Home",))
+    st.caption("⏳ First load and 3D views can take about 5 to 10 seconds. Please be patient. "
+               "All values are computer predictions, not lab measurements.")
 
 
-def sidebar(status: dict):  # noqa: F811  (same name on purpose, so main() shows the tour button)
-    _sidebar_original(status)
-    st.sidebar.divider()
-    st.sidebar.button("▶ Start guided tour", on_click=tour_start, key="tour_start_btn",
-                      help="Step-by-step walkthrough for the demo video")
+# ---- speed: send only the pocket area to the 3D viewer -----------------------------
+def _atom_xyz(line):
+    try:
+        return float(line[30:38]), float(line[38:46]), float(line[46:54])
+    except ValueError:
+        return None
 
 
-_main_original = main
+def _focus_points(layers, zoom_layer, zoom_sel, around):
+    sel = zoom_sel or ((around or {}).get("sel") or {})
+    r = sel.get("resn")
+    resns = set(r if isinstance(r, list) else [r]) if r else None
+    lig_layer = around["layer"] if around else zoom_layer
+    pts = []
+    for i, L in enumerate(layers):
+        for line in L["data"].splitlines():
+            if not line.startswith(("ATOM", "HETATM")):
+                continue
+            if L["fmt"] == "pdb":
+                if resns and line[17:20].strip() in resns and (p := _atom_xyz(line)):
+                    pts.append(p)
+            elif i == lig_layer and (p := _atom_xyz(line)):
+                pts.append(p)
+    return (np.array(pts), resns) if pts else (None, resns)
 
 
-def main():  # noqa: F811
-    ss = st.session_state
-    ss.setdefault("tour_on", False)
-    ss.setdefault("tour_step", 0)
-    ss.setdefault("tour_top", False)
-    if ss["tour_on"] and TOUR[min(ss["tour_step"], len(TOUR) - 1)]["sec"] is None:
-        ss.setdefault("section", "0. Home")
-        ss.setdefault("dark", False)
-        data_status = get_data()
-        inject_css(is_dark())
-        sidebar(data_status[1])
-        tour_intro()
-        return
-    _main_original()
-    if ss["tour_on"]:
-        tour_coach()
+def _trim_pdb(text: str, focus, resns, radius: float = 15.0) -> str:
+    lines = text.splitlines()
+    idx, coords, keys = [], [], []
+    for n, l in enumerate(lines):
+        if l.startswith(("ATOM", "HETATM")) and (p := _atom_xyz(l)):
+            el = l[76:78].strip() or l[12:16].strip().lstrip("0123456789")[:1]
+            if l.startswith("ATOM") and el.upper() == "H":
+                continue                                  # hydrogens are not drawn in the cartoon, so do not send them
+            idx.append(n); coords.append(p); keys.append((l[21], l[22:27], l[17:20].strip()))
+    if not coords:
+        return text
+    C = np.array(coords)
+    d = np.sqrt(((C[:, None, :] - focus[None, :, :]) ** 2).sum(-1)).min(axis=1)
+    near = {keys[j][:2] for j in np.where(d <= radius)[0]}
+    keep = {idx[j] for j in range(len(idx)) if keys[j][:2] in near or (resns and keys[j][2] in resns)}
+    return "\n".join(l for n, l in enumerate(lines) if n in keep) + "\nEND\n"
+
+
+def _trim_layers(layers, zoom_layer, zoom_sel, around, radius: float = 15.0):
+    big = [L for L in layers if L["fmt"] == "pdb" and len(L["data"]) > 150_000]
+    if not big:
+        return layers, False
+    focus, resns = _focus_points(layers, zoom_layer, zoom_sel, around)
+    if focus is None:
+        return layers, False
+    out = []
+    for L in layers:
+        if L["fmt"] == "pdb" and len(L["data"]) > 150_000:
+            L = {**L, "data": _trim_pdb(L["data"], focus, resns, radius)}
+        out.append(L)
+    return out, True
 
 
 
