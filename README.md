@@ -128,8 +128,8 @@ config/secrets.json
 ## 6. Presentation
 
 - **Demo video (max 10 minutes):** https://drive.google.com/file/d/1z15GzfTW1MqKvd9rE-A__TIVJWt1mtJ0/view?usp=sharing
-- **Slide deck (max 10 slides):** [[add link]](https://drive.google.com/file/d/18bvgKlF9fZf_KsIwqIzolrPGjZkZv0KY/view?usp=drive_link)
-- **Live app:** [[add URL]](https://omniphyto.streamlit.app/)
+- **Slide deck (max 10 slides):** https://drive.google.com/file/d/18bvgKlF9fZf_KsIwqIzolrPGjZkZv0KY/view?usp=drive_link
+- **Live app:** https://omniphyto.streamlit.app/
 - **Screenshots:** <!-- add images to docs/ and uncomment: docs/screenshot_ranking.png, docs/screenshot_3d.png, docs/screenshot_md.png -->
 
 ## 7. Development practices
