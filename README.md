@@ -8,7 +8,11 @@ HerbaQuest (the OmniPhyto pipeline) screens neem (*Azadirachta indica*) compound
 
 > These are computational predictions only. Nothing here is a clinical claim, a measured affinity, or a validated drug lead. Wet-lab confirmation is required.
 
-**Quick links:** [Demo video](https://drive.google.com/file/d/1z15GzfTW1MqKvd9rE-A__TIVJWt1mtJ0/view?usp=drivesdk) · [Slide deck](https://drive.google.com/file/d/1QVGHBE8M1ZejWChsCYdc2nYm2II9UBtP/view?usp=drivesdk) · [Live app](https://omniphyto.streamlit.app/)
+**Quick links:**
+
+- **Demo video:** https://youtu.be/cTQ-jVRVI3k
+- **Slide deck:** https://drive.google.com/file/d/1QVGHBE8M1ZejWChsCYdc2nYm2II9UBtP/view?usp=drivesdk
+- **Live app:** https://omniphyto.streamlit.app/
 
 ## 1. Project description
 
@@ -23,6 +27,8 @@ Track 02: Natural Products for Drug Discovery.
 2. **Dock.** 238 of those are docked on DPP-4 (PDB 3D4L). The top 10 are also docked on hERG (8ZYO), CYP3A4 (2V0M) and CYP2D6 (3TDA). Each protocol is validated by redocking the crystal ligand.
 3. **Rank.** Composite = 0.5 efficacy + 0.3 selectivity + 0.2 ADMET. Weight sensitivity was checked over 27 weight sets.
 4. **Simulate.** 10 ns molecular dynamics on the two leads (OP0048, OP0145), the crystal ligand 605 (control) and OP0437 (negative control).
+
+> **Note on compound source and naming:** the neem compounds were pulled from the COCONUT natural products database, which records each compound by the part of the plant it comes from. The 437 compounds therefore come from different parts of the neem plant (not just the leaves), even where file or column names in the repository suggest otherwise. We kept the original file names unchanged to avoid altering the repository files.
 
 ### Key results
 | Check | Result |
@@ -127,7 +133,7 @@ config/secrets.json
 
 ## 6. Presentation
 
-- **Demo video (max 10 minutes):** https://drive.google.com/file/d/1z15GzfTW1MqKvd9rE-A__TIVJWt1mtJ0/view?usp=drivesdk
+- **Demo video (max 10 minutes):** https://youtu.be/cTQ-jVRVI3k
 - **Slide deck (max 10 slides):** https://drive.google.com/file/d/1QVGHBE8M1ZejWChsCYdc2nYm2II9UBtP/view?usp=drivesdk
 - **Live app:** https://omniphyto.streamlit.app/
 - **Screenshots:** <!-- add images to docs/ and uncomment: docs/screenshot_ranking.png, docs/screenshot_3d.png, docs/screenshot_md.png -->
