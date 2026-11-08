@@ -232,3 +232,6 @@ data/output/
 !/data/incoming/results/target/
 !/data/incoming/results/target/poses/
 !/data/incoming/results/target/poses/**
+   # Secrets (never commit)
+   *.env
+   config/secrets.json
