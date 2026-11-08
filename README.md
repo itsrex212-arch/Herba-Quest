@@ -141,7 +141,14 @@ config/secrets.json
 
 ## 8. Team
 
-HerbaQuest, EthnoHack 2026. Structural biology and bioinformatics: Goodness. [Add the other members and their roles.]
+HerbaQuest, EthnoHack 2026.
+
+1. Goodness Akorede Akapo (Structural Lead)
+2. Firdaos Olagunju Folakemi (Chemist)
+3. Awe Ayomide(Developer)
+4. Omoniyi Omotolani Victor (Project Manager)
+5. Bamidele Ayomide Victor (ML Engineer)
+
 
 ## 9. Limitations and scope
 
